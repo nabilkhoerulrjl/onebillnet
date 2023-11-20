@@ -37,7 +37,7 @@
         <li>
             <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Broadcast Customer</span><span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
-                <li onclick="addTabCustomer()"><a href="javascript:void(0)">Bill Reminder</a></li>
+                <li onclick="addTabBillReminder()"><a href="javascript:void(0)">Bill Reminder</a></li>
             </ul>
         </li>
         <li>
@@ -78,11 +78,6 @@
                         </li> -->
                         <li onclick="addTabTemplateRespone()">
                             <a href="javascript:void(0)">Template Broadcast</a>
-                       <a href="javascript:void(0)">Template Broadcast</a>
-                       <a href="javascript:void(0)">Template Broadcast</a>
-                        <a href="javascript:void(0)">Template Broadcast</a>
->
-                        <a href="javascript:void(0)">Template Broadcast</a>
                         </li>
                     </ul>
                 </li>

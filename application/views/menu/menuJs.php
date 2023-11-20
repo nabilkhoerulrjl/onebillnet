@@ -19,6 +19,10 @@
     openTabGeneral('company_profile','Company Profile', 'fa-building', 'setting/Company_Controller/Index', 'Get' );
   }
 
+  function addTabBillReminder() {
+    openTabGeneral('bill_reminder','Bill Reminder', 'fa-message', 'broadcast/BillReminder_Controller/Index', 'Get' );
+  }
+
         
 
         function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){
