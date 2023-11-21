@@ -24,26 +24,50 @@
                 </div>
                 <div class="ibox-content" style="">
                     <form method="get">
-                    <div class="form-group row"><label class="col-sm-2 col-form-label">From</label>
-                        <div class="col-sm-10">
-                            <select class="form-control m-b" name="from">
-                                <option>085945751995</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
-                            </select>
-                        </div>
-                    </div>
-                        <div class="form-group  row"><label class="col-sm-2 col-form-label">From</label>
-
-                            <div class="col-sm-10"><input type="text" class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Help text</label>
-                            <div class="col-sm-10"><input type="text" class="form-control"> <span class="form-text m-b-none">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group row"><label class="col-sm-2 col-form-label">Media</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control m-b" name="from">
+                                            <option>Whatsapp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group row"><label class="col-sm-2 col-form-label">From</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control m-b" name="from">
+                                            <option>085945751995</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5" style="padding-bottom:0px !important;">
+                                <div class="form-group row"><label class="col-sm-3 col-form-label">Type Target</label>
+                                    <div class="col-sm-9" style="padding-left:0px !important;">
+                                        <select class="form-control m-b" name="from">
+                                            <option>Input</option>
+                                            <option>Contact</option>
+                                            <option>Group Contact</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed" style="margin-top:0px !important;"></div>
+                        <div class="row">
+                            <div class="form-group row"><label class="col-sm-2 col-form-label">To</label>
+                            <div class="bootstrap-tagsinput">
+                                <span class="tag label label-primary">Amsterdam<span data-role="remove"></span></span> 
+                                <span class="tag label label-primary">Washington<span data-role="remove"></span></span> 
+                                <span class="tag label label-primary">Sydney<span data-role="remove"></span></span> 
+                                <span class="tag label label-primary">Beijing<span data-role="remove"></span></span> 
+                                <span class="tag label label-primary">Cairo<span data-role="remove"></span></span> 
+                                <input type="text" placeholder="">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed" style="margin-top:0px !important;"></div>
                         <div class="form-group row"><label class="col-sm-2 col-form-label">Password</label>
 
                             <div class="col-sm-10"><input type="password" class="form-control" name="password"></div>
