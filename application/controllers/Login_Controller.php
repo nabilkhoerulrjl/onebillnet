@@ -5,12 +5,6 @@ $env = getenv('APP_ENV');
 
 
 class Login_Controller extends CI_Controller {
-	if ($env === 'development') {
-		// Logika untuk lingkungan pengembangan
-		echo "Aku"
-	} else if ($env === 'production') {
-		// Logika untuk lingkungan produksi
-	}
 	/**
 	 * Index Page for this controller.
 	 *
@@ -130,6 +124,64 @@ class Login_Controller extends CI_Controller {
             echo "SiteId Not Found !";
         }
         return $siteId;
+	}
+
+	public function forgotPassword(){
+		$email = $this->input->post('Email');
+		$host = $_SERVER['HTTP_HOST'];
+		$where = array(
+			'Email' => $email
+		);
+		$this->load->model('M_Login');
+		$data['dataUser'] = $this->M_Login->getUserData('Users', $where);
+		if($data['dataUser']) {
+			$data = array(
+				'email' => $data['dataUser']->Email,
+				'alertMessageSuccess' => 'User Data Found',
+			);
+			$this->load->view('login/resetPassword',$data);
+		}else{
+			$data = array(
+				'alertMessageDanger' => 'User Data Not Found',
+			);
+			$this->load->view('login/searchAccount',$data);
+		}
+		
+	}
+
+	public function searchAccount(){
+		$this->load->view('login/searchAccount'); 
+	}
+
+	public function resetPassword(){
+		$email = $this->input->post('Email');
+		$newpassword = $this->input->post('NewPassword');
+		$host = $_SERVER['HTTP_HOST'];
+		$where = array(
+			'Email' => $email
+		);
+		$this->load->model('M_Login');
+		$data['dataUser'] = $this->M_Login->getUserData('Users', $where);
+		if($data['dataUser']->Password == $newpassword) {
+			$data = array(
+				'email' => $data['dataUser']->Email,
+				'alertMessageDanger' => 'Previous password cannot be used',
+			);
+			$this->load->view('login/resetPassword',$data);
+		}else{
+			$resetResult = $this->M_Login->resetPassword($email, $newpassword);
+			if ($resetResult) {
+				$companyName = $this->getSiteName();
+				$data = array(
+					'alertMessageSuccessReset' => 'Password Changed Successfully',
+					'title' => $companyName,
+					'email' => $email,
+					'owner' => 'Nabil@ Home Code Project',//$settingCopyrightOwner,
+					'year' => '2002',//$settingCopyrightYear,
+				);
+				$this->load->view('login/resetPassword',$data);
+			}
+		}
 	}
 
 	// public function getSettingCopyrightYear() {

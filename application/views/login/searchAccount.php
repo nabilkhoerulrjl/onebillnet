@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="Nabil Khoerul Rijal">
         <link rel="icon" href="<?= base_url() ?>public/img/Indihome.jpg">
-        <title><?= $title; ?></title>
+        <title>Search Account</title>
         <!-- Custom fonts for this template-->
         <link href="<?= base_url()?>public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
@@ -105,43 +105,28 @@
                                     <div class="p-5">
                                         <div class="text-center" style="display: flex;flex-wrap: nowrap;
                                         flex-direction: row;align-items: flex-start;align-content: space-around;justify-content: center;">
-                                        <img width="50"src="<?= base_url() ?>public/img/Indihome.jpg" alt="" srcset="">
-                                            <h1 class="h4 text-gray-900 mb-4 company-title"><?= $title; ?></h1>
+                                            <h1 class="h4 text-gray-900 mb-4 company-title">Reset Password</h1>
                                         </div>
-                                        <form class="user" method="POST" action="<?= base_url()?>Login_Controller/getDataUser">
-                                            <?php if(isset($alertMessage)) : ?> 
+                                        <form class="user" method="POST" action="<?= base_url()?>Login_Controller/forgotPassword">
+                                            <?php if(isset($alertMessageDanger)) : ?> 
                                             <div class="alert alert-danger">
-                                                <?= $alertMessage; ?>
+                                                <?= $alertMessageDanger; ?>
                                             </div>
                                             <?php endif; ?> 
-                                            
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="fieldInputUsername" aria-describedby="emailHelp"
                                                     placeholder="Enter Username" name="Email"
-                                                    value="<?php if(isset($_COOKIE["loginId"])) { echo $_COOKIE["loginId"]; } ?>" required>
+                                                    value="" required>
                                             </div>
-                                            <div class="form-group mb-4">
-                                                <input type="password" class="form-control form-control-user"
-                                                    id="fieldInputPassword" placeholder="Password" name="Password"
-                                                    value="<?php if(isset($_COOKIE["loginPass"])) { echo $_COOKIE["loginPass"]; } ?>" required>
-                                                    <i toggle="#fieldInputPassword" class="fa fa-eye position-absolute toggle-password cursor-pointer"></i>
-                                            </div>
-                                            
-                                            <!-- <div class="form-group">
-                                                <div class="custom-control custom-checkbox small">
-                                                    <input type="checkbox" class="custom-control-input cursor-pointer" id="customCheck" <?php if(isset($_COOKIE["loginId"])) { ?> checked="checked" <?php } ?>>
-                                                    <label class="custom-control-label cursor-pointer" for="customCheck">Remember Me</label>
-                                                </div>
-                                            </div> -->
                                             <button class="btn btn-primary btn-user btn-block" style="margin-bottom:1em">
-                                                Login
+                                                Search Account
                                             </button>
-                                            <a href="<?= base_url() ?>Login_Controller/searchAccount" >
-                                                <small>Forgot password?</small>
+                                            <a href="<?= base_url() ?>Login_Controller/index" >
+                                                <small>Back to Login Menu</small>
                                             </a>
                                             <hr>
-                                            <p class="m-t text-center"> <small><?= $owner; ?> &copy; <?= $year; ?></small> </p>
+                                            <!-- <p class="m-t text-center"> <small><?= $owner; ?> &copy; <?= $year; ?></small> </p> -->
                                         </form>
                                     </div>
                                 </div>
@@ -158,15 +143,7 @@
         <script src="<?= base_url()?>public/js/bootstrap.js"></script>
         <script>
             $(document).ready(function () {
-                $(".toggle-password").click(function() {
-                    $(this).toggleClass("fa-eye fa-eye-slash");
-                    var input = $($(this).attr("toggle"));
-                    if (input.attr("type") == "password") {
-                        input.attr("type", "text");
-                    } else {
-                        input.attr("type", "password");
-                    }
-                });
+                
             });
         </script>
     </body>
