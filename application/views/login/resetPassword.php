@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="Nabil Khoerul Rijal">
         <link rel="icon" href="<?= base_url() ?>public/img/Indihome.jpg">
-        <title><?= $title; ?></title>
+        <title>Reset Password</title>
         <!-- Custom fonts for this template-->
         <link href="<?= base_url()?>public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link
@@ -27,7 +27,7 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.7em;
+                    bottom: 9.4em;
                 }
             }
 
@@ -38,7 +38,7 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.7em;
+                    bottom: 9.4em;
                 }
             }
 
@@ -49,7 +49,7 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.7em;
+                    bottom: 9.4em;
                 }
             }
 
@@ -60,7 +60,7 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.8em;
+                    bottom: 9.3em;
                 }
             }
 
@@ -71,7 +71,7 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.8em;
+                    bottom: 9.4em;
                 }
             }
 
@@ -82,12 +82,16 @@
                 }
                 .toggle-password {
                     right: 5.5em;
-                    bottom: 16.8em;
+                    bottom: 9.4em;
                 }
             }
 
             .cursor-pointer {
                 cursor: pointer;
+            }
+
+            .hidden {
+                display : none;
             }
         </style>
     </head>
@@ -105,26 +109,36 @@
                                     <div class="p-5">
                                         <div class="text-center" style="display: flex;flex-wrap: nowrap;
                                         flex-direction: row;align-items: flex-start;align-content: space-around;justify-content: center;">
-                                        <img width="50"src="<?= base_url() ?>public/img/Indihome.jpg" alt="" srcset="">
-                                            <h1 class="h4 text-gray-900 mb-4 company-title"><?= $title; ?></h1>
+                                            <h1 class="h4 text-gray-900 mb-4 company-title">Reset Password</h1>
                                         </div>
-                                        <form class="user" method="POST" action="<?= base_url()?>Login_Controller/getDataUser">
-                                            <?php if(isset($alertMessage)) : ?> 
+                                        <form class="user" method="POST" action="<?= base_url()?>Login_Controller/resetPassword">
+                                            <?php if(isset($alertMessageDanger)) : ?> 
                                             <div class="alert alert-danger">
-                                                <?= $alertMessage; ?>
+                                                <?= $alertMessageDanger; ?>
                                             </div>
                                             <?php endif; ?> 
-                                            
-                                            <div class="form-group">
-                                                <input type="text" class="form-control form-control-user"
-                                                    id="fieldInputUsername" aria-describedby="emailHelp"
-                                                    placeholder="Enter Username" name="Email"
-                                                    value="<?php if(isset($_COOKIE["loginId"])) { echo $_COOKIE["loginId"]; } ?>" required>
+                                            <?php if(isset($alertMessageSuccess)) : ?> 
+                                            <div class="alert alert-success">
+                                                <?= $alertMessageSuccess; ?>
+                                            </a>
                                             </div>
-                                            <div class="form-group mb-4">
+                                            <?php endif; ?> 
+                                            <?php if(isset($alertMessageSuccessReset)) : ?> 
+                                            <div class="alert alert-success">
+                                                <?= $alertMessageSuccessReset; ?> | <a href="<?= base_url() ?>Login_Controller/index" >
+                                                <small>Click to Redirect Login Page</small>
+                                            </a>
+                                            </div>
+                                            <?php endif; ?> 
+                                                <input type="hidden" class="form-control form-control-user"
+                                                    id="fieldInputEmail" aria-describedby="emailHelp"
+                                                    placeholder="New Password" name="Email"
+                                                    value="<?= $email ?>" required>
+                                            <div class="form-group <?php if(isset($alertMessageSuccessReset)) : ?> hidden <?php endif; ?>">
                                                 <input type="password" class="form-control form-control-user"
-                                                    id="fieldInputPassword" placeholder="Password" name="Password"
-                                                    value="<?php if(isset($_COOKIE["loginPass"])) { echo $_COOKIE["loginPass"]; } ?>" required>
+                                                    id="fieldInputPassword" aria-describedby="emailHelp"
+                                                    placeholder="New Password" name="NewPassword"
+                                                    value="" required>
                                                     <i toggle="#fieldInputPassword" class="fa fa-eye position-absolute toggle-password cursor-pointer"></i>
                                             </div>
                                             
@@ -134,14 +148,9 @@
                                                     <label class="custom-control-label cursor-pointer" for="customCheck">Remember Me</label>
                                                 </div>
                                             </div> -->
-                                            <button class="btn btn-primary btn-user btn-block" style="margin-bottom:1em">
-                                                Login
+                                            <button class="btn btn-primary btn-user btn-block <?php if(isset($alertMessageSuccessReset)) : ?> hidden <?php endif; ?>" style="margin-bottom:1em">
+                                                Reset
                                             </button>
-                                            <a href="<?= base_url() ?>Login_Controller/searchAccount" >
-                                                <small>Forgot password?</small>
-                                            </a>
-                                            <hr>
-                                            <p class="m-t text-center"> <small><?= $owner; ?> &copy; <?= $year; ?></small> </p>
                                         </form>
                                     </div>
                                 </div>
