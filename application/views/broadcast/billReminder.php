@@ -1,6 +1,25 @@
+
+<script src="<?= base_url()?>public/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<script src="<?= base_url()?>public/js/plugins/select2/select2.full.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<style> -->
+    .d-block {
+        display:block;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
 <div class="wrapper wrapper-content" style="border: 3px solid white">
-    <div class="row">
-        <div class="col-lg-12">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
             <div class="ibox">
                 <div class="ibox-title">
                     <h5>Form Send Billing Reminder <small>to your customer.</small></h5>
@@ -8,9 +27,9 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-wrench"></i>
-                        </a>
+                        </a> -->
                         <!-- <ul class="dropdown-menu dropdown-user">
                             <li><a href="#" class="dropdown-item">Config option 1</a>
                             </li>
@@ -23,285 +42,194 @@
                     </div>
                 </div>
                 <div class="ibox-content" style="">
-                    <form method="get">
+                    <form method="POST">
+                        <div class="row  justify-content-center" style="justify-content: center !important;">
+                            <div class="col-sm-12">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">Media</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <select class="form-control m-b-none" name="media" id="mediaSelect">
+                                            <!-- <option>Whatsapp</option> -->
+                                            <?php foreach ($dataConn as $item): 
+                                                  if($item->MediaId == 'WHATP'): $mediaName = 'Whatsapp';endif;
+                                                  if($item->MediaId == 'WHATP2'): $mediaName = 'Whatsapp2';endif;?>
+                                                    <option value="<?= $item->MediaId ?>">
+                                                        <?= $mediaName ?>
+                                                    </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">From</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <select class="form-control m-b-none" name="from" id="fromSelect">
+                                            <!-- <option>085945751995</option> -->
+                                            <?php foreach ($dataConn as $item): ?>
+                                                <option value="<?= $item->UserName ?>" data-mediaid="<?= $item->MediaId ?>">
+                                                    <?= $item->UserName ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group row"><label class="col-sm-2 col-form-label">Media</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control m-b" name="from">
-                                            <option>Whatsapp</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group row"><label class="col-sm-2 col-form-label">From</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control m-b" name="from">
-                                            <option>085945751995</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-5" style="padding-bottom:0px !important;">
-                                <div class="form-group row"><label class="col-sm-3 col-form-label">Type Target</label>
-                                    <div class="col-sm-9" style="padding-left:0px !important;">
-                                        <select class="form-control m-b" name="from">
-                                            <option>Input</option>
-                                            <option>Contact</option>
-                                            <option>Group Contact</option>
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label" >Type Target</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <select class="form-control m-b-none" name="typeTarget" onchange="toggleElements(this.value)">
+                                            <option value="Input">Input</option>
+                                            <option value="Contact">Contact</option>
+                                            <option value="GroupContact">Group Contact</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="hr-line-dashed" style="margin-top:0px !important;"></div>
+                        <div class="row to-input">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <input class="tagsinput form-control " name="toInput" type="text" value="" placeholder="Insert Number e.g 081xx" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row to-contact hidden">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <select class="form-control multiple-select" name="toContact" id="toContact" multiple="multiple" style="width: 100%">
+                                            <!-- <option value="AL">Alabama</option>
+                                                ...
+                                            <option value="WY">Wyoming</option> -->
+                                            <?php foreach ($dataContact as $item): ?>
+                                                <option value="<?= $item->Id ?>" data-mediaid="">
+                                                    <?= $item->Name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row to-group-contact hidden">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                    <select class="form-control multiple-select" name="toGroupContact" id="toContactGroup" multiple="multiple" style="width: 100%">
+                                        <!-- <option value="AL">Alabama</option>
+                                            ...
+                                        <option value="WY">Wyoming</option> -->
+                                        <?php foreach ($dataContactGroup as $item): ?>
+                                            <option value="<?= $item->Id ?>" data-mediaid="">
+                                                <?= $item->GroupName ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
-                            <div class="form-group row"><label class="col-sm-2 col-form-label">To</label>
-                            <div class="bootstrap-tagsinput">
-                                <span class="tag label label-primary">Amsterdam<span data-role="remove"></span></span> 
-                                <span class="tag label label-primary">Washington<span data-role="remove"></span></span> 
-                                <span class="tag label label-primary">Sydney<span data-role="remove"></span></span> 
-                                <span class="tag label label-primary">Beijing<span data-role="remove"></span></span> 
-                                <span class="tag label label-primary">Cairo<span data-role="remove"></span></span> 
-                                <input type="text" placeholder="">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed" style="margin-top:0px !important;"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Password</label>
-
-                            <div class="col-sm-10"><input type="password" class="form-control" name="password"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Placeholder</label>
-
-                            <div class="col-sm-10"><input type="text" placeholder="placeholder" class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-lg-2 col-form-label">Disabled</label>
-
-                            <div class="col-lg-10"><input type="text" disabled="" placeholder="Disabled input here..." class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-lg-2 col-form-label">Static control</label>
-
-                            <div class="col-lg-10"><p class="form-control-static">email@example.com</p></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Checkboxes and radios <br>
-                            <small class="text-navy">Normal Bootstrap elements</small></label>
-
-                            <div class="col-sm-10">
-                                <div><label> <input type="checkbox" value=""> Option one is this and that—be sure to include why it's great </label></div>
-                                <div><label> <input type="radio" checked="" value="option1" id="optionsRadios1" name="optionsRadios"> Option one is this and that—be sure to
-                                    include why it's great </label></div>
-                                <div><label> <input type="radio" value="option2" id="optionsRadios2" name="optionsRadios"> Option two can be something else and selecting it will
-                                    deselect option one </label></div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Inline checkboxes</label>
-
-                            <div class="col-sm-10"><label> <input type="checkbox" value="option1" id="inlineCheckbox1"> a </label> <label class="checkbox-inline">
-                                <input type="checkbox" value="option2" id="inlineCheckbox2"> b </label> <label>
-                                <input type="checkbox" value="option3" id="inlineCheckbox3"> c </label></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Checkboxes &amp; radios <br><small class="text-navy">Custom elements</small></label>
-
-                            <div class="col-sm-10">
-                                <div class="i-checks"><label> <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" value="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option one </label></div>
-                                <div class="i-checks"><label> <div class="icheckbox_square-green checked" style="position: relative;"><input type="checkbox" value="" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option two checked </label></div>
-                                <div class="i-checks"><label> <div class="icheckbox_square-green checked disabled" style="position: relative;"><input type="checkbox" value="" disabled="" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option three checked and disabled </label></div>
-                                <div class="i-checks"><label> <div class="icheckbox_square-green disabled" style="position: relative;"><input type="checkbox" value="" disabled="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option four disabled </label></div>
-                                <div class="i-checks"><label> <div class="iradio_square-green" style="position: relative;"><input type="radio" value="option1" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option one </label></div>
-                                <div class="i-checks"><label> <div class="iradio_square-green checked" style="position: relative;"><input type="radio" checked="" value="option2" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option two checked </label></div>
-                                <div class="i-checks"><label> <div class="iradio_square-green checked disabled" style="position: relative;"><input type="radio" disabled="" checked="" value="option2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option three checked and disabled </label></div>
-                                <div class="i-checks"><label> <div class="iradio_square-green disabled" style="position: relative;"><input type="radio" disabled="" name="a" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> <i></i> Option four disabled </label></div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Inline checkboxes</label>
-
-                            <div class="col-sm-10"><label class="checkbox-inline i-checks"> <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" value="option1" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>a </label>
-                                <label class="i-checks"> <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" value="option2" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> b </label>
-                                <label class="i-checks"> <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" value="option3" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div> c </label></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Select</label>
-
-                            <div class="col-sm-10"><select class="form-control m-b" name="account">
-                                <option>option 1</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
-                            </select>
-
-                                <div class="col-lg-4 m-l-n"><select class="form-control" multiple="">
-                                    <option>option 1</option>
-                                    <option>option 2</option>
-                                    <option>option 3</option>
-                                    <option>option 4</option>
-                                </select></div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row has-success"><label class="col-sm-2 col-form-label">Input with success</label>
-
-                            <div class="col-sm-10"><input type="text" class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row has-warning"><label class="col-sm-2 col-form-label">Input with warning</label>
-
-                            <div class="col-sm-10"><input type="text" class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group  row has-error"><label class="col-sm-2 col-form-label">Input with error</label>
-
-                            <div class="col-sm-10"><input type="text" class="form-control"></div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Control sizing</label>
-
-                            <div class="col-sm-10"><input type="text" placeholder=".form-control-lg" class="form-control form-control-lg m-b">
-                                <input type="text" placeholder="Default input" class="form-control m-b"> <input type="text" placeholder=".form-control-sm" class="form-control form-control-sm">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Column sizing</label>
-
-                            <div class="col-sm-10">
-                                <div class="row">
-                                    <div class="col-md-2"><input type="text" placeholder=".col-md-2" class="form-control"></div>
-                                    <div class="col-md-3"><input type="text" placeholder=".col-md-3" class="form-control"></div>
-                                    <div class="col-md-4"><input type="text" placeholder=".col-md-4" class="form-control"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Input groups</label>
-
-                            <div class="col-sm-10">
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-addon">@</span>
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">Send Date</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <input type="datetime-local" name="sendDate" class="form-control col-sm-12" id="sendDatePicker" />
+                                        <small class="text-italic">This is only for scheduling messages, if you want to send it straight away, you don't need to fill it in</small>
+                                    
                                     </div>
-                                    <input type="text" placeholder="Username" class="form-control">
                                 </div>
-                                <div class="input-group m-b">
-                                    <input type="text" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-addon">.00</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="row">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">Delay</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <input type="text" name="delay" placeholder="Fill delay time send message per number e.g : 5-10" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label">Subject</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <input type="text" name="subject" placeholder="Fill Subject Message" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row message-template">
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-sm">
+                                    <label class="col-sm-2 col-form-label" >Message Template</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <select class="form-control m-b-none" name="messageTemplate" id="templateMessage">
+                                            <option value="">Select Template Message</option>
+                                            <!-- <option value="Template">Reminder 7 hari</option> -->
+                                            <?php foreach ($dataTemplate as $item): ?>
+                                                <?php $metaData = json_decode($item->Meta, true); ?>
+                                                <option value="<?= $item->Id ?>" data-mediaid="<?= $item->MediaId ?>" data-content="<?= htmlspecialchars($item->Content) ?>" data-params="<?= implode(', ', $metaData['params']) ?>" data-meta='<?= $item->Meta?>'>
+                                                    <?= $item->Title ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input-message m-b-lg hidden">
+                            <div class="col-sm-12">
+                                <div class="form-group row m-b-sm">
+                                    <!-- <label class="col-sm-2 col-form-label">Value Variable</label> -->
+                                    <div class="col-sm-8 m-l-sm">
+                                        <input class="form-control " id="variableMessage" name="variableMessage" type="text" value="" placeholder="for variable custom e.g fonnte" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input-message m-b-lg">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Message</label>
+                                    <div class="col-sm-8 m-l-sm">
+                                        <div class="input-group w-100 flex-nowrap">
+                                            <span class="input-group-text white-bg" id="basic-addon1">
+                                            <i class="fa fa-comment"></i>
+                                            </span>
+                                            <textarea name="message" id="message" class="form-control" cols="30" rows="10" placeholder="Write your message"></textarea>
                                         </div>
+                                        <small class="text-italic">Usable variable for custom : {name}, {var1}, {var2},...</small>
+                                        <small id="buttonInfo" class="float-right cursor-pointer">Info</small>
                                     </div>
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-addon">$</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-addon">.00</span>
-                                    </div>
-                                </div>
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-addon">
-                                        <input type="checkbox">
-                                            </span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-addon">
-                                        <input type="radio">
-                                            </span>
-                                    </div>
-                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Button addons</label>
 
-                            <div class="col-sm-10">
-
-                                <div class="input-group m-b"><span class="input-group-prepend">
-                                    <button type="button" class="btn btn-primary">Go!</button> </span> <input type="text" class="form-control">
+                        <div class="row"> 
+                            <div class="col-sm-12" style="padding-bottom:0px !important;">
+                                <div class="form-group row m-b-xs">
+                                    <div class="col-sm-12 m-l-sm">
+                                        <!-- <button class="btn btn-white btn-sm" type="submit">Cancel</button> -->
+                                        <button class="btn btn-primary btn-sm col-sm-2 float-right" type="submit">Send Message</button>
+                                    </div>
                                 </div>
-                                <div class="input-group"><input type="text" class="form-control"> <span class="input-group-append"> <button type="button" class="btn btn-primary">Go!
-                                </button> </span></div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">With dropdowns</label>
-
-                            <div class="col-sm-10">
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">Action </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="dropdown-divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                        <input type="text" class="form-control"></div>
-                                <div class="input-group"><input type="text" class="form-control">
-
-                                    <div class="input-group-append">
-                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">Action </button>
-                                        <ul class="dropdown-menu float-right">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="dropdown-divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row"><label class="col-sm-2 col-form-label">Segmented</label>
-
-                            <div class="col-sm-10">
-                                <div class="input-group m-b">
-                                    <div class="input-group-prepend">
-                                        <button tabindex="-1" class="btn btn-white" type="button">Action</button>
-                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"></button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="dropdown-divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                    <input type="text" class="form-control"></div>
-                                <div class="input-group"><input type="text" class="form-control">
-
-                                    <div class="input-group-append">
-                                        <button tabindex="-1" class="btn btn-white" type="button">Action</button>
-                                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"></button>
-                                        <ul class="dropdown-menu float-right">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="dropdown-divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-white btn-sm" type="submit">Cancel</button>
-                                <button class="btn btn-primary btn-sm" type="submit">Save changes</button>
                             </div>
                         </div>
                     </form>
@@ -310,3 +238,295 @@
         </div>
     </div>
 </div>
+
+<!-- Logout Info Variable-->
+<div class="modal fade" id="infoVaribleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Table of param variable message</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table width='100%' border='1px'>
+                    <tr>
+                        <td>{CustomerName}</td>
+                        <td>get name of contact customer</td>
+                    </tr>
+                    <tr>
+                        <td>{BillingAmount}</td>
+                        <td>get total bill</td>
+                    </tr>
+                    <tr>
+                        <td>{DueDate}</td>
+                        <td>Due date of billing</td>
+                    </tr>
+                    <tr>
+                        <td>{DueDate}</td>
+                        <td>Due Date Billing</td>
+                    </tr>
+                    <tr>
+                        <td>{IdBilling}</td>
+                        <td>Id Billing</td>
+                    </tr>
+                    <tr>
+                        <td>{PeriodeBilling}</td>
+                        <td>Periode Billing</td>
+                    </tr>
+                    <tr>
+                        <td>{PacketName}</td>
+                        <td>Packet name of customer</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="<?= base_url()?>public/js/jquery-3.1.1.min.js"></script>
+<script src="<?= base_url()?>public/js/popper.min.js"></script>
+<script src="<?= base_url()?>public/js/bootstrap.js"></script>
+<script src="<?= base_url()?>public/js/bootstrap.min.js"></script>
+<script src="<?= base_url()?>public/js/inspinia.js"></script>
+<script src="<?= base_url()?>public/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="<?= base_url()?>public/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<!-- Flot -->
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.spline.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.resize.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.pie.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.symbol.js"></script>
+<script src="<?= base_url()?>public/js/plugins/flot/curvedLines.js"></script>
+<!-- Peity -->
+<script src="<?= base_url()?>public/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="<?= base_url()?>public/js/demo/peity-demo.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="<?= base_url()?>public/js/inspinia.js"></script>
+<script src="<?= base_url()?>public/js/plugins/pace/pace.min.js"></script>
+<!-- jQuery UI -->
+<script src="<?= base_url()?>public/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Jvectormap -->
+<script src="<?= base_url()?>public/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+<script src="<?= base_url()?>public/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- Sparkline -->
+<script src="<?= base_url()?>public/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+<!-- Sparkline demo data  -->
+<script src="<?= base_url()?>public/js/demo/sparkline-demo.js"></script>
+<!-- ChartJS-->
+<script src="<?= base_url()?>public/js/plugins/chartJs/Chart.min.js"></script>
+<script src="<?= base_url()?>public/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<script src="<?= base_url()?>public/js/plugins/select2/select2.full.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        //Buat fungsi tagsinput
+        $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+        });
+
+        //Buat fungsi multiselect
+        $('.multiple-select').select2();
+
+        //Buat multiselect dan tagsinput agar kolom auto 100% saat awal di load
+        $('.bootstrap-tagsinput').addClass('col-sm-12');
+        $('.multiple-select').addClass('col-sm-12');
+
+        //Buat fungsi select from data berdasarkan data apa yang di pilih oleh mediaselect
+        $('#mediaSelect').change(function() {
+            var selectedMediaId = $(this).val();
+            $('#toContact').children().attr("data-mediaid",selectedMediaId);
+            $('#toContactGroup').children().attr("data-mediaid",selectedMediaId);
+
+            // Hide all options
+            $('#fromSelect option').hide();
+
+            // Show options that match the selected MediaId
+            $('#fromSelect option[data-mediaid="' + selectedMediaId + '"]').show();
+
+            // Auto select the first matching option
+            $('#fromSelect option[data-mediaid="' + selectedMediaId + '"]:first').prop('selected', true);
+        });
+        // Hide options in 'From' select initially
+        $('#fromSelect option').hide();
+
+        //Buat fungsi modal info variable message
+        $("#buttonInfo").on("click", function () {
+            // Show the logout modal
+            $("#infoVaribleModal").modal("show");
+        });
+
+        //Buat fungsi Apply message template to textarea message
+        $('#templateMessage').change(function() {
+            var selectedTemplateId = $(this).val();
+            var selectedTemplateContent = $(this).find(':selected').data('content');
+            var selectedTemplateParams = $(this).find(':selected').data('params');
+            console.log(selectedTemplateId);
+            console.log(selectedTemplateContent);
+            console.log(selectedTemplateParams);
+
+            // Set nilai textarea message berdasarkan konten template yang dipilih
+            $('#message').val(selectedTemplateContent);
+            // Set nilai input variableMessage berdasarkan params template yang dipilih
+            $('#variableMessage').val(selectedTemplateParams);
+        });
+        // Hide options in 'From' select initially
+        $('#fromSelect option').hide();
+
+        // Untuk show hide templateMessage berdasarkan typetarget yang di pilih
+        // Sembunyikan select template saat halaman dimuat
+        $('.message-template').hide();
+
+        $('select[name="typeTarget"]').change(function() {
+            var selectedValue = $(this).val();
+            var messageTemplateSelect = $('.message-template');
+
+            // Jika 'Input' dipilih, sembunyikan select template
+            if (selectedValue === 'Input') {
+                messageTemplateSelect.hide();
+            } else {
+                // Selain 'Input', tampilkan select template
+                messageTemplateSelect.show();
+            }
+        });
+    });
+
+    //Untuk menampilkan select to berdasarkan typetarget yang dipilih
+    function toggleElements(selectedValue) {
+        // $('.to-input, .to-contact, .to-group-contact').hide();
+        if (selectedValue === 'Input') {
+            $('.to-input').removeClass('hidden');
+            $('.to-contact').addClass('hidden');
+            $('.to-group-contact').addClass('hidden');
+            // $('.to-group-contact').hide();
+        } else if (selectedValue === 'Contact') {
+            $('.to-input').addClass('hidden');
+            $('.to-contact').removeClass('hidden');
+            $('.to-group-contact').addClass('hidden');
+        } else if (selectedValue === 'GroupContact') {
+            $('.to-contact').addClass('hidden');
+            $('.to-input').addClass('hidden');
+            $('.to-group-contact').removeClass('hidden');
+        }
+    }
+
+    $('form').submit(function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Ambil nilai dari elemen formulir
+        var mediaId = $('#mediaSelect').val();
+        var from = $('#fromSelect').val();
+        var typeTarget = $('select[name="typeTarget"]').val();
+        var toInput = $('input[name="toInput"]').val();
+        var toContact = $('select[name="toContact"]').val();
+        var toGroupContact = $('select[name="toGroupContact"]').val();
+        var sendDate = $('input[name="sendDate"]').val();
+        var delay = $('input[name="delay"]').val();
+        var subject = $('input[name="subject"]').val();
+        var messageTemplate = $('select[name="messageTemplate"]').val();
+        var metaTemplate = $('select[name="messageTemplate"] option:selected').data('meta');
+        var variableMessage = $('input[name="variableMessage"]').val();
+        var message = $('textarea[name="message"]').val();
+        var convertedVariable = replaceVarMessage(message, variableMessage);
+        // Susun objek data
+        var formData = {
+            MediaId: mediaId,
+            From: from,
+            TypeTarget: typeTarget,
+            ToInput: toInput,
+            ToContact: toContact,
+            ToGroupContact: toGroupContact,
+            SendDate: sendDate,
+            Delay: delay,
+            Subject: subject,
+            MessageTemplate: messageTemplate,
+            MetaTemplate: metaTemplate,
+            VariableMessage: variableMessage,
+            Message: message,
+            ConvertedVariable: convertedVariable.replacedData
+        };
+        var base_url = "<?php echo base_url(); ?>";
+        // console.log(convertedVariable.replacedData);
+        // console.log(formData);
+        // console.log(base_url);
+
+        // Kirim data menggunakan Ajax
+        $.ajax({
+            type: 'POST',
+            url: base_url+'Message_Controller/sendMessage', // Ganti dengan URL controller Anda
+            data: formData,
+            success: function (response) {
+                // Handle the response from the controller
+                console.log(response);
+
+                // Jika Anda ingin melakukan sesuatu setelah berhasil mengirim data, tambahkan kode di sini
+            },
+            error: function (error) {
+                // Handle errors
+                console.log('Error:', error);
+            }
+        });
+        
+    });
+
+    
+    function convertToBraces(inputString) {
+        // Memisahkan string menjadi array berdasarkan koma dan spasi
+        var variables = inputString.split(', ');
+
+        // Menambahkan kurung kurawal pada setiap elemen array
+        var variablesWithBraces = variables.map(function(variable) {
+            return '{' + variable + '}';
+        });
+
+        // Menggabungkan kembali array menjadi string
+        var result = variablesWithBraces.join(', ');
+
+        return result;
+    }
+    
+    function replaceVarMessage(data, variable) {
+        // Membuat variabel pengganti untuk CustomerName
+        var replacementMap = {
+            '{name}': 'CustomerName',
+        };
+        var arrayVariable = variable.split(',');
+        // Menemukan variabel yang ada dalam kurung kurawal
+        var matches = data.match(/\{([^}]+)\}/g);
+        // console.log(matches);
+
+        // Membuat mapping otomatis berdasarkan variabel yang ditemukan
+        if (matches) {
+            matches.forEach(function(match, index) {
+                if (!replacementMap[match]) {
+                    // replacementMap[] = '{var' + (index + 1) + '}';
+                    replacementMap[match] = arrayVariable[index];
+                }
+            });
+        }
+        // console.log('datakami',arrayVariable);
+
+        // console.log('datakami',replacementMap);
+
+        // Melakukan penggantian variabel
+        for (var key in replacementMap) {
+            if (replacementMap.hasOwnProperty(key)) {
+                var regex = new RegExp(key, "g");
+                data = data.replace(regex, replacementMap[key]);
+                // console.log('datakami',data);
+            }
+        }
+                // console.log('datakami',data);
+        // Mendapatkan hanya data variabel yang ada di dalam kurung kurawal
+        var onlyVariables = data.match(/\{([^}]+)\}/g);
+
+        return {
+            replacedData: data,
+            onlyVariables: onlyVariables
+        };
+    }
+</script>

@@ -136,5 +136,11 @@ $autoload['model'] = array(
                         'M_Login', 
                         'M_Company', 
                         'M_Site',
-                        'M_Setting'
+                        'M_Setting',
+                        'M_Connection',
+                        'Contact_Model',
+                        'Template_Model',
+                        'ContactGroup_Model',
+                        'Message_Model',
+                        'MessageContent_Model',
                     );

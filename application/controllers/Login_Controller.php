@@ -48,13 +48,13 @@ class Login_Controller extends CI_Controller {
 		// var_dump($data['dataUser']->Email);
 		if (!empty($data['dataUser'])) { // Ubah kondisi ini
 			$data_session = array(
+				'id' => $data['dataUser']->Id,
 				'name' => $data['dataUser']->UserName,
 				'status' => "login",
 				'host' => $host,
 				'role' => $data['dataUser']->RoleName,
 				'picture' => $data['dataUser']->JpegPicture, // Gunakan JpegPicture yang telah disetel sebelumnya
 			);
-
 			if (!empty($this->input->post("remember"))) {
 				setcookie("loginId", $email, time() + (10 * 365 * 24 * 60 * 60));
 				setcookie("loginPass", $password, time() + (10 * 365 * 24 * 60 * 60));
