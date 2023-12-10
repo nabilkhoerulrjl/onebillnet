@@ -37,6 +37,7 @@ class Message_Controller extends CI_Controller {
         //Get data contact sesuai input contact yang diberikan 
         $targets = array();
         $target = NULL;
+        $schedule = $sendDate;
         //Check input contact mana yang ada datanya
         if(isset($toInput)) {
             if (strpos($toInput, '|') !== false) {
@@ -165,10 +166,17 @@ class Message_Controller extends CI_Controller {
             $targets = $target;
         }
 
+        if($schedule == '' || $schedule == null){
+            $currentDateTime = new DateTime();
+            $timestamp = $currentDateTime->getTimestamp();
+            $schedule = $timestamp;
+        }
+
         $apiData = array(
             'targets' => $targets,//$toInput,
             'sendDate' => $sendDate,
             'message' => $message,
+            'schedule' => $schedule,
             'delay' => $delay,
             'countryCode' => '62', // Sesuaikan dengan kebutuhan
         );
@@ -293,10 +301,11 @@ class Message_Controller extends CI_Controller {
         );
 
         $message = $apiData['message'];
+        $scedule = $apiData['schedule'];
         $delay = $apiData['delay'];
         $countryCode = $apiData['countryCode'];
 
-        $response = $this->fonnte_api->sendMessage($apiData['targets'], $message, $delay, $countryCode);
+        $response = $this->fonnte_api->sendMessage($apiData['targets'], $message, $scedule, $delay, $countryCode);
 
         $jsonString = $response;
         $jsonData = json_decode($jsonString, true);

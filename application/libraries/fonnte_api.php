@@ -9,7 +9,7 @@ class fonnte_api {
         $this->CI = &get_instance();
     }
 
-    public function sendMessage($targets, $message, $delay = 2, $countryCode = '62') {
+    public function sendMessage($targets, $message, $delay = 2, $scedule, $countryCode = '62') {
         $curl = curl_init();
         
         $toTargets ="";
@@ -31,6 +31,7 @@ class fonnte_api {
             'target' => $toTargets,
             'message' => $message,
             'delay' => $delay,
+            'schedule' => $scedule,
             'countryCode' => $countryCode,
         );
     
