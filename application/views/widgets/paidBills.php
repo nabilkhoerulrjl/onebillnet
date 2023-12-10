@@ -6,7 +6,7 @@
             </div>
             <div class="col-8 text-right">
                 <span> Paid Bills </span>
-                <h2 class="font-bold"><?= $summaryData->TotalPaidCustomers ?></h2>
+                <h2 class="font-bold"><?= $summaryData->TPCustomers ?></h2>
             </div>
         </div>
     </div>

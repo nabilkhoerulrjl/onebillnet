@@ -20,6 +20,9 @@
 <div class="wrapper wrapper-content" style="border: 3px solid white">
     <div class="row justify-content-center">
         <div class="col-lg-11">
+            <div class="alert alert-warning hidden">
+                Kolom yang bertanda bintang merah wajib diinput
+            </div>
             <div class="ibox">
                 <div class="ibox-title">
                     <h5>Form Send Billing Reminder <small>to your customer.</small></h5>
@@ -167,9 +170,9 @@
                         <div class="row">
                             <div class="col-sm-12" style="padding-bottom:0px !important;">
                                 <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">Subject</label>
+                                    <label class="col-sm-2 col-form-label">Subject <span style="color:red;">*</span></label>
                                     <div class="col-sm-8 m-l-sm">
-                                        <input type="text" name="subject" placeholder="Fill Subject Message" class="form-control">
+                                        <input type="text" name="subject" placeholder="Fill Subject Message" class="form-control" require>
                                     </div>
                                 </div>
                             </div>
@@ -206,16 +209,16 @@
                         <div class="row input-message m-b-lg">
                             <div class="col-sm-12">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Message</label>
+                                    <label class="col-sm-2 col-form-label">Message <span style="color:red;">*</span></label>
                                     <div class="col-sm-8 m-l-sm">
                                         <div class="input-group w-100 flex-nowrap">
                                             <span class="input-group-text white-bg" id="basic-addon1">
                                             <i class="fa fa-comment"></i>
                                             </span>
-                                            <textarea name="message" id="message" class="form-control" cols="30" rows="10" placeholder="Write your message"></textarea>
+                                            <textarea name="message" id="message" class="form-control" cols="30" rows="10" placeholder="Write your message" require></textarea>
                                         </div>
-                                        <small class="text-italic">Usable variable for custom : {name}, {var1}, {var2},...</small>
-                                        <small id="buttonInfo" class="float-right cursor-pointer">Info</small>
+                                        <!-- <small class="text-italic">Usable variable for custom : {name}, {var1}, {var2},...</small>
+                                        <small id="buttonInfo" class="float-right cursor-pointer">Info</small> -->
                                     </div>
                                 </div>
                             </div>

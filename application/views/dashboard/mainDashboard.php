@@ -25,7 +25,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="flot-chart m-t-lg" style="height: 55px;">
-                        <h1 class="no-margins">Rp <?= $summaryData->TotalRevenueThisMonth ?></h1>
+                        <h1 class="no-margins">Rp <?= $summaryData->TRThisMonth ?></h1>
                             <!-- <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div> -->
                         <small>Total Revenue from Paid Bills in this month</small>
                     </div>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="flot-chart m-t-lg" style="height: 55px;">
-                        <h1 class="no-margins">Rp <?= $summaryData->TotalRevenueLast3Months ?></h1>
+                        <h1 class="no-margins">Rp <?= $summaryData->TRLast3Months ?></h1>
                             <!-- <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div> -->
                         <small>Total Revenue In The Last 3 Month</small>
                     </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="flot-chart m-t-lg" style="height: 55px;">
-                        <h1 class="no-margins">Rp <?= $summaryData->TotalNetProfitThisMonth ?></h1>
+                        <h1 class="no-margins">Rp <?= $summaryData->TNPThisMonth ?></h1>
                         <small>Total Net Profit from Paid Bills in this month</small>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="flot-chart m-t-lg" style="height: 55px;">
-                        <h1 class="no-margins">Rp <?= $summaryData->TotalGrossProfitThisMonth ?></h1>
+                        <h1 class="no-margins">Rp <?= $summaryData->TGPThisMonth ?></h1>
                         <small>Total Gross Profit from Paid Bills in this month</small>
                     </div>
                 </div>
