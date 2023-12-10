@@ -305,6 +305,16 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
+	require_once __DIR__ . '/vendor/autoload.php';
+	$environment = getenv('APPLICATION_ENV') ?: 'development';
+
+	// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+
+	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ".env.{$environment}");
+	use Dotenv\Dotenv;
+
+	$dotenv->load();
+	$dotenv->required(['APPLICATION_ENV', 'DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME']);
 
 /*
  * --------------------------------------------------------------------

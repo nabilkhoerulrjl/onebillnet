@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'onebillnet_db',
+    'hostname' => getenv('DB_HOST'),  // Menggunakan getenv() untuk mendapatkan nilai dari variabel lingkungan
+    'username' => getenv('DB_USER'),
+    'password' => getenv('DB_PASS'),
+    'database' => getenv('DB_NAME'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
