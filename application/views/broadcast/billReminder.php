@@ -16,9 +16,64 @@
     .cursor-pointer {
         cursor: pointer;
     }
+    /* .spiner-example {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(32, 33, 36, 0.6);
+        z-index: 100;
+        align-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    } */
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .loading-overlay p {
+        margin-top: 10px;
+    }
+
+    .wrapper {
+        position: relative;
+    }
+
+    .text-alert{
+        color:red;
+        font-weight: bold;
+        font-size: 3vh;
+    }
 </style>
-<div class="wrapper wrapper-content" style="border: 3px solid white">
+    <!-- Loading Overlay -->
+
+<div class="wrapper wrapper-content" style="border: 3px solid white;">
+    <div id="wrapper-popup"></div>
+    <div class="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
     <div class="row justify-content-center">
+
         <div class="col-lg-11">
             <div class="alert alert-warning hidden">
                 Kolom yang bertanda bintang merah wajib diinput
@@ -99,7 +154,7 @@
                         <div class="row to-input">
                             <div class="col-sm-12" style="padding-bottom:0px !important;">
                                 <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
                                     <div class="col-sm-8 m-l-sm">
                                         <input class="tagsinput form-control " name="toInput" type="text" value="" placeholder="Insert Number e.g 081xx" style="display: none;">
                                     </div>
@@ -109,7 +164,7 @@
                         <div class="row to-contact hidden">
                             <div class="col-sm-12" style="padding-bottom:0px !important;">
                                 <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
                                     <div class="col-sm-8 m-l-sm">
                                         <select class="form-control multiple-select" name="toContact" id="toContact" multiple="multiple" style="width: 100%">
                                             <!-- <option value="AL">Alabama</option>
@@ -128,7 +183,7 @@
                         <div class="row to-group-contact hidden">
                             <div class="col-sm-12" style="padding-bottom:0px !important;">
                                 <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To</label>
+                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
                                     <div class="col-sm-8 m-l-sm">
                                     <select class="form-control multiple-select" name="toGroupContact" id="toContactGroup" multiple="multiple" style="width: 100%">
                                         <!-- <option value="AL">Alabama</option>
@@ -405,15 +460,21 @@
             $('.to-input').removeClass('hidden');
             $('.to-contact').addClass('hidden');
             $('.to-group-contact').addClass('hidden');
+            $('.select2-selection__rendered').html('');
             // $('.to-group-contact').hide();
         } else if (selectedValue === 'Contact') {
+            $('.tagsinput').tagsinput('removeAll');
             $('.to-input').addClass('hidden');
             $('.to-contact').removeClass('hidden');
             $('.to-group-contact').addClass('hidden');
+            $('.select2-selection__rendered').html('');
+            
         } else if (selectedValue === 'GroupContact') {
+            $('.tagsinput').tagsinput('removeAll');
             $('.to-contact').addClass('hidden');
             $('.to-input').addClass('hidden');
             $('.to-group-contact').removeClass('hidden');
+            $('.select2-selection__rendered').html('');
         }
     }
 
@@ -456,23 +517,49 @@
         // console.log(convertedVariable.replacedData);
         // console.log(formData);
         // console.log(base_url);
+        var toMessage;
+        if(toInput !== ''){
+            toMessage = toInput;
+        }else if(toContact !== ''){
+            toMessage = toContact;
+        }else if(toGroupContact !== ''){
+            toMessage = toGroupContact;
+        }
+        if(subject !== '' && message !== '' && toMessage.length !== 0){
+            $('.loading-overlay').show();
+            // Kirim data menggunakan Ajax
+            $.ajax({
+                type: 'POST',
+                url: base_url+'Message_Controller/sendMessage', // Ganti dengan URL controller Anda
+                data: formData,
+                success: function (response) {
+                    // Handle the response from the controller
+                    $('.loading-overlay').hide();
+                    console.log(response);
 
-        // Kirim data menggunakan Ajax
-        $.ajax({
-            type: 'POST',
-            url: base_url+'Message_Controller/sendMessage', // Ganti dengan URL controller Anda
-            data: formData,
-            success: function (response) {
-                // Handle the response from the controller
-                console.log(response);
-
-                // Jika Anda ingin melakukan sesuatu setelah berhasil mengirim data, tambahkan kode di sini
-            },
-            error: function (error) {
-                // Handle errors
-                console.log('Error:', error);
-            }
-        });
+                    // Jika Anda ingin melakukan sesuatu setelah berhasil mengirim data, tambahkan kode di sini
+                },
+                error: function (error) {
+                    // Handle errors
+                    console.log('Error:', error);
+                }
+            });
+        }else{
+            var htmlAlert = `<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body text-alert"><center>Please fill in all required fields!</center></div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Okey</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+            $('#wrapper-popup').html(htmlAlert);
+            $("#alertModal").modal("show");
+        }
+        
         
     });
 

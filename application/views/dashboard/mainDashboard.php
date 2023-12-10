@@ -515,12 +515,12 @@
                     </div>
                 </div>
             </div>
-        </div> -->
-                              <!-- <td>Tellus Ltd</td>
+        </div> 
+                               <td>Tellus Ltd</td>
                                 <td><span class="pie">4,9</span></td>
                                 <td>18%</td>
                                 <td>Jul 22, 2013</td>
-                                <td><a href="#"><i class="fa fa-check text-navy"></i></a></td> -->
+                                <td><a href="#"><i class="fa fa-check text-navy"></i></a></td>
                             </tr>
                             </tbody>
                         </table>
