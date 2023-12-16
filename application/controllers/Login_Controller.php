@@ -86,7 +86,7 @@ class Login_Controller extends CI_Controller {
 		$where = array(
 			'Id' => $siteId,
 		);
-        $company = $this->M_Site->siteName("site",$where);
+        $company = $this->M_Site->siteName("Site",$where);
         //$query = $this->db->get('site');
 		//$arrays = $site->result();
         $companyName = null;
