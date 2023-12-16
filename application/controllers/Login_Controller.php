@@ -72,7 +72,7 @@ class Login_Controller extends CI_Controller {
 				'owner' => 'Nabil@ Home Code Project',//$settingCopyrightOwner,
 				'year' => '2002',//$settingCopyrightYear,
 			);
-			$this->load->view('Login/index', $data);
+			$this->load->view('login/index', $data);
 		}
 	}
 
