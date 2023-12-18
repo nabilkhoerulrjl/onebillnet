@@ -35,4 +35,5 @@ git_credential_helper="!f() { echo \"username=${GITHUB_USERNAME}\"; echo \"passw
 git config --global credential.helper "$git_credential_helper"
 
 # Pull latest changes from GitHub repository
+# source <(/mnt/c/Users/nabil/AppData/Roaming/npm/dotenv -e .env."$ACTIVE_BRANCH")
 cd "$DEPLOY_DIR" && git pull origin "$ACTIVE_BRANCH"
