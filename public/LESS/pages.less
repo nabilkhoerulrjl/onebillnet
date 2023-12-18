@@ -285,14 +285,12 @@ ul.notes li div {
   -webkit-transform: rotate(-6deg);
   -o-transform: rotate(-6deg);
   -moz-transform: rotate(-6deg);
-  -ms-transform: rotate(-6deg);
 }
 
 ul.notes li:nth-child(even) div {
   -o-transform: rotate(4deg);
   -webkit-transform: rotate(4deg);
   -moz-transform: rotate(4deg);
-  -ms-transform: rotate(4deg);
   position: relative;
   top: 5px;
 }
@@ -301,7 +299,6 @@ ul.notes li:nth-child(3n) div {
   -o-transform: rotate(-3deg);
   -webkit-transform: rotate(-3deg);
   -moz-transform: rotate(-3deg);
-  -ms-transform: rotate(-3deg);
   position: relative;
   top: -5px;
 }
@@ -310,7 +307,6 @@ ul.notes li:nth-child(5n) div {
   -o-transform: rotate(5deg);
   -webkit-transform: rotate(5deg);
   -moz-transform: rotate(5deg);
-  -ms-transform: rotate(5deg);
   position: relative;
   top: -10px;
 }
@@ -320,7 +316,6 @@ ul.notes li div:hover, ul.notes li div:focus {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -o-transform: scale(1.1);
-  -ms-transform: scale(1.1);
   position: relative;
   z-index: 5;
 }
@@ -542,11 +537,11 @@ a.compose-mail {
   overflow: hidden;
 }
 
-.feed-element > a img {
+.feed-element > .pull-left {
   margin-right: 10px;
 }
 
-.feed-element img.rounded-circle, .dropdown-messages-box img.rounded-circle {
+.feed-element img.img-circle, .dropdown-messages-box img.img-circle {
   width: 38px;
   height: 38px;
 }
@@ -568,10 +563,6 @@ a.compose-mail {
 .feed-element .photos {
   margin: 10px 0;
 
-}
-
-.dropdown-messages-box .dropdown-item:focus, .dropdown-messages-box .dropdown-item:hover {
-  background-color: inherit;
 }
 
 .feed-photo {
@@ -757,7 +748,7 @@ dd.project-people {
 }
 
 .chat-avatar {
-  width: 36px;
+  white: 36px;
   height: 36px;
   float: left;
   margin-right: 10px;
@@ -958,7 +949,7 @@ dd.project-people {
 .article h1 {
   font-size: 48px;
   font-weight: 700;
-  color: @nav-bg;
+  color: #2F4050;
 }
 
 .article p {
@@ -1004,7 +995,7 @@ table.issue-tracker tbody tr td {
   margin: 10px 0;
 }
 
-.team-members img.rounded-circle {
+.team-members img.img-circle {
   width: 42px;
   height: 42px;
   margin-bottom: 5px;

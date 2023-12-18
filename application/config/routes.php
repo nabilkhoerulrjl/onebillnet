@@ -57,6 +57,7 @@ $route['setting'] = 'setting/Company_Controller';
 $route['message'] = 'Message_Controller';
 $route['fonnte'] = 'Fonnte_Controller';
 $route['contact'] = 'contactcontroller';
+$route['customer'] = 'customercontroller';
 $route['template'] = 'templatecontroller';
 $route['webhook'] = 'webhookcontroller/receive';
 $route['404_override'] = '';

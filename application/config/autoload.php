@@ -143,4 +143,5 @@ $autoload['model'] = array(
                         'ContactGroup_Model',
                         'Message_Model',
                         'MessageContent_Model',
+                        'Customer_Model',
                     );

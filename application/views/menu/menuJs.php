@@ -7,8 +7,8 @@
     openTabGeneral('winbox_dashboard','Winbox Dashboard', 'fa-gauge', 'dashboard/WinboxDash_Controller/index', 'Get' );
   }
 
-  function addTabtListCustomers() {
-    openTabGeneral('list_customer','List Customers', 'fa-users', 'customer/ListCustomer_Controller/index', 'Get' );
+  function addTabListCustomers() {
+    openTabGeneral('list_customer','List Customers', 'fa-users', 'customer/CustomerController/index', 'Get' );
   }
 
   function addTabSetting() {

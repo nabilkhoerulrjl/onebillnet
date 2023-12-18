@@ -1,3 +1,12 @@
+/*
+ *
+ *   INSPINIA Landing Page - Responsive Admin Theme
+ *   Copyright 2014 Webapplayers.com
+ *
+*/
+/* GLOBAL STYLES
+-------------------------------------------------- */
+
 /* PACE PLUGIN
 -------------------------------------------------- */
 .landing-page.pace .pace-progress {
@@ -25,14 +34,6 @@ body.landing-page {
 }
 
 .landing-page {
-
-  button:focus {
-    outline: 0;
-  }
-
-  .container {
-    overflow: hidden;
-  }
 
   span.navy {
     color: @navy;
@@ -67,10 +68,6 @@ body.landing-page {
   }
   /* CUSTOMIZE THE NAVBAR
   -------------------------------------------------- */
-  .navbar {
-    padding: 0 1rem;
-  }
-
   .navbar-wrapper {
     position: fixed;
     top: 0;
@@ -149,7 +146,6 @@ body.landing-page {
     border-radius: 0 0 5px 5px;
     font-weight: 700;
     transition: all 0.3s ease-in-out 0s;
-    margin-top: -16px;
   }
   .navbar-scroll.navbar-default .nav li a {
     color: @text-color;
@@ -159,13 +155,9 @@ body.landing-page {
   }
   .navbar-wrapper .navbar.navbar-scroll {
     padding-top: 0;
-    padding-bottom: 5px;
+    padding-bottom: 0;
     border-bottom: 1px solid @border-color;
     border-radius: 0;
-  }
-
-  .nav.navbar-right {
-    flex-direction: row;
   }
 
   .nav > li.active {
@@ -180,8 +172,8 @@ body.landing-page {
     padding: 20px 10px;
   }
 
-  .navbar-default .navbar-nav > li .nav-link.active,
-  .navbar-default .navbar-nav > li .nav-link.active:hover {
+  .navbar-default .navbar-nav > .active > a,
+  .navbar-default .navbar-nav > .active > a:hover {
     border-top: 6px solid @navy;
   }
 
@@ -194,7 +186,7 @@ body.landing-page {
   }
 
   .navbar.navbar-scroll .navbar-brand {
-    margin-top: 5px;
+    margin-top: 15px;
     border-radius: 5px;
     font-size: 12px;
     padding: 10px;
@@ -264,7 +256,6 @@ body.landing-page {
   }
   .carousel-inner .container {
     position: relative;
-    overflow: visible;
   }
   .carousel-inner {
     overflow: visible;
@@ -444,7 +435,6 @@ body.landing-page {
   .comments-avatar {
     margin-top: 25px;
     margin-left: 22px;
-    margin-bottom: 25px;
   }
 
   .comments-avatar .commens-name {
@@ -538,7 +528,7 @@ body.landing-page {
   @media (min-width: 768px) {
     /* Navbar positioning foo */
     .navbar-wrapper {
-      //margin-top: 0;
+      margin-top: 20px;
     }
 
     .navbar-wrapper .container {
@@ -614,7 +604,7 @@ body.landing-page {
     }
 
     .nav > li > a {
-      padding: 10px 10px 15px 10px;
+      padding: 25px 10px 15px 10px;
     }
 
     .navbar-nav > li > a {
@@ -622,7 +612,7 @@ body.landing-page {
     }
 
     .navbar .navbar-brand {
-      margin-top: 5px;
+      margin-top: 6px;
       border-radius: 5px;
       font-size: 12px;
       padding: 10px;
@@ -659,19 +649,6 @@ body.landing-page {
       background-color: #ffffff;
       padding: 9px 10px;
       border: none;
-    }
-
-    .nav.navbar-right {
-      flex-direction: column;
-    }
-  }
-
-  .navbar-toggle {
-    color: #ddd;
-    float: right;
-
-    i {
-      font-size: 24px;
     }
   }
 

@@ -19,10 +19,6 @@ body.md-skin {
     font-family: 'Roboto';
   }
 
-  ul.nav-second-level {
-    background-color: inherit;
-  }
-
   .font-bold {
     font-weight: 500;
   }
@@ -74,7 +70,7 @@ body.md-skin {
   }
 
   .welcome-message {
-    color: #ffffff !important;
+    color: #ffffff;
     font-weight: 300;
   }
 
@@ -149,10 +145,6 @@ body.md-skin {
     padding: 7px 10px 7px 52px;
   }
 
-  .nav-third-level li a {
-    padding-left: 62px;
-  }
-
   .navbar-top-links li a {
     padding: 20px 10px;
     min-height: 50px;
@@ -176,7 +168,7 @@ body.md-skin {
   }
 
   .nav-header .text-muted {
-    color: #ffffff !important;
+    color: #ffffff;
   }
 
   .navbar-form-custom .form-control {
@@ -365,23 +357,27 @@ body.md-skin {
     background: #ffffff;
   }
 
-  &.fixed-nav #side-menu {
-    background-color: #fff;
-  }
-
   &.fixed-nav #wrapper.top-navigation #page-wrapper {
     margin-top: 0;
+  }
+
+  &.fixed-sidebar.mini-navbar .navbar-static-side {
+    width: 0;
   }
 
   &.fixed-sidebar.mini-navbar #page-wrapper {
     margin: 0 0 0 0;
   }
 
+  &.body-small.fixed-sidebar.mini-navbar #page-wrapper {
+    margin: 0 0 0 0;
+  }
 
   &.body-small.fixed-sidebar.mini-navbar .navbar-static-side {
     width: @sidebar-width;
     background-color: #ffffff;
   }
+
 
   &.boxed-layout #wrapper {
     background-color: #ffffff;
