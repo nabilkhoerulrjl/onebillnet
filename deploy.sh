@@ -45,12 +45,13 @@ ssh $(echo "$REMOTE_USER" | tr -d '\r')@$(echo "$REMOTE_HOST" | tr -d '\r') "cd 
 echo "Success login to server..."
 
 # Set up Git credentials for HTTPS
-echo "Setup..."
+echo "Setup git..."
 git_credential_helper="!f() { echo \"username=${GITHUB_USERNAME}\"; echo \"password=${GITHUB_TOKEN}\"; }; f"
 git config --global credential.helper "$git_credential_helper"
 
 echo "Pull latest code..."
-sudo git pull origin "$ACTIVE_BRANCH" || { echo "Gagal pull latest code."; exit 1; }
+ssh $(echo $REMOTE_USER | tr -d '\r')@$(echo $REMOTE_HOST | tr -d '\r') "cd $(echo $DEPLOY_PATH | tr -d '\r') && git pull origin master"
+#ssh $(echo "$REMOTE_USER" | tr -d '\r')@$(echo "$REMOTE_HOST" | tr -d '\r') cd $(echo "$DEPLOY_PATH" | tr -d '\r') && sudo git pull origin "$ACTIVE_BRANCH" || { echo "Gagal pull latest code."; exit 1; }
 echo "Success pull latest code..."
 
 
