@@ -8,7 +8,7 @@
   }
 
   function addTabListCustomers() {
-    openTabGeneral('list_customer','List Customers', 'fa-users', 'customer/CustomerController/index', 'Get' );
+    openTabGeneral('list_customer','List Customers', 'fa-users', 'CustomerController/index', 'Get' );
   }
 
   function addTabSetting() {
