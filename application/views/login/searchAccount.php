@@ -1,167 +1,82 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
     <head>
+        <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 11]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+        <!-- Meta -->
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="author" content="Nabil Khoerul Rijal">
-        <link rel="icon" href="<?= base_url() ?>public/img/Indihome.jpg">
-        <title>Search Account</title>
-        <!-- Custom fonts for this template-->
-        <link href="<?= base_url()?>public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-        <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-        <!-- Custom styles for this template-->
-        <!-- <link href="<?= base_url()?>public/css/sb-admin-2.min.css" rel="stylesheet"> -->
-        <link href="<?= base_url()?>public/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<?= base_url()?>public/font-awesome/css/font-awesome.css" rel="stylesheet">
-        <link href="<?= base_url()?>public/css/animate.css" rel="stylesheet">
-        <link href="<?= base_url()?>public/css/style.css" rel="stylesheet">
+        <title><?= $title; ?></title>
+        <!-- Favicon icon -->
+        <link rel="icon" href="<?= base_url() ?>/public/img/Indihome.jpg" type="image/x-icon">
+        <!-- vendor css -->
+        <link rel="stylesheet" href="<?= base_url() ?>/public/css/style.css">
         <style>
-        /*No media query for `xs` since this is the default in Bootstrap */
-            @media (max-width: 575.98px) {
-                .custom-control-label {
-                    margin-top: 5px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.7em;
-                }
-            }
-
-            /* Small devices (landscape phones, 576px and up) */
-            @media (min-width: 576px) {
-                .custom-control-label {
-                    margin-top: 5px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.7em;
-                }
-            }
-
-            /* Medium devices (tablets, 768px and up) */
-            @media (min-width: 768px) {
-                .custom-control-label {
-                    margin-top: 5px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.7em;
-                }
-            }
-
-            /* Large devices (desktops, 992px and up) */
-            @media (min-width: 992px) {
-                .custom-control-label {
-                    margin-top: 5px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.8em;
-                }
-            }
-
-            /* X-Large devices (large desktops, 1200px and up) */
-            @media (min-width: 1200px) {
-                .custom-control-label {
-                    margin-top: 5px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.8em;
-                }
-            }
-
-            /* XX-Large devices (larger desktops, 1400px and up) */
-            @media (min-width: 1400px) {
-                .custom-control-label {
-                    margin-top: 6px;
-                }
-                .toggle-password {
-                    right: 5.5em;
-                    bottom: 16.8em;
-                }
-            }
-
             .cursor-pointer {
                 cursor: pointer;
             }
 
-            .display-flex {
-                display:flex;
+            .font-white {
+                color: white;
             }
 
-            .justify-content-center {
-                justify-content: center;
-            }
-
-            .align-items-center {
-                align-items: center;
-            }
-
-            .position-absolute: {
-                position: absolute;
+            .font-sm {
+                font-size: small;
             }
         </style>
     </head>
-
-    <body class="bg-gradient-primary display-flex justify-content-center align-items-center">
-        <div class="container">
-            <!-- Outer Row -->
-            <div class="row display-flex justify-content-center">
-                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6 white-bg">
-                    <div class="card o-hidden border-0 shadow-lg my-5">
-                        <div class="card-body p-0">
-                            <!-- Nested Row within Card Body -->
-                            <div class="row">
-                                <div class="col-lg-12 p-xl">
-                                    <div class="p-5">
-                                        <div class="text-center justify-content-center align-items-center" style="display: flex;flex-wrap: nowrap;
-                                        flex-direction: row;align-items: flex-center;align-content: space-around;justify-content: center; margin-bottom:10px;">
-                                            <h1 class="h4 text-gray-900 mb-4 company-title">Reset Password</h1>
-                                        </div>
-                                        <form class="user" method="POST" action="<?= base_url()?>Login_Controller/forgotPassword">
-                                            <?php if(isset($alertMessageDanger)) : ?> 
-                                            <div class="alert alert-danger">
-                                                <?= $alertMessageDanger; ?>
-                                            </div>
-                                            <?php endif; ?> 
-                                            <div class="form-group">
-                                                <input type="text" class="form-control form-control-user"
-                                                    id="fieldInputUsername" aria-describedby="emailHelp"
-                                                    placeholder="Enter Email" name="Email"
-                                                    value="" required>
-                                            </div>
-                                            <button class="btn btn-primary btn-user btn-block" style="margin-bottom:1em">
-                                                Search Account
-                                            </button>
-                                            <a href="<?= base_url() ?>Login_Controller/index" >
-                                                <small>Back to Login Menu</small>
-                                            </a>
-                                            <hr>
-                                            <!-- <p class="m-t text-center"> <small><?= $owner; ?> &copy; <?= $year; ?></small> </p> -->
-                                        </form>
-                                    </div>
+    <body>
+        <!-- [ auth-signin ] start -->
+        <div class="auth-wrapper">
+            <div class="auth-content text-center">
+                <div class="card borderless">
+                    <div class="row align-items-center ">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <div class="text-center d-flex justify-content-center align-items-center flex-column">
+                                    <h4 class="mb-1 f-w-400">Search Account</h4>
                                 </div>
+                                <hr>
+                                <?php if(isset($alertMessageDanger)) : ?> 
+                                <div class="alert alert-danger">
+                                    <?= $alertMessageDanger; ?>
+                                </div>
+                                <?php endif; ?> 
+                                <form class="user" method="POST" action="<?= base_url()?>Login_Controller/forgotPassword">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user"
+                                            id="fieldInputUsername" aria-describedby="emailHelp"
+                                            placeholder="Enter Email" name="Email"
+                                            value="" required>
+                                    </div>
+                                    <button class="btn btn-block btn-primary mb-4">Search Account</button>
+                                </form>
+                                <a href="<?= base_url() ?>Login_Controller/index" >
+                                    <small>Back to Login Menu</small>
+                                </a>
+                                <hr>
+                                <!-- <p class="mb-0 text-muted">Don’t have an account? <a href="auth-signup.html" class="f-w-400">Signup</a></p> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="autorize position-absolute" style="bottom:0px;right:0px;padding:10px;">
+                <h3 class="font-white font-sm">Powered by OnebillNet</h3>
+            </div>
         </div>
-
-        <!-- Mainly scripts -->
-        <script src="<?= base_url()?>public/js/jquery-3.1.1.min.js"></script>
-        <script src="<?= base_url()?>public/js/popper.min.js"></script>
-        <script src="<?= base_url()?>public/js/bootstrap.js"></script>
-        <script>
-            $(document).ready(function () {
-                
-            });
-        </script>
+        <!-- [ auth-signin ] end -->
+        <!-- Required Js -->
+        <script src="<?= base_url() ?>/public/js/vendor-all.min.js"></script>
+        <script src="<?= base_url() ?>/public/js/plugins/bootstrap.min.js"></script>
+        <script src="<?= base_url() ?>/public/js/pcoded.min.js"></script>
     </body>
-
 </html>
