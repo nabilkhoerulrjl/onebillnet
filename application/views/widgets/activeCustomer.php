@@ -1,6 +1,11 @@
+<style>
+    .display-flex {
+        display: flex;
+    }
+</style>
 <div class="col-lg-3">
     <div class="widget style1 navy-bg">
-        <div class="row">
+        <div class="row display-flex">
             <div class="col-4">
                 <i class="fa fa-user fa-5x"></i>
             </div>

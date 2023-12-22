@@ -3,6 +3,11 @@
     <head>
         <?php $this->load->view("admin/_partials/head.php") ?>
     </head>
+    <style>
+        .no-padding {
+            padding: none;
+        }
+    </style>
     <body>
         <div id="wrapper">
             <nav class="navbar-default navbar-static-side" role="navigation">
@@ -19,7 +24,7 @@
                 </div>
                 <div class="row border-bottom">
                     
-                    <div class="col-lg-12 p-0">
+                    <div class="col-lg-12 no-padding">
                         <div class="row mt-1">
                             <div class="col-lg-12">
                                 <div class="tabs-container">

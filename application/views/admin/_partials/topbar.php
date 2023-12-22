@@ -1,6 +1,6 @@
   <!-- Include jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/tZ1iU9vX0Y89s3PJ6uZ4LIl/bktcQf5T/Ct8Q=" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="<?= base_url()?>public/js/jquery-2.1.1.js"></script>
+
 <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
@@ -32,14 +32,10 @@
 
 <!-- End of Topbar -->
 <script>
-    $(document).ready(function () {
-            // Handle click event on logout button
-            
-        });
-        $("#logoutBtn").on("click", function () {
-                // Show the logout modal
-                $("#logoutModal").modal("show");
-            });
+    $("#logoutBtn").on("click", function () {
+        // Show the logout modal
+        $("#logoutModal").modal("show");
+    });
     function addTabSettings() {
         var agent_ts = '{{agent_ts}}';
 
