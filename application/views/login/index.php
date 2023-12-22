@@ -26,7 +26,7 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }
@@ -37,7 +37,7 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }
@@ -48,7 +48,7 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }
@@ -59,7 +59,7 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }
@@ -70,7 +70,7 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }
@@ -81,7 +81,7 @@
                     margin-top: 6px;
                 }
                 .toggle-password {
-                    right: ;
+                    right: 3.8em;
                     bottom: 15.6em;
                 }
             }

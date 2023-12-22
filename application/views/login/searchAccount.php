@@ -89,22 +89,38 @@
             .cursor-pointer {
                 cursor: pointer;
             }
+
+            .display-flex {
+                display:flex;
+            }
+
+            .justify-content-center {
+                justify-content: center;
+            }
+
+            .align-items-center {
+                align-items: center;
+            }
+
+            .position-absolute: {
+                position: absolute;
+            }
         </style>
     </head>
 
-    <body class="bg-gradient-primary d-flex justify-content-center align-items-center">
+    <body class="bg-gradient-primary display-flex justify-content-center align-items-center">
         <div class="container">
             <!-- Outer Row -->
-            <div class="row justify-content-center">
-                <div class="col-xl-5 col-lg-5 col-md-5">
+            <div class="row display-flex justify-content-center">
+                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6 white-bg">
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card-body p-0">
                             <!-- Nested Row within Card Body -->
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 p-xl">
                                     <div class="p-5">
-                                        <div class="text-center" style="display: flex;flex-wrap: nowrap;
-                                        flex-direction: row;align-items: flex-start;align-content: space-around;justify-content: center;">
+                                        <div class="text-center justify-content-center align-items-center" style="display: flex;flex-wrap: nowrap;
+                                        flex-direction: row;align-items: flex-center;align-content: space-around;justify-content: center; margin-bottom:10px;">
                                             <h1 class="h4 text-gray-900 mb-4 company-title">Reset Password</h1>
                                         </div>
                                         <form class="user" method="POST" action="<?= base_url()?>Login_Controller/forgotPassword">
@@ -116,7 +132,7 @@
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user"
                                                     id="fieldInputUsername" aria-describedby="emailHelp"
-                                                    placeholder="Enter Username" name="Email"
+                                                    placeholder="Enter Email" name="Email"
                                                     value="" required>
                                             </div>
                                             <button class="btn btn-primary btn-user btn-block" style="margin-bottom:1em">

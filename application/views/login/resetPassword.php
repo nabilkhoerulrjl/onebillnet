@@ -26,8 +26,8 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.4em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -37,8 +37,8 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.4em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -48,8 +48,8 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.4em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -59,8 +59,8 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.3em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -70,8 +70,8 @@
                     margin-top: 5px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.4em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -81,8 +81,8 @@
                     margin-top: 6px;
                 }
                 .toggle-password {
-                    right: 5.5em;
-                    bottom: 9.4em;
+                    right: 4em;
+                    bottom: 8.8em;
                 }
             }
 
@@ -90,25 +90,37 @@
                 cursor: pointer;
             }
 
-            .hidden {
-                display : none;
+            .display-flex {
+                display:flex;
+            }
+
+            .justify-content-center {
+                justify-content: center;
+            }
+
+            .align-items-center {
+                align-items: center;
+            }
+
+            .position-absolute: {
+                position: absolute;
             }
         </style>
     </head>
 
-    <body class="bg-gradient-primary d-flex justify-content-center align-items-center">
+    <body class="bg-gradient-primary display-flex justify-content-center align-items-center">
         <div class="container">
             <!-- Outer Row -->
-            <div class="row justify-content-center">
-                <div class="col-xl-5 col-lg-5 col-md-5">
+            <div class="row display-flex justify-content-center">
+                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6 white-bg">
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card-body p-0">
                             <!-- Nested Row within Card Body -->
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 p-xl">
                                     <div class="p-5">
-                                        <div class="text-center" style="display: flex;flex-wrap: nowrap;
-                                        flex-direction: row;align-items: flex-start;align-content: space-around;justify-content: center;">
+                                        <div class="text-center justify-content-center align-items-center" style="display: flex;flex-wrap: nowrap;
+                                        flex-direction: row;align-items: flex-center;align-content: space-around;justify-content: center; margin-bottom:10px;">
                                             <h1 class="h4 text-gray-900 mb-4 company-title">Reset Password</h1>
                                         </div>
                                         <form class="user" method="POST" action="<?= base_url()?>Login_Controller/resetPassword">
@@ -139,7 +151,7 @@
                                                     id="fieldInputPassword" aria-describedby="emailHelp"
                                                     placeholder="New Password" name="NewPassword"
                                                     value="" required>
-                                                    <i toggle="#fieldInputPassword" class="fa fa-eye position-absolute toggle-password cursor-pointer"></i>
+                                                    <i toggle="#fieldInputPassword" class="fa fa-eye position-absolute toggle-password cursor-pointer"  style="position: absolute;"></i>
                                             </div>
                                             
                                             <!-- <div class="form-group">
