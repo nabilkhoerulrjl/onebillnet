@@ -1,5 +1,17 @@
+<style>
+  /* CSS untuk warna teks pada tab yang aktif dan tidak aktif */
+.nav-tabs a.active-tab {
+    color: #1abc9c !important;
+}
+
+.nav-tabs a {
+    color: #495057 !important;
+}
+</style>
+
 <script>
   function addTabDashboard() {
+    alert('asdasdasd');
     openTabGeneral('main_dashboard','Main Dashboard', 'fa-gauge', 'dashboard/MainDash_Controller/index', 'Get' );
   }
 
@@ -23,90 +35,97 @@
     openTabGeneral('bill_reminder','Bill Reminder', 'fa-message', 'broadcast/BillReminder_Controller/Index', 'Get' );
   }
 
-        
+  function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){
+      //showHideMenu();
+      var tabName = 'Tab Name Prototipe';//$(".nav-menu-custom > li.on > a").text();
+      var tabIcon = Icon;
+      breadcumbsValue(tabName,TittleText);
+      //var countTab = $("li[id*='tab-open']").length;
+      //var maxTab = '{{maxTab}}'
 
-        function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){
-            //showHideMenu();
-            var tabName = 'Tab Name Prototipe';//$(".nav-menu-custom > li.on > a").text();
-            var tabIcon = Icon;
-            breadcumbsValue(tabName,TittleText);
-            //var countTab = $("li[id*='tab-open']").length;
-            //var maxTab = '{{maxTab}}'
+      /*
+      if(countTab > maxTab-1){
+      max_tab_toast_show();
+      return false
+      
+      }
+  */
+      if (UrlTarget.charAt(0) !== '/') UrlTarget = '<?= base_url(); ?>'+UrlTarget;
 
-            /*
-            if(countTab > maxTab-1){
-            max_tab_toast_show();
-            return false
-            
-            }
-*/
-            if (UrlTarget.charAt(0) !== '/') UrlTarget = '<?= base_url(); ?>'+UrlTarget;
+      if (typeof(form_data) == 'undefined') form_data = null;
 
-            if (typeof(form_data) == 'undefined') form_data = null;
+      if (!($('#'+NameID).length)){
+      $('#pageTab').append('<li><a class="nav-link text-uppercase" data-toggle="tab" href="#'+NameID+'" tabname="'+tabName+'" TittleText="'+TittleText+'"><i class="fa '+tabIcon+'"></i> '+TittleText+' &nbsp;&nbsp;<button class="close" type="button" onClick="removeTab()" style="position: relative;font-size: 17px;top: 1px;bottom: 5px;left: 0.5em;"><i class="fa fa-times fa-xs"></i></button></a></li>');
+      $('#pageTabContent').append('<div class=\"tab-pane\" id=\"'+NameID+'\"></div>');
+      $('#'+NameID+'').append('<div class=\"loadingTab'+NameID+'\" style=\"z-index:1011;position:absolute;padding:10px;margin:0px;width:15%;top:317px;left:43%;text-align:center;color:#555555;border:0px;background-color:#ddd; cursor: wait; font-weight: 600;display:none;\"</h3><i class="fa fa-refresh fa-spin"></i> Loading...</h3></div>');
 
-            if (!($('#'+NameID).length)){
-            $('#pageTab').append('<li><a class="nav-link" data-toggle="tab" href="#'+NameID+'" tabname="'+tabName+'" TittleText="'+TittleText+'"><i class="fa '+tabIcon+'"></i> '+TittleText+' &nbsp;&nbsp;<button class="close" type="button" onClick="removeTab()" style="position: relative;font-size: 17px;top: 1px;bottom: 5px;left: 0.5em;"><i class="fa fa-times"></i></button></a></li>');
-            $('#pageTabContent').append('<div class=\"tab-pane\" id=\"'+NameID+'\"></div>');
-            $('#'+NameID+'').append('<div class=\"loadingTab'+NameID+'\" style=\"z-index:1011;position:absolute;padding:10px;margin:0px;width:15%;top:317px;left:43%;text-align:center;color:#555555;border:0px;background-color:#ddd; cursor: wait; font-weight: 600;display:none;\"</h3><i class="fa fa-refresh fa-spin"></i> Loading...</h3></div>');
+      $.ajax({
+          url: UrlTarget,
+          type: MethodAction,
+          dataType: "html",
+          data	: form_data,
+          cache: false,
+          beforeSend: function() {
+                  //blockUI('#pageTabContent');
+                  $('div .loadingTab'+NameID+'').show();
+              },
+          success: function(data) {
+          securityCheck(data);
+          $('#'+NameID).append(data);
+          //$('.blockUI').hide();
+          $('div .loadingTab'+NameID+'').remove();
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+          //alert(xhr.status);
+          //alert(thrownError);
+          }
+      })
+      $('.nav-tabs a[href="#'+NameID+'"]').tab('show');
+      }
+      else
+      {
+      $('.nav-tabs a[href="#'+NameID+'"]').tab('show');
+      }
+      //openTabGeneral('itemtab2','Dashboard','ManualTicket', 'Get' );
+  }
 
-            $.ajax({
-                url: UrlTarget,
-                type: MethodAction,
-                dataType: "html",
-                data	: form_data,
-                cache: false,
-                beforeSend: function() {
-                        //blockUI('#pageTabContent');
-                        $('div .loadingTab'+NameID+'').show();
-                    },
-                success: function(data) {
-                securityCheck(data);
-                $('#'+NameID).append(data);
-                //$('.blockUI').hide();
-                $('div .loadingTab'+NameID+'').remove();
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                //alert(xhr.status);
-                //alert(thrownError);
-                }
-            })
-            $('.nav-tabs a[href="#'+NameID+'"]').tab('show');
-            }
-            else
-            {
-            $('.nav-tabs a[href="#'+NameID+'"]').tab('show');
-            }
-            //openTabGeneral('itemtab2','Dashboard','ManualTicket', 'Get' );
+  // Menambahkan CSS untuk warna teks pada tab yang aktif dan tidak aktif
+$(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+    $('a[data-toggle="tab"]').removeClass('active-tab');
+    $(e.target).addClass('active-tab');
+});
 
-        }
+// Menambahkan CSS untuk warna teks pada tab yang aktif dan tidak aktif
+$(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+    $('a[data-toggle="tab"]').removeClass('active-tab');
+    $(e.target).addClass('active-tab');
+});
 
-        function breadcumbsValue(tabName,TittleText){
-            tabName = $.trim(tabName);
-            TittleText = $.trim(TittleText);
+  function breadcumbsValue(tabName,TittleText){
+    tabName = $.trim(tabName);
+    TittleText = $.trim(TittleText);
 
-            if(typeof(tabName) == 'undefined'){
-            tabName = "<i>(undefined)</i>";
-            }
-            if(tabName.length == 1){
-            tabName = "Menu";
-            }
-            if(tabName.length == 0){
-            tabName = "<i>(undefined)</i>";
-            }
-            if( (typeof(TittleText) == 'undefined') || (TittleText.length <= 1) ){
-            TittleText = "<i>(undefined)</i>";
-            }
+    if(typeof(tabName) == 'undefined'){
+    tabName = "<i>(undefined)</i>";
+    }
+    if(tabName.length == 1){
+    tabName = "Menu";
+    }
+    if(tabName.length == 0){
+    tabName = "<i>(undefined)</i>";
+    }
+    if( (typeof(TittleText) == 'undefined') || (TittleText.length <= 1) ){
+    TittleText = "<i>(undefined)</i>";
+    }
 
-            $(".breadcrumb-item").html(tabName);
-            $(".breadcrumb-item.active").html(TittleText);
-            console.log(tabName +" "+TittleText);
-        }
+    $(".breadcrumb-item").html(tabName);
+    $(".breadcrumb-item.active").html(TittleText);
+    console.log(tabName +" "+TittleText);
+  }
 
   function securityCheck( htmldata)
   {
-
     var tes = htmldata.substring(0, 6);
-
     if(tes=='logout')
     {
       window.location='{{ url() }}Login/';

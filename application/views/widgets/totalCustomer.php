@@ -1,12 +1,9 @@
 <div class="col-lg-3">
-    <div class="widget style1 yellow-bg">
-        <div class="row">
-            <div class="col-4">
-                <i class="fa fa-users fa-5x"></i>
-            </div>
-            <div class="col-8 text-right">
-                <span> Total Customers </span>
-                <h2 class="font-bold"><?= $summaryData->TotalCustomers ?></h2>
+    <div class="card">
+        <div class="card-body p-3 d-flex align-items-center"><i class="fa fa-users bg-secondary text-white p-3 font-2xl mr-3"></i>
+            <div>
+                <div class="text-value-sm text-secondary"><?= $summaryData->TotalCustomers ?></div>
+                <div class="text-muted text-uppercase font-weight-bold small">Total Customers</div>
             </div>
         </div>
     </div>

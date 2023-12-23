@@ -1,133 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <?php $this->load->view("admin/_partials/head.php") ?>
     </head>
-    <style>
-        .no-padding {
-            padding: none;
-        }
-    </style>
     <body>
-        <div id="wrapper">
-            <nav class="navbar-default navbar-static-side" role="navigation">
-                <!-- Sidebar -->
-                    <?php $this->load->view("admin/_partials/sidebar.php") ?>
-                <!-- End of Sidebar -->
-            </nav>
-
-            <div id="page-wrapper" class="gray-bg">
-                <div class="row border-bottom">
-                    <!-- Topbar -->
-                        <?php $this->load->view("admin/_partials/topbar.php") ?>
-                    <!-- End of Topbar -->
+        <?php $this->load->view("admin/_partials/preLoader.php") ?>
+        <!-- [ navigation menu ] start -->
+        <!-- theme-horizontal menu-light -->
+        <nav class="pcoded-navbar  ">
+            <?php $this->load->view("admin/_partials/navigation.php") ?>
+        </nav>
+	    <!-- [ navigation menu ] end -->
+        <!-- [ Header ] start -->
+	    <header class="navbar pcoded-header navbar-expand-lg navbar-light header-dark">
+            <?php $this->load->view("admin/_partials/header.php") ?>
+        </header>
+	    <!-- [ Header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="pcoded-main-container" style="overflow:hidden;">
+            <div class="pcoded-content p-0">
+                <!-- [ breadcrumb ] start -->
+                <!-- <div class="page-header"> <?php $this->load->view("admin/_partials/breadcrumb.php") ?> -->
+                <!-- [ breadcrumb ] End -->
+                </div> 
+                <!-- [ breadcrumb ] end -->
+                <!-- [ Main Content ] start -->
+                <div class="card-body p-0 pt-4 pl-0 pr-0 pb-0 bg-white">
+                    <ul class="nav nav-tabs ml-2" id="pageTab" role="tablist">
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-uppercase" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                        </li> -->
+                    </ul>
                 </div>
-                <div class="row border-bottom">
-                    
-                    <div class="col-lg-12 no-padding">
-                        <div class="row mt-1">
-                            <div class="col-lg-12">
-                                <div class="tabs-container">
-                                    <ul id="pageTab" class="nav nav-tabs pl-2" role="tablist">
-                                        
-                                    </ul>
-                                    <div id="pageTabContent" class="tab-content">
-                                        <!--
-                                        <div role="tabpanel" id="tab-1" class="tab-pane active">
-                                            <div class="panel-body">
-                                                <div class="row">
-                                                    <div class="col-lg-3">
-                                                        <div class="widget style1 navy-bg">
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <i class="fa fa-microchip fa-5x"></i>
-                                                                </div>
-                                                                <div class="col-8 text-right">
-                                                                    <span> Temp CPU </span>
-                                                                    <h2 class="font-bold">26'C</h2>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <div class="widget style1 lazur-bg">
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <i class="fa fa-server fa-5x"></i>
-                                                                </div>
-                                                                <div class="col-8 text-right">
-                                                                    <span> CPU Usage </span>
-                                                                    <h2 class="font-bold">260%</h2>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <div class="widget style1 yellow-bg">
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <i class="fa fa-signal fa-5x"></i>
-                                                                </div>
-                                                                <div class="col-8 text-right">
-                                                                    <span> Total Traffic </span>
-                                                                    <i class="fa fa-sort-up"></i>
-                                                                    <h2 class="font-bold">12</h2>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <div class="widget style1 yellow-bg">
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <i class="fa fa-users fa-5x"></i>
-                                                                </div>
-                                                                <div class="col-8 text-right">
-                                                                    <span> Total Customer </span>
-                                                                    <h2 class="font-bold">12</h2>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div role="tabpanel" id="tab-2" class="tab-pane">
-                                            <div class="panel-body">
-                                                <strong>Donec quam felis</strong>
-
-                                                <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
-                                                    and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
-
-                                                <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                                                    sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
-                                            </div>
-                                        </div>
-                                        -->
-                                    </div>
-                                </div>
-                            </div>
+                <div class="card-body p-1">
+                    <div class="tab-content" id="pageTabContent">
+                        <!-- <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <p class="mb-0">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica.
+                                Reprehenderit
+                                butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher
+                                voluptate nisi qui.
+                            </p>
                         </div>
+                        <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <p class="mb-0">Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four
+                                loko
+                                farm-to-table
+                                craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. accusamus tattooed echo park.</p>
+                        </div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <p class="mb-0">Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed
+                                craft beer,
+                                iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Lnyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                        </div> -->
                     </div>
                 </div>
-	
-                <?php 
-                /*
-                    if ($this->uri->segment('1') == 'welcome') :
-                        $this->load->view("menu/mainDashboard.php");
-                    endif;
-                */
-                ?>
-                <!-- Footer -->
-                    <?php $this->load->view("admin/_partials/footer.php") ?>
-                <!-- End of Footer -->
+                <!-- </div> -->
+                <!-- [ Main Content ] end -->
             </div>
-
-            <div id="right-sidebar">
-                <div class="sidebar-container">
-                    
-                </div>
-            </div>
+            <!-- [ footer ] start -->
+            <!-- <div class="page-header">
+                <?php //$this->load->view("admin/_partials/footer.php") ?>
+            </div> -->
+            <!-- [ footer ] End -->
         </div>
         <!-- Dashboard JS -->
             <?php $this->load->view("admin/_partials/dashboardjs.php") ?>

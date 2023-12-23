@@ -1,384 +1,202 @@
-
 <script src="<?= base_url()?>public/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <script src="<?= base_url()?>public/js/plugins/select2/select2.full.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<style> -->
-    .d-block {
-        display:block;
+<style>
+    .select2-selection.select2-selection--multiple {
+        border: 2px solid #d7d7d7 !important;
+        border-radius: 0px !important;
+        margin: 0px !important;
     }
-
-    .hidden {
-        display: none;
+    .select2.select2-container .select2-selection {
+        border: 1px solid black;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        height: 34px;
+        margin-bottom: 15px;
+        outline: none !important;
+        transition: all .15s ease-in-out;
     }
-
-    .cursor-pointer {
-        cursor: pointer;
-    }
-    /* .spiner-example {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background-color: rgba(32, 33, 36, 0.6);
-        z-index: 100;
-        align-content: center;
-        flex-direction: row;
-        flex-wrap: wrap;
-    } */
-
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-    }
-
-    .loading-overlay p {
-        margin-top: 10px;
-    }
-
-    .wrapper {
+    .select2.select2-container .select2-selection--multiple .select2-selection__choice {
+        background-color: #1ABC9C;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        margin: 4px 4px 0 0;
+        padding: 0 6px 0 22px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
         position: relative;
     }
-
-    .text-alert{
-        color:red;
-        font-weight: bold;
-        font-size: 3vh;
-    }
 </style>
-    <!-- Loading Overlay -->
-
-<div class="wrapper wrapper-content" style="border: 3px solid white;">
-    <div id="wrapper-popup"></div>
-    <div class="loading-overlay" style="display: none;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <div class="sk-spinner sk-spinner-wave">
-            <div class="sk-rect1"></div>
-            <div class="sk-rect2"></div>
-            <div class="sk-rect3"></div>
-            <div class="sk-rect4"></div>
-            <div class="sk-rect5"></div>
-        </div>
+<div class="card m-2">
+    <div class="card-header">
+        <h4>Broadcast Billing Reminder</h4>
     </div>
-    <div class="row justify-content-center">
-
-        <div class="col-lg-11">
-            <div class="alert alert-warning hidden">
-                Kolom yang bertanda bintang merah wajib diinput
+    <div class="card-body ml-5 mt-0 mr-5 mb-0">
+    <form method="POST">
+        <h5>Form Options</h5>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                
+                    <div class="form-group">
+                        <label class="col-form-label">Media</label>
+                        <div class="">
+                            <select class="form-control form-control-sm" name="media" id="mediaSelect">
+                                <!-- <option>Whatsapp</option> -->
+                                <?php foreach ($dataConn as $item): 
+                                        if($item->MediaId == 'WHATP'): $mediaName = 'Whatsapp';endif;
+                                        if($item->MediaId == 'WHATP2'): $mediaName = 'Whatsapp2';endif;?>
+                                        <option value="<?= $item->MediaId ?>">
+                                            <?= $mediaName ?>
+                                        </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">From</label>
+                        <div class="">
+                            <select class="form-control form-control-sm" name="from" id="fromSelect">
+                                <!-- <option>085945751995</option> -->
+                                <?php foreach ($dataConn as $item): ?>
+                                    <option value="<?= $item->UserName ?>" data-mediaid="<?= $item->MediaId ?>">
+                                        <?= $item->UserName ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Send Date</label>
+                        <div class="">
+                            <input type="datetime-local" name="sendDate" class="form-control form-control-sm col-sm-12" id="sendDatePicker" />
+                            <small class="text-italic">This is only for scheduling messages, if you want to send it straight away, you don't need to fill it in</small>
+                        </div>
+                    </div>
+                
             </div>
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Form Send Billing Reminder <small>to your customer.</small></h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <!-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a> -->
-                        <!-- <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul> -->
-                        <!-- <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a> -->
+            <div class="col-md-6">
+                
+                    <div class="form-group">
+                        <label class="col-form-label">Type Target</label>
+                        <div class="">
+                            <select class="form-control form-control-sm" name="typeTarget" onchange="toggleElements(this.value)">
+                                <option value="Input">Input</option>
+                                <option value="Contact">Contact</option>
+                                <option value="GroupContact">Group Contact</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group to-input">
+                        <label class="col-form-label">To <span style="color:red;">*</span></label>
+                        <div class="">
+                            <input class="tagsinput form-control form-control-sm d-none" name="toInput" type="text" value="" placeholder="Insert Number e.g 081xx">
+                        </div>
+                    </div>
+                    <div class="form-group to-contact d-none">
+                        <label class="col-form-label">To <span style="color:red;">*</span></label>
+                        <div class="">
+                            <select class="form-control form-control-sm multiple-select-contact" name="toContact" id="toContact" multiple="multiple" style="width: 100%">
+                                <!-- <option value="AL">Alabama</option>
+                                    ...
+                                <option value="WY">Wyoming</option> -->
+                                <?php foreach ($dataContact as $item): ?>
+                                    <option value="<?= $item->Id ?>" data-mediaid="">
+                                        <?= $item->Name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group to-group-contact d-none">
+                        <label class="col-form-label">To <span style="color:red;">*</span></label>
+                        <div class="">
+                        <select class="form-control form-control-sm multiple-select-group" name="toGroupContact" id="toContactGroup" multiple="multiple" style="width: 100%">
+                            <!-- <option value="AL">Alabama</option>
+                                ...
+                            <option value="WY">Wyoming</option> -->
+                            <?php foreach ($dataContactGroup as $item): ?>
+                                <option value="<?= $item->Id ?>" data-mediaid="">
+                                    <?= $item->GroupName ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Delay</label>
+                        <div class="">
+                            <input type="text" name="delay" placeholder="Fill delay time send message per number e.g : 5-10" class="form-control form-control-sm">
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+        <h5 class="mt-3">Form Message</h5>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Subject <span style="color:red;">*</span></label>
+                    <div class="">
+                        <input type="text" name="subject" placeholder="Fill Subject Message" class="form-control form-control-sm" require>
                     </div>
                 </div>
-                <div class="ibox-content" style="">
-                    <form method="POST">
-                        <div class="row  justify-content-center" style="justify-content: center !important;">
-                            <div class="col-sm-12">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">Media</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <select class="form-control m-b-none" name="media" id="mediaSelect">
-                                            <!-- <option>Whatsapp</option> -->
-                                            <?php foreach ($dataConn as $item): 
-                                                  if($item->MediaId == 'WHATP'): $mediaName = 'Whatsapp';endif;
-                                                  if($item->MediaId == 'WHATP2'): $mediaName = 'Whatsapp2';endif;?>
-                                                    <option value="<?= $item->MediaId ?>">
-                                                        <?= $mediaName ?>
-                                                    </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label" >Message Template</label>
+                    <div class="">
+                        <select class="form-control form-control-sm m-b-none" name="messageTemplate" id="templateMessage">
+                            <option value="">Select Template Message</option>
+                            <!-- <option value="Template">Reminder 7 hari</option> -->
+                            <?php foreach ($dataTemplate as $item): ?>
+                                <?php $metaData = json_decode($item->Meta, true); ?>
+                                <option value="<?= $item->Id ?>" data-mediaid="<?= $item->MediaId ?>" data-content="<?= htmlspecialchars($item->Content) ?>" data-params="<?= implode(', ', $metaData['params']) ?>" data-meta='<?= $item->Meta?>'>
+                                    <?= $item->Title ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group d-none">
+                    <!-- <label class="col-sm-2 col-form-label">Value Variable</label> -->
+                    <div class="">
+                        <input class="form-control " id="variableMessage" name="variableMessage" type="text" value="" placeholder="for variable custom e.g fonnte" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">Message <span style="color:red;">*</span></label>
+                    <div class="">
+                        <div class="input-group w-100 flex-nowrap">
+                            <span class="input-group-text white-bg" id="basic-addon1">
+                            <i class="fa fa-comment"></i>
+                            </span>
+                            <textarea name="message" id="message" class="form-control" cols="30" rows="10" placeholder="Write your message" require></textarea>
                         </div>
-                        <div class="row justify-content-center">
-                            <div class="col-sm-12">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">From</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <select class="form-control m-b-none" name="from" id="fromSelect">
-                                            <!-- <option>085945751995</option> -->
-                                            <?php foreach ($dataConn as $item): ?>
-                                                <option value="<?= $item->UserName ?>" data-mediaid="<?= $item->MediaId ?>">
-                                                    <?= $item->UserName ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label" >Type Target</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <select class="form-control m-b-none" name="typeTarget" onchange="toggleElements(this.value)">
-                                            <option value="Input">Input</option>
-                                            <option value="Contact">Contact</option>
-                                            <option value="GroupContact">Group Contact</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row to-input">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <input class="tagsinput form-control " name="toInput" type="text" value="" placeholder="Insert Number e.g 081xx" style="display: none;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row to-contact hidden">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <select class="form-control multiple-select" name="toContact" id="toContact" multiple="multiple" style="width: 100%">
-                                            <!-- <option value="AL">Alabama</option>
-                                                ...
-                                            <option value="WY">Wyoming</option> -->
-                                            <?php foreach ($dataContact as $item): ?>
-                                                <option value="<?= $item->Id ?>" data-mediaid="">
-                                                    <?= $item->Name ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row to-group-contact hidden">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
-                                    <div class="col-sm-8 m-l-sm">
-                                    <select class="form-control multiple-select" name="toGroupContact" id="toContactGroup" multiple="multiple" style="width: 100%">
-                                        <!-- <option value="AL">Alabama</option>
-                                            ...
-                                        <option value="WY">Wyoming</option> -->
-                                        <?php foreach ($dataContactGroup as $item): ?>
-                                            <option value="<?= $item->Id ?>" data-mediaid="">
-                                                <?= $item->GroupName ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">Send Date</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <input type="datetime-local" name="sendDate" class="form-control col-sm-12" id="sendDatePicker" />
-                                        <small class="text-italic">This is only for scheduling messages, if you want to send it straight away, you don't need to fill it in</small>
-                                    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="row">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">Delay</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <input type="text" name="delay" placeholder="Fill delay time send message per number e.g : 5-10" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label">Subject <span style="color:red;">*</span></label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <input type="text" name="subject" placeholder="Fill Subject Message" class="form-control" require>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row message-template">
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-sm">
-                                    <label class="col-sm-2 col-form-label" >Message Template</label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <select class="form-control m-b-none" name="messageTemplate" id="templateMessage">
-                                            <option value="">Select Template Message</option>
-                                            <!-- <option value="Template">Reminder 7 hari</option> -->
-                                            <?php foreach ($dataTemplate as $item): ?>
-                                                <?php $metaData = json_decode($item->Meta, true); ?>
-                                                <option value="<?= $item->Id ?>" data-mediaid="<?= $item->MediaId ?>" data-content="<?= htmlspecialchars($item->Content) ?>" data-params="<?= implode(', ', $metaData['params']) ?>" data-meta='<?= $item->Meta?>'>
-                                                    <?= $item->Title ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row input-message m-b-lg hidden">
-                            <div class="col-sm-12">
-                                <div class="form-group row m-b-sm">
-                                    <!-- <label class="col-sm-2 col-form-label">Value Variable</label> -->
-                                    <div class="col-sm-8 m-l-sm">
-                                        <input class="form-control " id="variableMessage" name="variableMessage" type="text" value="" placeholder="for variable custom e.g fonnte" >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row input-message m-b-lg">
-                            <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Message <span style="color:red;">*</span></label>
-                                    <div class="col-sm-8 m-l-sm">
-                                        <div class="input-group w-100 flex-nowrap">
-                                            <span class="input-group-text white-bg" id="basic-addon1">
-                                            <i class="fa fa-comment"></i>
-                                            </span>
-                                            <textarea name="message" id="message" class="form-control" cols="30" rows="10" placeholder="Write your message" require></textarea>
-                                        </div>
-                                        <!-- <small class="text-italic">Usable variable for custom : {name}, {var1}, {var2},...</small>
-                                        <small id="buttonInfo" class="float-right cursor-pointer">Info</small> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="row"> 
-                            <div class="col-sm-12" style="padding-bottom:0px !important;">
-                                <div class="form-group row m-b-xs">
-                                    <div class="col-sm-12 m-l-sm">
-                                        <!-- <button class="btn btn-white btn-sm" type="submit">Cancel</button> -->
-                                        <button class="btn btn-primary btn-sm col-sm-2 float-right" type="submit">Send Message</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                        <!-- <small class="text-italic">Usable variable for custom : {name}, {var1}, {var2},...</small>
+                        <small id="buttonInfo" class="float-right cursor-pointer">Info</small> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <button type="submit" class="btn  btn-primary p-3 mb-2 float-right">Send Message</button>
                 </div>
             </div>
         </div>
+        </form>
     </div>
 </div>
-
-<!-- Logout Info Variable-->
-<div class="modal fade" id="infoVaribleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Table of param variable message</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table width='100%' border='1px'>
-                    <tr>
-                        <td>{CustomerName}</td>
-                        <td>get name of contact customer</td>
-                    </tr>
-                    <tr>
-                        <td>{BillingAmount}</td>
-                        <td>get total bill</td>
-                    </tr>
-                    <tr>
-                        <td>{DueDate}</td>
-                        <td>Due date of billing</td>
-                    </tr>
-                    <tr>
-                        <td>{DueDate}</td>
-                        <td>Due Date Billing</td>
-                    </tr>
-                    <tr>
-                        <td>{IdBilling}</td>
-                        <td>Id Billing</td>
-                    </tr>
-                    <tr>
-                        <td>{PeriodeBilling}</td>
-                        <td>Periode Billing</td>
-                    </tr>
-                    <tr>
-                        <td>{PacketName}</td>
-                        <td>Packet name of customer</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Mainly scripts -->
-<script src="<?= base_url()?>public/js/jquery-3.1.1.min.js"></script>
-<script src="<?= base_url()?>public/js/popper.min.js"></script>
-<script src="<?= base_url()?>public/js/bootstrap.js"></script>
-<script src="<?= base_url()?>public/js/bootstrap.min.js"></script>
-<script src="<?= base_url()?>public/js/inspinia.js"></script>
-<script src="<?= base_url()?>public/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="<?= base_url()?>public/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-<!-- Flot -->
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.spline.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.resize.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.pie.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/jquery.flot.symbol.js"></script>
-<script src="<?= base_url()?>public/js/plugins/flot/curvedLines.js"></script>
-<!-- Peity -->
-<script src="<?= base_url()?>public/js/plugins/peity/jquery.peity.min.js"></script>
-<script src="<?= base_url()?>public/js/demo/peity-demo.js"></script>
-<!-- Custom and plugin javascript -->
-<script src="<?= base_url()?>public/js/inspinia.js"></script>
-<script src="<?= base_url()?>public/js/plugins/pace/pace.min.js"></script>
-<!-- jQuery UI -->
-<script src="<?= base_url()?>public/js/plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Jvectormap -->
-<script src="<?= base_url()?>public/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
-<script src="<?= base_url()?>public/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- Sparkline -->
-<script src="<?= base_url()?>public/js/plugins/sparkline/jquery.sparkline.min.js"></script>
-<!-- Sparkline demo data  -->
-<script src="<?= base_url()?>public/js/demo/sparkline-demo.js"></script>
-<!-- ChartJS-->
-<script src="<?= base_url()?>public/js/plugins/chartJs/Chart.min.js"></script>
 <script src="<?= base_url()?>public/js/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <script src="<?= base_url()?>public/js/plugins/select2/select2.full.min.js"></script>
-
 <script>
 
     $(document).ready(function() {
@@ -388,10 +206,23 @@
         });
 
         //Buat fungsi multiselect
-        $('.multiple-select').select2();
+        $('.multiple-select-contact').select2({
+            placeholder: "Select by Contact",
+            allowClear: true
+        });
+        $('.multiple-select-group').select2({
+            placeholder: "Select by Group Contact",
+            allowClear: true
+        });
 
         //Buat multiselect dan tagsinput agar kolom auto 100% saat awal di load
-        $('.bootstrap-tagsinput').addClass('col-sm-12');
+        // $('.bootstrap-tagsinput').addClass('form-control form-control-sm');
+        $('.bootstrap-tagsinput').addClass('bg-white');
+        $('.bootstrap-tagsinput').css({'border':'2px solid #d7d7d7'});
+        $('.bootstrap-tagsinput').css({'height':'calc(1.5em + 0.5rem + 4px)'});
+        $('.bootstrap-tagsinput').children('input').addClass('bg-white');
+        $('.bootstrap-tagsinput').children('input').addClass('border-0');
+
         $('.multiple-select').addClass('col-sm-12');
 
         //Buat fungsi select from data berdasarkan data apa yang di pilih oleh mediaselect
@@ -457,23 +288,23 @@
     function toggleElements(selectedValue) {
         // $('.to-input, .to-contact, .to-group-contact').hide();
         if (selectedValue === 'Input') {
-            $('.to-input').removeClass('hidden');
-            $('.to-contact').addClass('hidden');
-            $('.to-group-contact').addClass('hidden');
+            $('.to-input').removeClass('d-none');
+            $('.to-contact').addClass('d-none');
+            $('.to-group-contact').addClass('d-none');
             $('.select2-selection__rendered').html('');
             // $('.to-group-contact').hide();
         } else if (selectedValue === 'Contact') {
             $('.tagsinput').tagsinput('removeAll');
-            $('.to-input').addClass('hidden');
-            $('.to-contact').removeClass('hidden');
-            $('.to-group-contact').addClass('hidden');
+            $('.to-input').addClass('d-none');
+            $('.to-contact').removeClass('d-none');
+            $('.to-group-contact').addClass('d-none');
             $('.select2-selection__rendered').html('');
             
         } else if (selectedValue === 'GroupContact') {
             $('.tagsinput').tagsinput('removeAll');
-            $('.to-contact').addClass('hidden');
-            $('.to-input').addClass('hidden');
-            $('.to-group-contact').removeClass('hidden');
+            $('.to-contact').addClass('d-none');
+            $('.to-input').addClass('d-none');
+            $('.to-group-contact').removeClass('d-none');
             $('.select2-selection__rendered').html('');
         }
     }
