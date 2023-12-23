@@ -111,7 +111,7 @@
                             <div class="media">
                                 <img class="img-radius" src="<?= base_url() ?>public/images/user/avatar-1.jpg" alt="Generic placeholder image">
                                 <div class="media-body">
-                                    <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
+                                    <p><strong><?= $this->session->userdata('name');?></strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
                                     <p>New ticket Added</p>
                                 </div>
                             </div>
@@ -159,10 +159,10 @@
                     <i class="feather icon-user"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-notification">
-                    <div class="pro-head">
-                        <img src="<?= base_url() ?>public/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image">
-                        <span>John Doe</span>
-                        <a href="auth-signin.html" class="dud-logout" title="Logout">
+                    <div class="pro-head"> 
+                        <img src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" class="img-radius" alt="User-Profile-Image">
+                        <span><?= $this->session->userdata('name');?></span>
+                        <a href="#" id="logoutBtn" class="dud-logout" title="Logout">
                             <i class="feather icon-log-out"></i>
                         </a>
                     </div>
@@ -176,3 +176,30 @@
         </li>
     </ul>
 </div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+<!-- End of Topbar -->
+<script>
+$("#logoutBtn").on("click", function () {
+        // Show the logout modal
+        // alert('asdasdsa');
+        $("#logoutModal").modal("show");
+    });
+    // function addTabSettings() {
+    //     var agent_ts = '{{agent_ts}}';
+
+    //     $.ajax({
+    //         url: "<?= base_url()?>Menu_Controller/Settings",
+    //         dataType: "html",
+    //         type: "post",
+    //         success: function(result){
+    //             //securityCheck(result);
+    //             $("#accordionSidebar").html(result);
+    //             console.log(result);
+
+    //     }});
+    // }
+</script>

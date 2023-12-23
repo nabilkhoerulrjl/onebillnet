@@ -4,10 +4,10 @@
             
             <div class="">
                 <div class="main-menu-header">
-                    <img class="img-radius" src="<?= base_url() ?>public/images/user/avatar-2.jpg" alt="User-Profile-Image">
+                    <img class="img-radius" src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" alt="User-Profile-Image">
                     <div class="user-details">
-                        <span>John Doe</span>
-                        <div id="more-details">UX Designer<i class="fa fa-chevron-down m-l-5"></i></div>
+                        <span><?= $this->session->userdata('name');?></span>
+                        <div id="more-details"><?= $this->session->userdata('role');?><i class="fa fa-chevron-down m-l-5"></i></div>
                     </div>
                 </div>
                 <div class="collapse" id="nav-user-link">
