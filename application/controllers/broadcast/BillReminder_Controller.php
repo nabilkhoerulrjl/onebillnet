@@ -61,7 +61,7 @@ class BillReminder_Controller extends CI_Controller {
 			'Domain' => $domain,
 		);
         
-        $site = $this->M_Site->siteId("site",$where);
+        $site = $this->M_Site->siteId("Site",$where);
         //$query = $this->db->get('site');
 		//$arrays = $site->result();
         $siteId = null;
