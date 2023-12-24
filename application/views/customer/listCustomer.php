@@ -1,5 +1,6 @@
-<link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet">
-
+<!-- CSS Sweetalert2 -->
+<link href="<?= base_url()?>/public/css/plugins/sweetalert/sweetalert2.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?= base_url()?>/public/css/plugins/daterangepicker/daterangepicker.css" />
 <style>
     /* Gaya CSS tambahan sesuai kebutuhan aplikasi Anda */
     .top-tool {
@@ -39,6 +40,61 @@
     .cursor-pointer{
         cursor:pointer;
     }
+
+    /* CSS untuk slider menu */
+    .slider-menu {
+        position: absolute;
+        top: 35%;
+        right: -300px; /* Atur posisi awal di luar layar */
+        width: 300px;
+        height: 30%;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transition: right 0.3s ease-in-out;
+    }
+
+    .slider-menu.show {
+        right: 0; /* Pindahkan ke dalam layar saat ditampilkan */
+    }
+
+    #filterDateCustomer .text-truncate,
+    #filterDateCustomer .fa,
+    #filterDateCustomer span {
+        color: #373a3c; 
+    }
+
+    #filterDateCustomer:hover .text-truncate,
+    #filterDateCustomer:hover .fa,
+    #filterDateCustomer:hover span {
+        color: #373a3c; 
+    }
+
+    .daterangepicker td.available:hover, .daterangepicker td.available.active {
+        background-color: #1abc9c;
+    }
+
+    .daterangepicker td.in-range, .daterangepicker td.active {
+        background-color: rgba(26, 188, 156, 0.1);
+    }
+
+    .daterangepicker td.in-range, .daterangepicker td.active {
+        border-color: #1abc9c;
+    }
+
+    #resetFilter:hover {
+        color: #373a3c; 
+    }
+
+    #overlay {
+        display: none !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgb(0 0 0 / 8%); /* Warna latar belakang transparan */
+        z-index: 9999;
+    }
 </style>
 <div class="wrapper wrapper-content bg-white">
     <div class="text-header col-md p-4">
@@ -52,16 +108,16 @@
                     <i class="fa fa-copy mr-1"></i>
                 </button>
                 <button type="button" id="csvButton" class="btn btn-outline-success btn-sm"
-                data-toggle="Export to CSV" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
+                data-toggle="Export to CSV" onclick="exportToCSV()" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
                     <i class="fa fa-file-excel mr-1"></i>
                 </button>
                 <button type="button" id="pdfButton" class="btn btn-outline-danger btn-sm"
-                data-toggle="Export to PDF" data-placement="top" title="Export to PDF" data-original-title="Export to PDF">
+                data-toggle="Export to PDF" onclick="exportToPdf()" data-placement="top" title="Export to PDF" data-original-title="Export to PDF">
                     <i class="fa fa-file-pdf mr-1"></i>
                 </button>
                 <button type="button" id="printButton" class="btn btn-outline-info btn-sm"
-                data-toggle="Print" data-placement="top" title="Print" data-original-title="Print">
-                    <i class="fa fa-paste mr-1"></i>
+                data-toggle="Print" onclick="printTable()" data-placement="top" title="Print" data-original-title="Print">
+                    <i class="fa fa-print mr-1"></i>
                 </button>
             </div>
             <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
@@ -70,79 +126,84 @@
                     <i class="fa fa-filter"></i>
                 </button>
             </div>
-        </div>
-        <!-- Tabel ZingGrid -->
-        <!-- Tombol untuk Ekspor Data -->
-            <div class="table-responsive">
-                <table class="table table-hover" id="dataTableUsers">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Whatsapp</th>
-                            <th>RT/RW</th>
-                            <th>Kelurahan</th>
-                            <th>Kecamatan</th>
-                            <th>Kota</th>
-                            <th>Product</th>
-                            <th>Status Subsribe</th>
-                            <th>Status Billing</th>
-                            <th>Date Subsribe</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        <!-- search -->
-        <!-- <zing-grid pager="10" sort viewport-stop onclick="test(index='id')"> -->
-            <!-- Definisikan kolom dengan menentukan label secara kustom -->
-            <!-- <zg-column index="id" header="ID"></zg-column>
-            <zg-column index="nama" header="Nama"></zg-column>
-            <zg-column index="whatsapp" header="WhatsApp"></zg-column>
-            <zg-column index="rtrw" header="RT/RW"></zg-column>
-            <zg-column index="keluarahan" header="Kelurahan"></zg-column>
-            <zg-column index="kecamatan" header="Kecamatan"></zg-column>
-            <zg-column index="kota" header="Kota"></zg-column>
-            <zg-column index="productname" header="Product Name"></zg-column>
-            <zg-column index="statuslangganan" header="Status Langganan"></zg-column>
-            <zg-column index="statuspembayaran" header="Status Pembayaran"></zg-column>
-            <zg-column index="tanggalregistrasi" header="Tanggal Registrasi"></zg-column>
-            <zg-column type="">sadasdasdasd</zg-column>
-            <zg-column type="edit" index="action"></zg-column>
-            <zg-colgroup>
-                <zg-column index="action">sadasd</zg-column>
-                <zg-column index="action" type="element" type-element-tag-name="zg-button" type-element-attribute-name="action" onclick="test()"></zg-column>
-            </zg-colgroup>
-        </zing-grid> -->
-    </div>
-         <!-- Modal Bootstrap -->
-    <div class="modal" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exportModalLabel">Exporting Data</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+            <div id="filterSlider" class="slider-menu">
+                <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
+                    <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
+                    <button type="button" class="close"  id="closeFilterBtn" class="close-btn">
+                        <i class="fa fa-x fa-xs"></i>
                     </button>
-                </div>
-                <div class="modal-body">
-                    Please wait while the data is being exported...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+                <div id="sidebarBodyFilter">
+                    <div class="setings-item b-none p-box">
+						<div class="row p-2">
+							<div class="col-sm-12">
+								<button id="filterDateCustomer" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
+                                    <i class="fa fa-calendar-days pr-1"></i>
+                                    <div class="text-truncate">
+                                        <b>
+                                        <span id="searchdatepick" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
+                                        </b>
+                                        <i style="padding-right: 5px;" class="fa fa-angle-down"></i>
+                                    </div>
+								</button>
+							</div>
+						</div>
+                        <div class="row p-2">
+                            <div class="col-sm-6">
+                                <button id="resetFilter" class="btn btn-outline-secondary bg-white form-control">Reset Filter</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button id="applyFilter" class="btn btn-primary form-control">Apply Filter</button>
+                            </div>
+                        </div>
+					</div>
                 </div>
             </div>
+        </div>
+        <div id="overlay" class="d-flex justify-content-center align-items-center flex-column">
+            <div id="overlayLoading" class="spinner-border text-primary" style="width: 3rem;height: 3rem; display: none;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
+        </div>
+        
+        <!-- Tabel ZingGrid -->
+        <div class="table-responsive">
+            <table class="table table-hover" id="dataTableUsers">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Whatsapp</th>
+                        <th>RT/RW</th>
+                        <th>Kelurahan</th>
+                        <th>Kecamatan</th>
+                        <th>Kota</th>
+                        <th>Product</th>
+                        <th>Status Subsribe</th>
+                        <th>Status Billing</th>
+                        <th>Date Subsribe</th>
+                        <th class="action-column">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-    <!-- Tambahkan library ZingGrid -->
-    <script src="https://cdn.zinggrid.com/zinggrid.min.js"></script>
-    <!-- Tambahkan library Papaparse untuk ekspor CSV -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <!-- Tambahkan library jsPDF untuk ekspor PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<!-- JS moment -->
+<script type="text/javascript" src="<?= base_url()?>/public/js/plugins/moment/moment.min.js"></script>
+<!-- JS daterangepicker -->
+<script type="text/javascript" src="<?= base_url()?>/public/js/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- JS printThis -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+<!-- JS html2pdf -->
+<script src="https://unpkg.com/html2pdf.js@0.10.0/dist/html2pdf.bundle.js"></script>
+<!-- JS Clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
+<!-- JS Sweetalert2 -->
+<script src="<?= base_url()?>/public/js/plugins/sweetalert/sweetalert2.all.min.js"></script>
 <!-- Page Scripts -->
 <script>
     var base_url = '<?= base_url()?>';
@@ -155,51 +216,106 @@
     function hideExportModal() {
         $('#exportModal').modal('hide');
     }
-
-    function handleEdit(event) {
-    var selectedRowId = event.detail.row.id;
-    // Lakukan sesuatu dengan ID yang dipilih, misalnya tampilkan form edit data, dll.
-    console.log('Edit clicked for row with ID:', selectedRowId);
-    // Contoh: Redirect ke halaman edit dengan menggunakan ID
-    window.location.href = base_url + '/editData/' + selectedRowId;
-}
         
     // Fungsi untuk mengambil data dari controller menggunakan AJAX
-    function fetchData() {
+    function fetchData(filterData="") {
         // Ganti dengan URL controller Anda
         var url = base_url+'/CustomerController/getListData';
+        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        if(startDate == null){
+            startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        }
+        if(endDate == null){
+            endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
+        }
+        console.log(filterData);
+        // Menyiapkan data untuk dikirim
+        var requestData = '';
+        if(filterData == "") {
+            requestData = {
+                startDate: startDate,
+                endDate: endDate
+            };
+        }else{
+            requestData = filterData;
+        }
 
+        // console.log(requestData);
         // Menggunakan jQuery untuk melakukan AJAX request
         $.ajax({
             url: url,
-            method: 'GET',
+            method: 'POST',
             dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                $('#overlayLoading').show();
+                $('#overlay').show();
+            },
             success: function (data) {
-                // Masukkan data ke dalam tabel
-                $.each(data, function (index, value) {
-                    $('#dataTableUsers tbody').append(`
-                        <tr>
-                            <td>${value.id}</td>
-                            <td>${value.nama}</td>
-                            <td>${value.whatsapp}</td>
-                            <td>${value.rtrw}</td>
-                            <td>${value.keluarahan}</td>
-                            <td>${value.kecamatan}</td>
-                            <td>${value.kota}</td>
-                            <td>${value.productname}</td>
-                            <td><span class="badge badge-success">${value.statuslangganan}</span></td>
-                            <td><span class="badge badge-success">${value.statuspembayaran}</span></td>
-                            <td>${value.tanggalregistrasi}</td>
-                            <td>
-                                <!-- Tambahkan button action sesuai kebutuhan -->
-                                <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
-                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
-                            </td>
-                        </tr>
-                    `);
-                });
+                // Menyembunyikan elemen loading setelah data diterima
+                $('#overlayLoading').hide();
+                $('#overlay').hide();
+                if(data.length > 0){
+                    // Clear data dari table
+                    $('#dataTableUsers tbody').empty();
+                    // Masukkan data ke dalam tabel
+                    $.each(data, function (index, value) {
+                        //init variable
+                        var StatusSubsribe = '';
+                        var SubscribeBadge = '';
+                        var StatusBilling = '';
+                        var BillingBadge = '';
+                        //kondisi untuk status bill dan subscribe
+                        if(value.StatusSubsribe == 'CRS1'){
+                            StatusSubsribe = 'Active';
+                            SubscribeBadge = 'badge-success';
+                        }
+                        if(value.StatusSubsribe == 'CRS2'){
+                            StatusSubsribe = 'Not Active';
+                            SubscribeBadge = 'badge-warning';
+                        }
+                        if(value.StatusBill == 'BLS1'){
+                            StatusBilling = 'Not Paid';
+                            BillingBadge = 'badge-success';
+                        }
+                        if(value.StatusBill == 'BLS2'){
+                            StatusBilling = 'Not Paid';
+                            BillingBadge = 'badge-warning';
+                        }
+                        // Gunakan moment.js untuk memformat tanggal
+                        var DateSubsribe = moment(DateSubsribe).format('D MMMM YYYY');
+                        $('#dataTableUsers tbody').append(`
+                            <tr>
+                                <td>${value.CustomerId}</td>
+                                <td>${value.FirstName} `+` ${value.LastName}</td>
+                                <td>${value.Whatsapp}</td>
+                                <td>${value.RtRw}</td>
+                                <td>${value.Subdistrict}</td>
+                                <td>${value.Ward}</td>
+                                <td>${value.City}</td>
+                                <td>${value.ProductName}</td>
+                                <td><span class="badge ${SubscribeBadge}">${StatusSubsribe}</span></td>
+                                <td><span class="badge ${BillingBadge}">${StatusBilling}</span></td>
+                                <td title="${value.DateSubsribe}">${DateSubsribe}</td>
+                                <td class="action-column">
+                                    <!-- Tambahkan button action sesuai kebutuhan -->
+                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
+                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }else{
+                    $('#dataTableUsers tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
+                }
+                
             },
             error: function (error) {
+                // Menyembunyikan elemen loading jika terjadi kesalahan
+                $('#overlayLoading').hide();
+                $('#overlay').hide();
                 console.error('Error:', error);
             }
         });
@@ -210,100 +326,386 @@
         fetchData();
     });
 
-    // Mendapatkan referensi ke tombol-tombol ekspor
-    var copyButton = document.getElementById('copyButton');
-    var csvButton = document.getElementById('csvButton');
-    var pdfButton = document.getElementById('pdfButton');
-    var printButton = document.getElementById('printButton');
-
-    // Menambahkan event listener untuk menangani ekspor data
-    copyButton.addEventListener('click', function () {
-        showExportModal();
-        // ... (proses ekspor data)
-        // Mendapatkan referensi ke elemen zing-grid
-        var grid = document.querySelector('zing-grid');
-
-        // Mendapatkan data dari zing-grid
-        var data = grid.data;
-
-        // Menyalin data ke clipboard
-        navigator.clipboard.writeText(JSON.stringify(data)).then(function() {
-            alert('Data copied to clipboard!');
-        }).catch(function(err) {
-            console.error('Error:', err);
-        });
-        hideExportModal();
         
+    $('#searchDataText').on('input', function () {
+        // Ambil nilai dari input pencarian
+        var searchValue = $(this).val().toLowerCase();
+
+        // Fungsi untuk melakukan pencarian dan memfilter data di tabel HTML
+        filterTableData(searchValue);
     });
 
-    csvButton.addEventListener('click', function () {
-        showExportModal();
+    // Fungsi untuk memfilter data di tabel HTML
+    function filterTableData(searchValue) {
+        var table = document.getElementById('dataTableUsers');
+        console.log(table);
 
-        // Mendapatkan referensi ke elemen zing-grid
-        var grid = document.querySelector('zing-grid');
+        // Ambil semua baris dalam tabel, kecuali baris header
+        var rows = table.getElementsByTagName('tr');
 
-        // Mendapatkan data dari zing-grid
-        var data = grid.data;
+        // Iterasi melalui setiap baris data
+        for (var i = 1; i < rows.length; i++) { // Dimulai dari 1 untuk menghindari baris header
+            var row = rows[i];
+            var visible = false;
 
-        // Mengkonversi data menjadi format CSV
-        var csvContent = Papa.unparse(data);
+            // Ambil semua sel dalam baris
+            var cells = row.getElementsByTagName('td');
 
-        // Membuat elemen <a> untuk mengunduh data
-        var encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "exported_data.csv");
+            // Loop melalui setiap sel dan periksa nilainya
+            for (var j = 0; j < cells.length; j++) {
+                var cellValue = cells[j].innerText.toLowerCase();
+                if (cellValue.includes(searchValue)) {
+                    visible = true;
+                    break; // Hentikan pencarian jika nilai ditemukan dalam salah satu sel
+                }
+            }
 
-        // Menyembunyikan elemen <a> dan memanggil fungsi klik
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        hideExportModal();
-
-    });
-
-    pdfButton.addEventListener('click', function () {
-        // Mendapatkan referensi ke elemen zing-grid
-        var grid = document.querySelector('zing-grid');
-
-        // Mendapatkan data dari zing-grid
-        var data = grid.data;
-
-        // Mengkonversi data menjadi format PDF
-        var pdf = new jsPDF();
-        pdf.autoTable({ head: [grid.columns.map(col => col.label)], body: data });
-        pdf.save('exported_data.pdf');
-    });
-
-    printButton.addEventListener('click', function () {
-            window.print();
-    });
-
-    $('#searchInput').on('input', function () {
-      // Ambil nilai dari input pencarian
-      var searchValue = $(this).val().toLowerCase();
-
-      // Fungsi untuk melakukan pencarian dan memfilter data di ZingGrid
-      filterGridData(searchValue);
-    });
-
-    // Fungsi untuk memfilter data di ZingGrid
-    function filterGridData(searchValue) {
-      var grid = document.getElementById('customerGrid');
-      
-      // Lakukan filter pada setiap baris data
-      grid.data.forEach(function (row) {
-        var visible = Object.values(row).some(function (value) {
-          return String(value).toLowerCase().includes(searchValue);
-        });
-        row.hidden = !visible;
-      });
-
-      // Perbarui tampilan ZingGrid
-      grid.refresh();
+            // Terapkan properti CSS untuk menampilkan atau menyembunyikan baris
+            row.style.display = visible ? '' : 'none';
+        }
     }
 
-    function test(id){
-        alert(id);
+    function exportToCSV() {
+        // Tampilkan alert "Mohon Tunggu"
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Proses sedang berlangsung...',
+            icon: 'info',
+            timer: 2000,
+            timerProgressBar: true,
+            button: false,
+            confirmButtonColor: '#1abc9c',
+        });
+        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        // Ambil semua baris tabel
+        var rows = $("#dataTableUsers").find("tr");
+
+        // Ambil header CSV (hanya sekali)
+        var headerRow = rows.first().children().not(".action-column").map(function() {
+            return $(this).text();
+        }).get().join(",") + "\n";
+
+        // Tambahkan header ke CSV
+        var csv = headerRow;
+
+        // Tambahkan data CSV (tanpa header lagi)
+        rows.each(function(i, row) {
+            if (i > 0) { // Mulai dari baris kedua (skip header)
+                csv += $(row).children().not(".action-column").map(function() {
+                    return $(this).text();
+                }).get().join(",") + "\n";
+            }
+        });
+
+        // Buat link download CSV
+        var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        var link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "DataCustomer_Periode_"+startDate+"[to]"+endDate+".csv"; // Sesuaikan nama file CSV
+
+        // Tampilkan link download CSV
+        $(document.body).append(link);
+        link.click(); // Langsung klik link untuk memulai download
+        // Tampilkan alert "Berhasil Print"
+        Swal.fire({
+            title: 'Berhasil Export CSV',
+            text: 'Data Customers berhasil diexport to csv!',
+            icon: 'success',
+            confirmButtonColor: '#1abc9c',
+        });
+    }
+
+    function printTable() {
+        // Tampilkan alert "Mohon Tunggu"
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Proses sedang berlangsung...',
+            icon: 'info',
+            timer: 2000,
+            timerProgressBar: true,
+            button: false,
+            confirmButtonColor: '#1abc9c',
+        });
+
+        // Sembunyikan kolom Action untuk print
+        $(".action-column", "#dataTableUsers").hide();
+
+        // Konfigurasi print
+        $("#dataTableUsers").printThis({
+            pageTitle: "Data Customers",
+            header: "<h3>Data Customers</h3>",
+            style: "table { table-layout: fixed; width: 100%; }",
+            orientation: "landscape",
+            afterPrint: function() {
+                // Tampilkan kembali kolom Action setelah print
+                $(".action-column", "#dataTableUsers").show();
+
+                // Tampilkan alert "Berhasil Print"
+                Swal.fire({
+                    title: 'Berhasil Print',
+                    text: 'Data Customers berhasil dicetak!',
+                    icon: 'success',
+                    confirmButtonColor: '#1abc9c',
+                });
+            }
+        });
+    }
+
+    function exportToPdf() {
+        // Tampilkan alert "Mohon Tunggu"
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Proses sedang berlangsung...',
+            icon: 'info',
+            timer: 2000,
+            timerProgressBar: true,
+            button: false,
+            confirmButtonColor: '#1abc9c',
+        });
+        var element = document.getElementById("dataTableUsers");
+
+        const columnsToExclude = document.querySelectorAll('.action-column');
+        columnsToExclude.forEach(column => column.remove());
+        // Atur properti pdf
+        var pdfOptions = {
+            margin: 10,
+            filename: 'data_export.pdf',
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'A2', orientation: 'portrait' },
+            output: 'blob'  // Tentukan output sebagai blob
+        };
+
+        // Buat objek untuk ekspor pdf
+        var pdfExporter = new html2pdf(element, pdfOptions);
+
+        // Ekspor ke PDF
+        pdfExporter.toPdf().then(function (pdfBlob) {
+            // Unduh file PDF
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(pdfBlob);
+            link.download = pdfOptions.filename;
+            link.click();
+        });
+        // Tampilkan alert "Berhasil Print"
+        Swal.fire({
+            title: 'Berhasil Export PDF',
+            text: 'Data Customers berhasil diexport to pdf!',
+            icon: 'success',
+            confirmButtonColor: '#1abc9c',
+        });
+    }
+
+
+    $("#copyButton").click(function() {
+        // Tampilkan alert "Mohon Tunggu"
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Proses sedang berlangsung...',
+            icon: 'info',
+            timer: 2000,
+            timerProgressBar: true,
+            button: false,
+            confirmButtonColor: '#1abc9c', // Warna biru
+        });
+        var rows = [];
+        var table = $("#dataTableUsers");
+        var headers = $("thead th", table).map(function() {
+        return $(this).text().trim();
+        }).get();
+
+        $("tbody tr", table).each(function() {
+        var rowData = {};
+        $("td:not(.action-column)", this).each(function(index) {
+            rowData[headers[index]] = $(this).text().trim();
+        });
+        rows.push(rowData);
+        });
+
+        var csvData = "";
+        csvData += Object.keys(rows[0]).filter(header => header !== 'Action').join('\t') + '\r\n';
+        $.each(rows, function(i, row) {
+        var values = Object.values(row).filter((value, index) => Object.keys(rows[0])[index] !== 'Action');
+        csvData += values.join('\t') + '\r\n';
+        });
+
+        new ClipboardJS('#copyButton', {
+        text: function() {
+            return csvData;
+        }
+        }).on('success', function(e) {
+            // Tampilkan alert "Berhasil Print"
+            Swal.fire({
+                title: 'Berhasil Copy',
+                text: 'Data Customers berhasil dicopy!',
+                icon: 'success',
+                confirmButtonColor: '#1abc9c', // Warna biru
+                // cancelButtonColor: '#d33', // Warna merah (jika ada tombol Cancel)
+            });
+        }).on('error', function(e) {
+        alert('Failed to copy data');
+        });
+    });
+    /* Ini pake vanilla JS
+        function copyToClipboard() {
+        var rows = [];
+        var table = document.getElementById("dataTableUsers");
+        var headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
+
+        Array.from(table.querySelectorAll("tbody tr")).forEach(row => {
+            var rowData = {};
+            Array.from(row.cells).forEach((cell, index) => {
+                if (!cell.classList.contains('action-column')) {
+                    rowData[headers[index]] = cell.innerText.trim();
+                }
+            });
+            rows.push(rowData);
+        });
+
+        var csvData = '';
+        csvData += Object.keys(rows[0]).filter(header => header !== 'Action').join('\t') + '\r\n';
+        for (var i = 0; i < rows.length; i++) {
+            var values = Object.values(rows[i]).filter((value, index) => Object.keys(rows[0])[index] !== 'Action');
+            csvData += values.join('\t') + '\r\n';
+        }
+
+        var clipboard = new ClipboardJS('#copyButton', {
+            text: function () {
+                return csvData;
+            }
+        });
+
+        clipboard.on('success', function (e) {
+            alert('Data copied to clipboard');
+        });
+
+        clipboard.on('error', function (e) {
+            alert('Failed to copy data');
+        });
+    }*/
+
+    $('#btn-filter').click(function() {
+        // Toggle kelas 'show' untuk menampilkan atau menyembunyikan slider menu
+        $("#filterSlider").toggleClass("show");
+    });
+    // Bind event click pada tombol close
+    $("#closeFilterBtn").click(function() {
+        // Sembunyikan slider menu dengan menghapus kelas "show"
+        $("#filterSlider").removeClass("show");
+    });
+
+    // searchDateFilter.click(function() {
+    //     $( "#filterDateRage" ).click();
+    // });
+    // Mendapatkan tanggal saat ini
+    $('#filterDateCustomer').daterangepicker({
+        ranges: {
+            'Today': [moment(), moment()],
+            // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
+        },
+        "startDate": moment().subtract(1, 'year').startOf('day'),
+        "endDate": moment().endOf('day').endOf('year'),
+        "drops": "auto",
+            "locale": {
+            "format": "DD/MM/YYYY",
+            "separator": " - ",
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            "firstDay": 1
+        }
+    }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        
+        // Mendapatkan elemen span
+        var searchDateSpan = $('#searchdatepick');
+        // Menentukan format tanggal yang sesuai
+        var dateFormat = 'DD/MM/YYYY';
+        var startDateText = start.format(dateFormat);
+        var endDateText = end.format(dateFormat);
+
+        // Memperbarui teks pada elemen span sesuai dengan pilihan tanggal
+        if (label === 'Custom Range') {
+            searchDateSpan.text(startDateText + ' - ' + endDateText);
+        } else {
+            searchDateSpan.text(label);
+        }
+
+        // Tambahan: Memperbarui atribut startdate dan enddate jika diperlukan
+        searchDateSpan.attr('startdate', start.format('YYYY-MM-DD HH:mm:ss'));
+        searchDateSpan.attr('enddate', end.format('YYYY-MM-DD HH:mm:ss'));
+    });
+
+        // Panggil fungsi updateSearchDateText saat halaman dimuat
+        $(document).ready(function () {
+        updateSearchDateText();
+    });
+
+    // Event handler untuk button reset filter
+    $('#resetFilter').on('click', function () {
+        resetFilter();
+        $('#closeFilterBtn').click();
+    });
+
+    // Event handler untuk button apply filter
+    $('#applyFilter').on('click', function () {
+        applyFilter();
+        $('#closeFilterBtn').click();
+    });
+
+    // Fungsi untuk mereset filter ke 1 tahun terakhir
+    function resetFilter() {
+        $('#filterDateCustomer').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
+        $('#filterDateCustomer').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
+        // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
+        updateSearchDateText();
+        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate
+        }
+        fetchData(filterData);
+    }
+
+    // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
+    function applyFilter() {
+        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate
+        }
+        fetchData(filterData);
+    }
+
+    // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
+    function updateSearchDateText() {
+        var searchDateSpan = $('#searchdatepick');
+        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate;
+        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate;
+        var label = $('#filterDateCustomer').data('daterangepicker').chosenLabel;
+
+        var dateFormat = 'DD/MM/YYYY';
+        var startDateText = startDate.format(dateFormat);
+        var endDateText = endDate.format(dateFormat);
+
+        if (label === 'Custom Range') {
+            searchDateSpan.text(startDateText + ' - ' + endDateText);
+        } else {
+            searchDateSpan.text("Last Year");
+        }
+
+        searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
+        searchDateSpan.attr('enddate', endDate.format('YYYY-MM-DD HH:mm:ss'));
     }
 </script>

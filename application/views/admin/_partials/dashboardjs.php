@@ -1,5 +1,5 @@
 <!-- Required Js -->
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
 <script src="<?= base_url() ?>public/js/vendor-all.min.js"></script>
 <script src="<?= base_url() ?>public/js/plugins/bootstrap.min.js"></script>
 <script src="<?= base_url() ?>public/js/pcoded.min.js"></script>

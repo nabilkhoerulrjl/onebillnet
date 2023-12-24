@@ -37,7 +37,7 @@
                     <label>Customer</label>
                 </li>
                 <li class="nav-item pcoded-hasmenu">
-                    <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="feather icon-layout"></i></span><span class="pcoded-mtext">Data Customer</span></a>
+                    <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="fa fa-users"></i></span><span class="pcoded-mtext">Data Customer</span></a>
                     <ul class="pcoded-submenu">
                         <li><a href="javascript:void(0)" onclick="addTabListCustomers()">Customer</a></li>
                         <li><a href="javascript:void(0)" onclick="addTabListContact()">Contact</a></li>
@@ -48,7 +48,7 @@
                     <label>Communicator</label>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:void(0)" onclick="addTabBillReminder()" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Broadcast Billing</span></a>
+                    <a href="javascript:void(0)" onclick="addTabBillReminder()" class="nav-link "><span class="pcoded-micon"><i class="fa-solid fa-tower-broadcast"></i></span><span class="pcoded-mtext">Broadcast Billing</span></a>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Forms &amp; table</label>

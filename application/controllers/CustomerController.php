@@ -23,71 +23,71 @@ class CustomerController extends CI_Controller {
     }
 
     public function getListData() {
-        // $siteId = $this->getSiteId();
-        // echo "wqqwesadqwre";
-        // $query = 'SELECT
-            
-        //     FROM Customer c
-        //     JOIN Product p ON c.ProductId = p.Id
-        //     LEFT JOIN Bill b ON c.Id = b.CustomerId
-        //     LEFT JOIN Contact ct ON c.ContactId = ct.Id
-        //     WHERE
-        //     SiteId = ?';
-        // $result = $this->db->query($query, array($siteId))->result();
-        // $this->db->select('c.Id AS CustomerId, c.FirstName, c.LastName,c.Email,c.Phone,
-        //                     c.Whatsapp,c.RtRw,c.Ward,
-        //                     c.Subdistrict,
-        //                     c.City,
-        //                     c.Province,
-        //                     p.Name AS ProductName,
-        //                     c.StatusId AS SubscriptionStatus,
-        //                     b.StatusId AS BillStatus,
-        //                     c.Gender,
-        //                     c.CreateDate AS RegistrationDate');
-        // $this->db->from('nama_tabel1 as t1');
-        // $this->db->join('nama_tabel2 as t2', 't1.common_column = t2.common_column', 'INNER');
-        // $this->db->where('t1.tanggal_kolom >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)', NULL, FALSE);
-        // $this->db->where('t1.site_id', $siteid);
+        $startDate = $this->input->post('startDate');
+        $endDate = $this->input->post('endDate');
+        // var_dump($startDate);
+        // var_dump($endDate);
+        // die();
+        $siteId = $this->getSiteId();
+        $this->load->model('Customer_model');
+        $this->db->select('c.Id AS CustomerId, c.FirstName, c.LastName,
+                            c.Whatsapp,c.RtRw,c.Ward, 
+                            c.Subdistrict, c.City,
+                            c.Province,pd.Name AS ProductName,
+                            c.StatusId AS StatusSubsribe,
+                            b.StatusId AS StatusBill,
+                            c.ActiveDate AS DateSubsribe');
+        $this->db->from('Customer as c');
+        $this->db->join('Product as pd', 'c.ProductId = pd.Id', 'LEFT');
+        $this->db->join('Bill as b', 'c.Id = b.CustomerId', 'LEFT');
+        $this->db->where('c.SiteId =', $siteId);
+        $this->db->where('c.CreateDate >=', $startDate);
+        $this->db->where('c.CreateDate <=', $endDate);
+        $this->db->order_by('c.CreateDate', 'desc');
 
-        // $query = $this->db->get();
-        // $result = $query->result();
-        $customers = [
-            [
-                'id' => 1,
-                'nama' => 
-                'John Doe', 
-                // 'email' => 'john@example.com',
-                'whatsapp' => '0868546358293',
-                'rtrw' => '04/06',
-                'keluarahan' => 'cimpaeun',
-                'kecamatan' => 'Tapos',
-                'kota' => 'Depok',
-                'productname' => 'paket 50 mbps',
-                'statuslangganan' => 'Active',
-                'statuspembayaran' => 'Lunas',
-                'tanggalregistrasi' => '20 september 2022',
+        $queryGet = $this->db->get();
+        
+        $data = $this->Customer_model->getCustomerByCustom($queryGet);
+        echo json_encode($data);
+
+        // var_dump($data);
+        // $customers = [
+        //     [
+        //         'id' => 1,
+        //         'nama' => 
+        //         'John Doe', 
+        //         // 'email' => 'john@example.com',
+        //         'whatsapp' => '0868546358293',
+        //         'rtrw' => '04/06',
+        //         'keluarahan' => 'cimpaeun',
+        //         'kecamatan' => 'Tapos',
+        //         'kota' => 'Depok',
+        //         'productname' => 'paket 50 mbps',
+        //         'statuslangganan' => 'Active',
+        //         'statuspembayaran' => 'Lunas',
+        //         'tanggalregistrasi' => '20 september 2022',
                 
-            ],
-            [
-                'id' => 1,
-                'nama' => 'John Die', 
-                // 'email' => 'john@example.com',
-                'whatsapp' => '0868546358293',
-                'rtrw' => '04/06',
-                'keluarahan' => 'cimpaeun',
-                'kecamatan' => 'Tapos',
-                'kota' => 'Depok',
-                'productname' => 'paket 50 mbps',
-                'statuslangganan' => 'Active',
-                'statuspembayaran' => 'Lunas',
-                'tanggalregistrasi' => '20 september 2022',
+        //     ],
+        //     [
+        //         'id' => 1,
+        //         'nama' => 'John Die', 
+        //         // 'email' => 'john@example.com',
+        //         'whatsapp' => '0868546358293',
+        //         'rtrw' => '04/06',
+        //         'keluarahan' => 'cimpaeun',
+        //         'kecamatan' => 'Tapos',
+        //         'kota' => 'Depok',
+        //         'productname' => 'paket 50 mbps',
+        //         'statuslangganan' => 'Active',
+        //         'statuspembayaran' => 'Lunas',
+        //         'tanggalregistrasi' => '20 september 2022',
                 
-            ],
-            // Tambahkan data sesuai kebutuhan
-        ];
+        //     ],
+        //     // Tambahkan data sesuai kebutuhan
+        // ];
         
         // Mengembalikan data dalam format JSON
-        echo json_encode($customers);
+        // echo json_encode($data);
         // $this->load->view('contact/create');
 
     }
