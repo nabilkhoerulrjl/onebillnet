@@ -99,7 +99,7 @@ class CustomerController extends CI_Controller {
             $domain = $_SERVER['SERVER_NAME'];
         }
         $where = array(
-			'Domain' => 'homewifi.com'//$domain,
+			'Domain' => $domain,
 		);
         
         $site = $this->M_Site->siteId("Site",$where);
