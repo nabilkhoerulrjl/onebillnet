@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-    'hostname' => getenv('DB_HOST'),  // Menggunakan getenv() untuk mendapatkan nilai dari variabel lingkungan
-    'username' => getenv('DB_USER'),
-    'password' => getenv('DB_PASS'),
-    'database' => getenv('DB_NAME'),
+    'hostname' => getenv('APP_DB_HOST'),  // Menggunakan getenv() untuk mendapatkan nilai dari variabel lingkungan
+    'username' => getenv('APP_DB_USER'),
+    'password' => getenv('APP_DB_PASS'),
+    'database' => getenv('APP_DB_NAME'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

@@ -1,12 +1,12 @@
 # .env.staging
 
 # Set default values Information Server
-SERVER_ADDRESS=$DEPLOY_SERVER_ADDRESS
-GITHUB_USERNAME=$GITHUB_USERNAME
-GITHUB_TOKEN=$GITHUB_TOKEN
-REMOTE_HOST=$REMOTE_HOST
-REMOTE_USER=$REMOTE_USER
-DEPLOY_PATH=$DEPLOY_PATH
+APP_SERVER_ADDRESS=$APP_DEPLOY_SERVER_ADDRESS
+APP_GITHUB_USERNAME=$APP_GITHUB_USERNAME
+APP_GITHUB_TOKEN=$APP_GITHUB_TOKEN
+APP_REMOTE_HOST=$APP_REMOTE_HOST
+APP_REMOTE_USER=$APP_REMOTE_USER
+APP_DEPLOY_PATH=$APP_DEPLOY_PATH
 
 # REMOTE_HOST='192.168.0.122'
 # REMOTE_USER='webserver1'
@@ -41,16 +41,16 @@ fi
 # scp -r $LOCAL_PATH $REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH  || { echo "Gagal mengunggah ke server."; exit 1; }
 
 echo "Login to server..."
-ssh $(echo "$REMOTE_USER" | tr -d '\r')@$(echo "$REMOTE_HOST" | tr -d '\r') "cd $(echo "$DEPLOY_PATH" | tr -d '\r')" || { echo "$REMOTE_HOST"; exit 1; }
+ssh $(echo "$APP_REMOTE_USER" | tr -d '\r')@$(echo "$APP_REMOTE_HOST" | tr -d '\r') "cd $(echo "$APP_DEPLOY_PATH" | tr -d '\r')" || { echo "$APP_REMOTE_HOST"; exit 1; }
 echo "Success login to server..."
 
 # Set up Git credentials for HTTPS
 echo "Setup git..."
-git_credential_helper="!f() { echo \"username=${GITHUB_USERNAME}\"; echo \"password=${GITHUB_TOKEN}\"; }; f"
+git_credential_helper="!f() { echo \"username=${APP_GITHUB_USERNAME}\"; echo \"password=${APP_GITHUB_TOKEN}\"; }; f"
 git config --global credential.helper "$git_credential_helper"
 
 echo "Pull latest code..."
-ssh $(echo $REMOTE_USER | tr -d '\r')@$(echo $REMOTE_HOST | tr -d '\r') "cd $(echo $DEPLOY_PATH | tr -d '\r') && git pull origin "$ACTIVE_BRANCH""
+ssh $(echo $APP_REMOTE_USER | tr -d '\r')@$(echo $APP_REMOTE_HOST | tr -d '\r') "cd $(echo $APP_DEPLOY_PATH | tr -d '\r') && git pull origin "$ACTIVE_BRANCH""
 #ssh $(echo "$REMOTE_USER" | tr -d '\r')@$(echo "$REMOTE_HOST" | tr -d '\r') cd $(echo "$DEPLOY_PATH" | tr -d '\r') && sudo git pull origin "$ACTIVE_BRANCH" || { echo "Gagal pull latest code."; exit 1; }
 echo "Success pull latest code..."
 

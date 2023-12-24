@@ -305,17 +305,37 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
+// Config lama
+	// require_once __DIR__ . '/vendor/autoload.php';
+	// $environment = getenv('APP_ENV') ?: 'development';
+
+	// // $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+
+	// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ".env.{$environment}");
+	// use Dotenv\Dotenv;
+
+	// $dotenv->load();
+	// $dotenv->required(['APP_ENV', 'APP_DB_HOST', 'APP_DB_USER', 'APP_DB_PASS', 'APP_DB_NAME']);
+// Config percobaan baru
+	// File: index.php
 	require_once __DIR__ . '/vendor/autoload.php';
-	$environment = getenv('APPLICATION_ENV') ?: 'development';
 
-	// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+	// Baca konfigurasi situs dari file
+	$sites = require_once APPPATH . '/config/sites.php';
 
-	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ".env.{$environment}");
-	use Dotenv\Dotenv;
+	// Identifikasi situs berdasarkan domain
+	$domain = $_SERVER['HTTP_HOST'];
 
+	$dotenvFile = isset($sites[$domain]) ? $sites[$domain] : '.env';
+
+	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, $dotenvFile);
 	$dotenv->load();
-	$dotenv->required(['APPLICATION_ENV', 'DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME']);
 
+	// Muat konfigurasi situs berdasarkan domain
+	$siteConfigFile = "config/config-{$domain}.php";
+	if (file_exists(APPPATH . $siteConfigFile)) {
+		require_once APPPATH . $siteConfigFile;
+	}
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
@@ -324,3 +344,4 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+

@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
     class M_Site extends CI_Model {
         function siteId($table,$where){
             $queryGetSite = $this->db->get_where($table,$where);
@@ -18,6 +19,10 @@
                 $dataCompanyName = $data->Name;
             }
             return $dataCompanyName;
+        }
+
+        public function getSiteInfo($domain) {
+            return $this->db->get_where('site', ['Domain' => $domain])->row_array();
         }
     }
 ?>
