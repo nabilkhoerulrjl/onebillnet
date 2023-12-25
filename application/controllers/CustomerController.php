@@ -29,6 +29,8 @@ class CustomerController extends CI_Controller {
         // var_dump($endDate);
         // die();
         $siteId = $this->getSiteId();
+        // var_dump('s',$siteId);
+        // die();
         $this->load->model('Customer_model');
         $this->db->select('c.Id AS CustomerId, c.FirstName, c.LastName,
                             c.Whatsapp,c.RtRw,c.Ward, 
@@ -50,69 +52,16 @@ class CustomerController extends CI_Controller {
         $data = $this->Customer_model->getCustomerByCustom($queryGet);
         echo json_encode($data);
 
-        // var_dump($data);
-        // $customers = [
-        //     [
-        //         'id' => 1,
-        //         'nama' => 
-        //         'John Doe', 
-        //         // 'email' => 'john@example.com',
-        //         'whatsapp' => '0868546358293',
-        //         'rtrw' => '04/06',
-        //         'keluarahan' => 'cimpaeun',
-        //         'kecamatan' => 'Tapos',
-        //         'kota' => 'Depok',
-        //         'productname' => 'paket 50 mbps',
-        //         'statuslangganan' => 'Active',
-        //         'statuspembayaran' => 'Lunas',
-        //         'tanggalregistrasi' => '20 september 2022',
-                
-        //     ],
-        //     [
-        //         'id' => 1,
-        //         'nama' => 'John Die', 
-        //         // 'email' => 'john@example.com',
-        //         'whatsapp' => '0868546358293',
-        //         'rtrw' => '04/06',
-        //         'keluarahan' => 'cimpaeun',
-        //         'kecamatan' => 'Tapos',
-        //         'kota' => 'Depok',
-        //         'productname' => 'paket 50 mbps',
-        //         'statuslangganan' => 'Active',
-        //         'statuspembayaran' => 'Lunas',
-        //         'tanggalregistrasi' => '20 september 2022',
-                
-        //     ],
-        //     // Tambahkan data sesuai kebutuhan
-        // ];
-        
-        // Mengembalikan data dalam format JSON
-        // echo json_encode($data);
-        // $this->load->view('contact/create');
-
     }
 
     public function getSiteId()
     {
-        $domain = $_SERVER['HTTP_HOST'];
-        if (!$domain) {
-            $domain = $_SERVER['SERVER_NAME'];
-        }
-        $where = array(
-			'Domain' => $domain,
-		);
-        
-        $site = $this->M_Site->siteId("Site",$where);
-		// var_dump($site);
-		// // var_dump($site);
-		// die();
-        //$query = $this->db->get('site');
-		//$arrays = $site->result();
-        $siteId = null;
-        if(isset($site)){
-            $siteId = $site;
-        }else{
-            echo "SiteId Not Found !";
+		$siteId  ="0";
+		// Load the session library
+		$this->load->library('session');
+        if ($this->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->session->userdata("siteid");
         }
         return $siteId;
 	}

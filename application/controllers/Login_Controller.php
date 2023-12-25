@@ -52,6 +52,7 @@ class Login_Controller extends CI_Controller {
 				'name' => $data['dataUser']->UserName,
 				'status' => "login",
 				'host' => $host,
+				'siteid' => $data['dataUser']->SiteId,
 				'role' => $data['dataUser']->RoleName,
 				'picture' => $data['dataUser']->JpegPicture, // Gunakan JpegPicture yang telah disetel sebelumnya
 			);
@@ -107,21 +108,15 @@ class Login_Controller extends CI_Controller {
         if (!$domain) {
             $domain = $_SERVER['SERVER_NAME'];
         }
-        $where = array(
-			'Domain' => $domain,
-		);
+        $where = array('Domain' => $domain);
         
         $site = $this->M_Site->siteId("Site",$where);
-		// var_dump($site);
-		// // var_dump($site);
-		// die();
-        //$query = $this->db->get('site');
-		//$arrays = $site->result();
+		// require_once APPPATH . 'config/config.php';
         $siteId = null;
         if(isset($site)){
-            $siteId = $site;
+            $siteId = $site + 0;
         }else{
-            echo "SiteId Not Found !";
+            $siteId = $this->config->item('site_id');
         }
         return $siteId;
 	}
