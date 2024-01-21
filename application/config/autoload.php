@@ -144,4 +144,5 @@ $autoload['model'] = array(
                         'Message_Model',
                         'MessageContent_Model',
                         'Customer_Model',
+                        'File_Model',
                     );

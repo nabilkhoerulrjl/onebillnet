@@ -96,11 +96,17 @@
         z-index: 9999;
     }
 </style>
+<?php $this->load->view("customer/addCustomer.php") ?>
 <div class="wrapper wrapper-content bg-white">
     <div class="text-header col-md p-4">
         <h3 class="font-weight-bold">Data Customers</h3>
     </div>
     <div class="ibox-content p-4">
+        <div class="wrapper-btn-add d-flex justify-content-end pb-2">
+            <button type="button" class="btn btn-sm btn-primary" id="btnmodal">
+                <i class="fa fa-user-plus fa-sm pr-1"></i>Add Customer
+            </button>
+        </div>
         <div class="tools-table d-flex align-items-end justify-content-between mb-3">
             <div id="exportButtons d-flex">
                 <button type="button" id="copyButton" class="btn btn-outline-secondary btn-sm" 
@@ -206,6 +212,20 @@
 <script src="<?= base_url()?>/public/js/plugins/sweetalert/sweetalert2.all.min.js"></script>
 <!-- Page Scripts -->
 <script>
+    // Menjalankan fungsi fetchData saat halaman dimuat
+    $(document).ready(function () {
+        var startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        var endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
+        
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate
+        }
+        console.log('filterData',filterData);
+
+        // fetchData(filterData);
+        fetchData(filterData);
+    });
     var base_url = '<?= base_url()?>';
     // Fungsi untuk menampilkan modal
     function showExportModal() {
@@ -218,28 +238,29 @@
     }
         
     // Fungsi untuk mengambil data dari controller menggunakan AJAX
-    function fetchData(filterData="") {
-        // Ganti dengan URL controller Anda
-        var url = base_url+'/CustomerController/getListData';
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
-        if(startDate == null){
-            startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-        }
-        if(endDate == null){
-            endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
-        }
+    function fetchData(filterData) {
+        // Ganti dengan URL controller Anda 
+        var url = base_url+'CustomerController/getListData';
+        // var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        // var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        // if(startDate == null){
+        //     startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        // }
+        // if(endDate == null){
+        //     endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
+        // }
         console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
-        if(filterData == "") {
-            requestData = {
-                startDate: startDate,
-                endDate: endDate
-            };
-        }else{
+        // if(filterData == "") {
+        //     requestData = {
+        //         startDate: startDate,
+        //         endDate: endDate
+        //     };
+        // }else{
             requestData = filterData;
-        }
+            console.log('fetchData',requestData);
+        // }
 
         // console.log(requestData);
         // Menggunakan jQuery untuk melakukan AJAX request
@@ -320,11 +341,6 @@
             }
         });
     }
-
-    // Menjalankan fungsi fetchData saat halaman dimuat
-    $(document).ready(function () {
-        fetchData();
-    });
 
         
     $('#searchDataText').on('input', function () {
@@ -708,4 +724,11 @@
         searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
         searchDateSpan.attr('enddate', endDate.format('YYYY-MM-DD HH:mm:ss'));
     }
+
+    // buat trigger modal form add customer
+    $("#btnmodal").on("click", function () {
+        // Show the logout modal
+        // alert('asdasdsa');
+        $("#formAddCSModal").modal("show");
+    });
 </script>

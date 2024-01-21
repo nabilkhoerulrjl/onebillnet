@@ -16,6 +16,11 @@ class CustomerController extends CI_Controller {
         $this->load->view('customer/listCustomer');
     }
 
+    public function loadFormAddCustomer() {
+        // Load view "addCustomer.php" secara dinamis
+        $this->load->view('customer/addCustomer');
+    }
+
     public function view($contactId) {
         // Tampilkan detail kontak berdasarkan ID
         $data['contact'] = $this->Contact_model->getContactById($contactId);
@@ -31,25 +36,7 @@ class CustomerController extends CI_Controller {
         $siteId = $this->getSiteId();
         // var_dump('s',$siteId);
         // die();
-        $this->load->model('Customer_model');
-        $this->db->select('c.Id AS CustomerId, c.FirstName, c.LastName,
-                            c.Whatsapp,c.RtRw,c.Ward, 
-                            c.Subdistrict, c.City,
-                            c.Province,pd.Name AS ProductName,
-                            c.StatusId AS StatusSubsribe,
-                            b.StatusId AS StatusBill,
-                            c.ActiveDate AS DateSubsribe');
-        $this->db->from('Customer as c');
-        $this->db->join('Product as pd', 'c.ProductId = pd.Id', 'LEFT');
-        $this->db->join('Bill as b', 'c.Id = b.CustomerId', 'LEFT');
-        $this->db->where('c.SiteId =', $siteId);
-        $this->db->where('c.CreateDate >=', $startDate);
-        $this->db->where('c.CreateDate <=', $endDate);
-        $this->db->order_by('c.CreateDate', 'desc');
-
-        $queryGet = $this->db->get();
-        
-        $data = $this->Customer_model->getCustomerByCustom($queryGet);
+        $data = $this->Customer_Model->getCustomerAll($siteId, $startDate, $endDate);
         echo json_encode($data);
 
     }
@@ -66,19 +53,141 @@ class CustomerController extends CI_Controller {
         return $siteId;
 	}
 
-    // public function store() {
-    //     // Simpan kontak baru
-    //     $data = array(
-    //         'Name' => $this->input->post('name'),
-    //         'Email' => $this->input->post('email'),
-    //         // ... (tambahkan kolom lain sesuai kebutuhan)
-    //     );
+    public function storeData() {
 
-    //     $contactId = $this->Contact_model->insertContact($data);
+        $siteId = $this->getSiteId();
+        
+        // Mengambil data dari POST
+        $firstName = $this->input->post('firstName');
+        $lastName = $this->input->post('lastName');
+        $nikNumber = $this->input->post('nikNumber');
+        $email = $this->input->post('email');
+        $whatsapp = $this->input->post('whatsapp');
+        $product = $this->input->post('product');
+        $cityBorn = $this->input->post('cityBorn');
+        $dateOfBirth = $this->input->post('dateOfBirth');
+        $gender = $this->input->post('gender');
+        $province = $this->input->post('province');
+        $city = $this->input->post('city');
+        $kecamatan = $this->input->post('kecamatan');
+        $kelurahan = $this->input->post('kelurahan');
+        $rtRw = $this->input->post('rtRw');
+        $contactGroup = $this->input->post('contactGroup');
+        $address = $this->input->post('address');
+        $myImage = $this->input->post('myImage');
 
-    //     // Redirect ke halaman detail kontak
-    //     redirect('contact/view/' . $contactId);
-    // }
+        $userId = $this->getUserId();
+
+        $imageId = $this->uploadImage($myImage,$userId);
+
+        $dataCustomer = array(
+            'FirstName' => $firstName,
+            'LastName' => $lastName,
+            'NikNumber' => $nikNumber,
+            'ProductId' => $product,
+            'SiteId' => $siteId,
+            'StatusId' => 'CRS2',
+            'CityBorn' => $cityBorn,
+            'DateOfBirth' => $dateOfBirth,
+            'Gender' => $gender,
+            'Phone' => NULL,
+            'whatsapp' => $whatsapp,
+            'Email' => $email,
+            'Address' => $address,
+            'LastLogin' => NULL,
+            'ImageId' => $imageId,
+            'RtRw' => $rtRw,
+            'ward' => $kelurahan,
+            'Subdistrict' => $kecamatan,
+            'City' => $city,
+            'Province' => $province,
+            'Creator' => $userId,
+            'CreateDate' => date('Y-m-d H:i:s'),
+            'Modifier' => $userId,
+            'ModifyDate' => date('Y-m-d H:i:s')
+        );
+
+        $customerId = $this->Customer_Model->insertCustomer($dataCustomer);
+
+        $dataContact = array(
+            'Name' => $firstName.' '.$lastName,
+            'FirstName' => $firstName,
+            'LastName' => $lastName,
+            'Email' => $email,
+            'Phone' => NULL,
+            'whatsapp' => $whatsapp,
+            'Mobile' => NULL,
+            'CustomerId' => $customerId,
+            'GroupId' => $contactGroup,
+            'StatusId' => 'CTS2',
+            'SiteId' => $siteId,
+            'Creator' => $userId,
+            'CreateDate' => date('Y-m-d H:i:s'),
+            'Modifier' => $userId,
+            'ModifyDate' => date('Y-m-d H:i:s')
+        );
+
+            
+        $data = $this->Contact_Model->insertContact($dataContact);
+        if($data == 'success') {
+            echo json_encode(array('status' => 'success', 'message' => 'Message data success to save.'));
+        }else {
+            var_dump($data);
+            echo json_encode(array('status' => 'failed', 'message' => 'Customer data failed to save.'));
+        }
+    }
+
+    private function getUserId()
+	{
+		// Check if the variable is defined
+		$userId  ="0";
+        $this->load->library('session');
+        if ($this->session->has_userdata("id")) {
+            // Retrieve its value
+            $userId = $this->session->userdata("id");
+        }
+		
+		return $userId;
+	}
+
+    public function uploadImage($imageData,$userId) {
+        ini_set('upload_max_filesize', '20M');
+        ini_set('post_max_size', '20M');
+        // Upload gambar dan convert ke BLOB
+        $imageData = file_get_contents($_FILES['myImage']['tmp_name']);
+        $imageBLOB = base64_encode($imageData);
+        // Mendapatkan nama file
+        $fileName = pathinfo($_FILES['myImage']['name'], PATHINFO_FILENAME);
+        $filePath = $_FILES['myImage']['name'];
+        $fileSize = $_FILES['myImage']['size'];
+        $fileType = $_FILES['myImage']['type'];
+
+        var_dump($filePath);
+        // die();
+        // Data untuk insert ke tabel
+        $fileData = array(
+            'Name' => $fileName,
+            'Size' => $fileSize,
+            'Date' => date('Y-m-d H:i:s'),
+            'ContentType' => $fileType,
+            'Path' => $filePath, // Menggunakan nama file sebagai path
+            'Content' => $imageBLOB,
+            'Creator' => $userId, // Sesuaikan dengan pembuat
+            'CreateDate' => date('Y-m-d H:i:s'),
+            'Modifier' => $userId,
+            'ModifyDate' => date('Y-m-d H:i:s')
+        );
+
+        // Panggil fungsi model untuk insert data
+        $insertedId = $this->File_Model->insertFile($fileData);
+        if ($insertedId !== false) {
+            // Data berhasil di-insert, $insertedId berisi ID dari baris yang baru
+            return $insertedId;
+        } else {
+            // Gagal insert, tambahkan penanganan kesalahan jika diperlukan
+            echo "Gagal insert data.";
+        }
+    }
 
     // public function edit($contactId) {
     //     // Form untuk mengedit kontak berdasarkan ID

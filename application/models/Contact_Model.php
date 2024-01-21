@@ -34,7 +34,14 @@
 
         public function insertContact($data) {
             $this->db->insert('Contact', $data);
-            return $this->db->insert_id();
+            if ($this->db->affected_rows() > 0) {
+                // Jika insert berhasil, kembalikan pesan berhasil
+                return 'success';
+            } else {
+                // Jika insert gagal, kembalikan pesan error
+                $error = $this->db->error();
+                return 'Gagal insert data. Error: ' . $error['message'];
+            }
         }
 
         public function updateContact($contactId, $data) {

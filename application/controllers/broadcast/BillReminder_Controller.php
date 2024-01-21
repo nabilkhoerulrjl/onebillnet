@@ -53,22 +53,12 @@ class BillReminder_Controller extends CI_Controller {
 
     public function getSiteId()
     {
-        $domain = 'homewifi.com';//$_SERVER['HTTP_HOST'];
-        if (!$domain) {
-            $domain = $_SERVER['SERVER_NAME'];
-        }
-        $where = array(
-			'Domain' => $domain,
-		);
-        
-        $site = $this->M_Site->siteId("Site",$where);
-        //$query = $this->db->get('site');
-		//$arrays = $site->result();
-        $siteId = null;
-        if(isset($site)){
-            $siteId = $site;
-        }else{
-            echo "SiteId Not Found !";
+		$siteId  ="0";
+		// Load the session library
+		$this->load->library('session');
+        if ($this->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->session->userdata("siteid");
         }
         return $siteId;
 	}

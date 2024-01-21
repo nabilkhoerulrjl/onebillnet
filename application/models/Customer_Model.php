@@ -9,11 +9,18 @@
             return $query->row_array();
         }
 
-        public function getCustomerByCustom($queryGet) {
-            $result = $queryGet->result();
-            // echo $this->db->last_query();
-            // var_dump($result);
-            return $result;
+        public function getCustomerAll($siteId, $startDate, $endDate) {
+            $this->db->select('c.Id as CustomerId, c.FirstName, c.LastName, c.Whatsapp, c.RtRw, c.Ward, c.Subdistrict, c.City, c.Province, pd.Name as ProductName, c.StatusId as StatusSubsribe, b.StatusId as StatusBill, c.ActiveDate as DateSubsribe');
+            $this->db->from('Customer as c');
+            $this->db->join('Product as pd', 'c.ProductId = pd.Id', 'left');
+            $this->db->join('Bill as b', 'c.Id = b.CustomerId', 'left');
+            $this->db->where('c.SiteId', $siteId);
+            $this->db->where('c.CreateDate >=', $startDate);
+            $this->db->where('c.CreateDate <=', $endDate);
+            $this->db->order_by('c.CreateDate', 'ASC');
+    
+            $query = $this->db->get();
+            return $query->result();
 
             
             // die();
@@ -37,8 +44,29 @@
         }
 
         public function insertCustomer($data) {
-            $this->db->insert('Contact', $data);
-            return $this->db->insert_id();
+                // Memulai transaksi database
+            $this->db->trans_start();
+            // Masukkan data ke tabel 'Customer'
+            $this->db->insert('Customer', $data);
+
+            // Ambil ID yang baru saja dimasukkan
+            // Ambil data yang baru saja diinsert
+            $insertedId = $this->db->insert_id();
+            $result = $this->db->get_where('Customer', ['Id' => $insertedId])->row();
+            // var_dump($result);
+            // die();
+
+            // Menyelesaikan transaksi
+            $this->db->trans_complete();
+
+            // Periksa apakah transaksi berhasil atau tidak
+            if ($this->db->trans_status() === false) {
+                // Jika terjadi kesalahan, kembalikan false atau sesuaikan dengan kebutuhan
+                return false;
+            } else {
+                // Jika berhasil, kembalikan ID pesan yang baru saja dimasukkan
+                return $result->Id;
+            }
         }
 
         public function updateCustomer($contactId, $data) {

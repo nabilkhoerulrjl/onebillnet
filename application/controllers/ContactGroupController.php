@@ -20,6 +20,20 @@ class ContactGroupController extends CI_Controller {
         $this->load->view('contactgroup/detail', $data);
     }
 
+    public function getListDataContactGroup() {
+        $siteId = $this->getSiteId();
+		$select = 'ContactGroup.Id,ContactGroup.GroupName';
+		$where = array(
+			'SiteId' => $siteId,
+		);
+		$this->load->model('ContactGroup_Model');
+		$data = $this->ContactGroup_Model->getAllContactGroup($select, $where);
+        // var_dump($data);
+        echo json_encode($data);
+
+        return ;
+    }
+
     // Fungsi untuk menambahkan data grup kontak
     public function create() {
         // Proses penanganan form submission untuk menambahkan data
@@ -41,4 +55,16 @@ class ContactGroupController extends CI_Controller {
         $this->Contactgroup_model->delete_contactgroup($id);
         // Redirect atau tampilkan pesan sukses setelah penghapusan data
     }
+
+    public function getSiteId()
+    {
+		$siteId  ="0";
+		// Load the session library
+		$this->load->library('session');
+        if ($this->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->session->userdata("siteid");
+        }
+        return $siteId;
+	}
 }
