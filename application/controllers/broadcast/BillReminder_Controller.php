@@ -25,6 +25,18 @@ class BillReminder_Controller extends CI_Controller {
 
 		$this->load->view('broadcast/billReminder',$data);
 	}
+
+	public function deliveryHistory()
+	{
+		$this->load->view('broadcast/deliveryHistory');
+	}
+
+	public function getDataDeliveryHistory()
+	{
+		$siteId 	= $this->getSiteId();
+		$dataConn	= $this->getMediaConnection();
+
+	}
 /*
 	public function mainDashboard()
 	{
@@ -106,12 +118,12 @@ class BillReminder_Controller extends CI_Controller {
 	public function getContactGroup()
 	{
 		$siteId = $this->getSiteId();
-		$select = 'Contact.Id,Contact.Name,Contact.Email,Contact.Whatsapp';
+		$select = 'ContactGroup.Id,ContactGroup.GroupName';
 		$where = array(
-			'SiteId' => $siteId
+			'SiteId' => $siteId,
 		);
 		$this->load->model('ContactGroup_Model');
-		$data['dataContactGroup'] = $this->ContactGroup_Model->getAllContactGroups($select, $where);
+		$data['dataContactGroup'] = $this->ContactGroup_Model->getAllContactGroup($select, $where);
         return $data['dataContactGroup'];
 	}
 

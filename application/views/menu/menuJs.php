@@ -35,6 +35,10 @@
     openTabGeneral('bill_reminder','Bill Reminder', 'fa-message', 'broadcast/BillReminder_Controller/Index', 'Get' );
   }
 
+  function addTabDeliveryHistory() {
+    openTabGeneral('delivery_history','Delivery History', 'fa-history', 'broadcast/BillReminder_Controller/deliveryHistory', 'Get' );
+  }
+
   function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){
       //showHideMenu();
       var tabName = 'Tab Name Prototipe';//$(".nav-menu-custom > li.on > a").text();
