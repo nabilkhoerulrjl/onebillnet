@@ -106,12 +106,12 @@ class BillReminder_Controller extends CI_Controller {
 	public function getContactGroup()
 	{
 		$siteId = $this->getSiteId();
-		$select = 'Contact.Id,Contact.Name,Contact.Email,Contact.Whatsapp';
+		$select = 'Id,GroupName,Description';
 		$where = array(
 			'SiteId' => $siteId
 		);
 		$this->load->model('ContactGroup_Model');
-		$data['dataContactGroup'] = $this->ContactGroup_Model->getAllContactGroups($select, $where);
+		$data['dataContactGroup'] = $this->ContactGroup_Model->getAllContactGroup($select, $where);
         return $data['dataContactGroup'];
 	}
 

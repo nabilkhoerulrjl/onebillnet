@@ -16,10 +16,22 @@ class CustomerController extends CI_Controller {
         $this->load->view('customer/listCustomer');
     }
 
-    public function loadFormAddCustomer() {
-        // Load view "addCustomer.php" secara dinamis
-        $this->load->view('customer/addCustomer');
+    public function billCustomer() {
+        $data['idTabMenu'] = 'billCustomer255';
+        $data['dataBill']  = $this->getListBillData();
+        // var_dump($data['dataBill']);
+        $this->load->view('customer/billCustomer/index',$data);
     }
+
+    public function addBillCustomer() {
+        $data['idTabMenu']  = 'addBillCustomer255';
+        $this->load->view('customer/billCustomer/addBill',$data);
+    }
+
+    // public function loadFormAddCustomer() {
+    //     // Load view "addCustomer.php" secara dinamis
+    //     $this->load->view('customer/addCustomer');
+    // }
 
     public function view($contactId) {
         // Tampilkan detail kontak berdasarkan ID
@@ -27,18 +39,34 @@ class CustomerController extends CI_Controller {
         $this->load->view('contact/view', $data);
     }
 
-    public function getListData() {
-        $startDate = $this->input->post('startDate');
-        $endDate = $this->input->post('endDate');
-        // var_dump($startDate);
-        // var_dump($endDate);
-        // die();
+    public function getListBillData() {
+        // $startDate = $this->input->post('startDate');
+        // $endDate = $this->input->post('endDate');
         $siteId = $this->getSiteId();
-        // var_dump('s',$siteId);
-        // die();
-        $data = $this->Customer_Model->getCustomerAll($siteId, $startDate, $endDate);
-        echo json_encode($data);
+        $select = 'b.ExternalId AS ExternalId,
+        c.FirstName AS FirstName, c.LastName AS LastName,
+        pd.Name AS ProductName, b.Periode,
+        b.DueDate, b.Amount, b.StatusId,
+        b.PaymentLink, b.ExpiryDate';
+        $join1   = ['Product AS pd', 'c.ProductId = pd.Id', 'left'];
+        $join2   = ['Bill AS b', 'c.Id = b.CustomerId', 'left'];
+        $arrJoin = array(
+            'join1' => $join1,
+            'join2' => $join2,
+        );
+        $where  = $siteId;
+        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where);
+        return $data;
+    }
 
+    public function getAllData() {
+        $startDate = NULL;
+        $endDate = NULL;
+        $siteId = $this->getSiteId();
+        
+        $data = $this->Customer_Model->getCustomerAll($siteId, $startDate, $endDate);
+        
+        echo json_encode($data);
     }
 
     public function getSiteId()

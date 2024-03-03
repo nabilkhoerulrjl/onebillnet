@@ -17,6 +17,7 @@ class ProductController extends CI_Controller {
 		);
 		$this->load->model('Product_Model');
 		$data = $this->Product_Model->getAllProduct($select, $where);
+        $data[0] = 
         // var_dump($data);
         echo json_encode($data);
 

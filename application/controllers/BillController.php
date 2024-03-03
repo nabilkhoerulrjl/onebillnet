@@ -20,20 +20,20 @@ class BillController extends CI_Controller {
         $this->load->view('bill/view', $data);
     }
 
-    public function create() {
+    public function createBill() {
         // Contoh membuat tagihan baru
-        $billData = array(
-            'CustomerId' => 1,
-            'SiteId' => 2,
-            'Amount' => 100.00,
-            'DueDate' => '2023-12-31',
-            'StatusId' => 'Unpaid',
-            'PaymentDate' => null,
-            'Creator' => 'John Doe',
-            'CreateDate' => date('Y-m-d H:i:s'),
-            'Modifier' => 'John Doe',
-            'ModifyDate' => date('Y-m-d H:i:s')
-        );
+        // $billData = array(
+        //     'CustomerId' => 1,
+        //     'SiteId' => 2,
+        //     'Amount' => 100.00,
+        //     'DueDate' => '2023-12-31',
+        //     'StatusId' => 'Unpaid',
+        //     'PaymentDate' => null,
+        //     'Creator' => 'John Doe',
+        //     'CreateDate' => date('Y-m-d H:i:s'),
+        //     'Modifier' => 'John Doe',
+        //     'ModifyDate' => date('Y-m-d H:i:s')
+        // );
 
         $newBillId = $this->Bill_Model->createBill($billData);
 

@@ -44,6 +44,9 @@
                         <li><a href="javascript:void(0)" onclick="addTabListGroupContact()">Group Contact</a></li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" onclick="addTabBillCustomer()" class="nav-link "><span class="pcoded-micon"><i class="fa fa-file-invoice-dollar"></i></span><span class="pcoded-mtext">Bill Customer</span></a>
+                </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Communicator</label>
                 </li>

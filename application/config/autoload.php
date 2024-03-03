@@ -145,4 +145,5 @@ $autoload['model'] = array(
                         'MessageContent_Model',
                         'Customer_Model',
                         'File_Model',
+                        'Bill_Model',
                     );

@@ -35,6 +35,14 @@
     openTabGeneral('bill_reminder','Bill Reminder', 'fa-message', 'broadcast/BillReminder_Controller/Index', 'Get' );
   }
 
+  function addTabBillCustomer() {
+    openTabGeneral('bill_customer','Bill Customer', 'fa-file-invoice-dollar', 'CustomerController/billCustomer', 'Get' );
+  }
+
+  function addTabAddBill() {
+    openTabGeneral('add_bill_customer','Add Bill Customer', 'fa-file-circle-plus', 'CustomerController/addBillCustomer', 'Get' );
+  }
+
   function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){
       //showHideMenu();
       var tabName = 'Tab Name Prototipe';//$(".nav-menu-custom > li.on > a").text();

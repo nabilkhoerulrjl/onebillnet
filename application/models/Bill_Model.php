@@ -48,12 +48,27 @@ class Bill_Model extends CI_Model {
     }
 
     public function updateBill($billId, $data) {
-        $this->db->where('Id', $billId);
-        $this->db->update('Bill', $data);
+        // var_dump($data);
+        // $this->db->where_in('Id', $billId);
+        $success = $this->db->update_batch('Bill', $data, 'Id');
+
+        if ($success) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Data updated successfully.'
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Failed to update data.'
+            );
+        }
+    
+        return $response;
     }
 
     public function deleteBill($billId) {
-        $this->db->where('Id', $billId);
+        $this->db->where_in('Id', $billId);
         $this->db->delete('Bill');
     }
 }
