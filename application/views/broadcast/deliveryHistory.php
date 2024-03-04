@@ -226,7 +226,7 @@
     // Fungsi untuk mengambil data dari controller menggunakan AJAX
     function fetchData(filterData) {
         // Ganti dengan URL controller Anda 
-        var url = base_url+'broadcast/MessageController/getListData';
+        var url = base_url+'MessageController/getListData';
         console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
