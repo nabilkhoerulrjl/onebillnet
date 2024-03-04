@@ -109,7 +109,7 @@
     </div>
     <div class="ibox-content p-4">
         <div class="wrapper-btn-add d-flex justify-content-end pb-2">
-            <button type="button" class="btn btn-sm btn-primary" id="btnmodal">
+            <button type="button" class="btn btn-sm btn-primary" id="btnmodal<?=$idTabMenu;?>">
                 <i class="fa fa-file-invoice-dollar fa-sm pr-1"></i>Add Bill
             </button>
         </div>
@@ -120,7 +120,7 @@
             <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
         </div>
         <div class="table-responsive">
-            <table class="table table-hover" id="dataTableBill">
+            <table class="table table-hover" id="dataTableBill<?=$idTabMenu;?>">
                 <thead>
                     <tr>
                         <th>Inv Id</th>
@@ -214,7 +214,7 @@
         var idTabMenu = '<?= $idTabMenu; ?>';
         // Pagging TableBill
         var itemsPerPage = 15; // Jumlah item per halaman
-        var $tableRows = $('#dataTableBill tbody tr');
+        var $tableRows = $('#dataTableBill<?=$idTabMenu;?> tbody tr');
         var totalItems = $tableRows.length;
         var totalPages = Math.ceil(totalItems / itemsPerPage);
         var currentPage = 1;
@@ -301,7 +301,7 @@
 
     // Fungsi untuk memfilter data di tabel HTML
     function filterTableData(searchValue) {
-        var table = document.getElementById('dataTableBill');
+        var table = document.getElementById('dataTableBill<?=$idTabMenu;?>');
         console.log(table);
 
         // Ambil semua baris dalam tabel, kecuali baris header
@@ -343,7 +343,7 @@
         var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
         var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
         // Ambil semua baris tabel
-        var rows = $("#dataTableBill").find("tr");
+        var rows = $("#dataTableBill<?=$idTabMenu;?>").find("tr");
 
         // Ambil header CSV (hanya sekali)
         var headerRow = rows.first().children().not(".action-column").map(function() {
@@ -677,10 +677,10 @@
     }
 
     // buat trigger modal form add customer
-    $("#btnmodal").on("click", function () {
+    $("#btnmodal<?=$idTabMenu;?>").on("click", function () {
         // Show the logout modal
         // alert('asdasdsa');
-        $("#formAddCSModal").modal("show");
+        $("#formAddBlModal<?=$idTabMenu;?>").modal("show");
     });
 
     function fetchData() {
@@ -707,7 +707,7 @@
                 // $('#overlay').hide();
                 if(data.length > 0){
                     // Clear data dari table
-                    $('#dataTableBill tbody').empty();
+                    $('#dataTableBill<?=$idTabMenu;?> tbody').empty();
                     // Masukkan data ke dalam tabel
                     $.each(data, function (index, value) {
                         //init variable
@@ -728,7 +728,7 @@
                         var periode = moment(value.Periode).format('MMMM YYYY');
                         var dueDate = moment(value.DueDate).format('D MMMM YYYY hh:mm');
                         var expiryDate = moment(value.ExpiryDate).format('D MMMM YYYY hh:mm');
-                        $('#dataTableBill tbody').append(`
+                        $('#dataTableBill<?=$idTabMenu;?> tbody').append(`
                             <tr>
                                 <td>${value.ExternalId}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
@@ -748,7 +748,7 @@
                         `);
                     });
                 }else{
-                    $('#dataTableBill tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
+                    $('#dataTableBill<?=$idTabMenu;?> tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
                 }
                 
             },

@@ -64,7 +64,7 @@
 
     }
 </style>
-<div class="modal fade" id="formAddCSModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="formAddBlModal<?=$idTabMenu;?>" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -175,7 +175,7 @@
         $('.multiple-select-customer').select2({
             placeholder: "Select Customers",
             allowClear: true,
-            dropdownParent: $('#formAddCSModal'),
+            dropdownParent: $('#formAddBlModal<?=$idTabMenu;?>'),
         });
 
         // Tambahkan event listener untuk menangani pemilihan "Select All"
