@@ -686,7 +686,7 @@
     function fetchData() {
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
-        var url = base_url+'CustomerController/getListData';
+        var url = base_url+'CustomerController/getListCsData';
         // console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';

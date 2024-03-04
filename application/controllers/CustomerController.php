@@ -39,6 +39,20 @@ class CustomerController extends CI_Controller {
         $this->load->view('contact/view', $data);
     }
 
+    public function getListCsData() {
+        $startDate = $this->input->post('startDate');
+        $endDate = $this->input->post('endDate');
+        // var_dump($startDate);
+        // var_dump($endDate);
+        // die();
+        $siteId = $this->getSiteId();
+        // var_dump('s',$siteId);
+        // die();
+        $data = $this->Customer_Model->getCustomerAll($siteId, $startDate, $endDate);
+        echo json_encode($data);
+
+    }
+
     public function getListBillData() {
         // $startDate = $this->input->post('startDate');
         // $endDate = $this->input->post('endDate');

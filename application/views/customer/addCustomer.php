@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <div class="form-group has-icon-left">
-                                        <label for="last-name"><i class="fa fa-address-card"></i> NIK <span style="color:red;">*</span></label>
+                                        <label for="last-name"><i class="fa fa-address-card"></i> NIK</label>
                                         <div class="position-relative">
                                             <input type="number" class="form-control form-control-sm" placeholder="NIK Number" id="nikNumber" name="nikNumber" required>
                                         </div>
@@ -422,7 +422,7 @@
             //     console.log(pair[0] + ', ' + capitalizeWords(pair[1]));
             // }
 
-        if (!firstName || !lastName || !nikNumber || !email || !countryCode || !whatsapp || !product || !cityBorn || !dateOfBirth || !image || !gender || !contactGroup || !address || !province || !city || !kecamatan || !kelurahan || !rtRw) {
+        if (!firstName || !lastName || !email || !countryCode || !whatsapp || !product || !cityBorn || !dateOfBirth || !image || !gender || !contactGroup || !address || !province || !city || !kecamatan || !kelurahan || !rtRw) {
             // Jika ada setidaknya satu kolom yang kosong, lakukan sesuatu, contohnya:
             Swal.fire({
                 title: 'Attention',

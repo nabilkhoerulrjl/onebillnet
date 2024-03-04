@@ -240,7 +240,7 @@
     // Fungsi untuk mengambil data dari controller menggunakan AJAX
     function fetchData(filterData) {
         // Ganti dengan URL controller Anda 
-        var url = base_url+'CustomerController/getListData';
+        var url = base_url+'CustomerController/getListCsData';
         // var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
         // var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         // if(startDate == null){
