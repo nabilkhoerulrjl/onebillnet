@@ -50,7 +50,7 @@ git_credential_helper="!f() { echo \"username=${APP_GITHUB_USERNAME}\"; echo \"p
 git config --global credential.helper "$git_credential_helper"
 
 echo "Pull latest code..."
-ssh $(echo $APP_REMOTE_USER | tr -d '\r')@$(echo $APP_REMOTE_HOST | tr -d '\r') "cd $(echo $APP_DEPLOY_PATH | tr -d '\r') && git pull origin "$ACTIVE_BRANCH""
+ssh $(echo $APP_REMOTE_USER | tr -d '\r')@$(echo $APP_REMOTE_HOST | tr -d '\r') "cd $(echo $APP_DEPLOY_PATH | tr -d '\r') && sudo git pull origin "$ACTIVE_BRANCH""
 #ssh $(echo "$REMOTE_USER" | tr -d '\r')@$(echo "$REMOTE_HOST" | tr -d '\r') cd $(echo "$DEPLOY_PATH" | tr -d '\r') && sudo git pull origin "$ACTIVE_BRANCH" || { echo "Gagal pull latest code."; exit 1; }
 echo "Success pull latest code..."
 
