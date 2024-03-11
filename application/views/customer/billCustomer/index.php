@@ -113,6 +113,23 @@
                 <i class="fa fa-file-invoice-dollar fa-sm pr-1"></i>Add Bill
             </button>
         </div>
+        <div class="tools-table d-flex flex-row-reverse align-items-end justify-content-between mb-3">
+            <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
+                <input type="text" class="p-1 form-control form-control-sm p-2 mr-0" id="searchDataText<?=$idTabMenu;?>" placeholder="Search Data in Table" style="border-top: none; border-left: none; border-right: none; margin-right: 8px;">
+            </div>
+            <div id="exportButtons d-flex">
+                <button type="button" id="selectAllBtn<?=$idTabMenu;?>" class="btn btn-outline-secondary btn-sm" 
+                data-toggle="tooltip" data-placement="top" title="Copy Data" data-original-title="tooltip on top">
+                    <i class="fa fa-square-check mr-1"></i>
+                    Select All
+                </button>
+                <button type="button" id="csvButton" class="btn btn-outline-success btn-sm"
+                data-toggle="Export to CSV" onclick="deleteSelectedData<?=$idTabMenu;?>()" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
+                    <i class="fa fa-trash mr-1"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
         <div id="overlay" class="d-flex justify-content-center align-items-center flex-column">
             <div id="overlayLoading" class="spinner-border text-primary" style="width: 3rem;height: 3rem; display: none;" role="status">
                 <span class="sr-only">Loading...</span>
@@ -123,6 +140,7 @@
             <table class="table table-hover" id="dataTableBill<?=$idTabMenu;?>">
                 <thead>
                     <tr>
+                        <th class="d-none">Ref Id</th>
                         <th>Inv Id</th>
                         <th>Customer Name</th>
                         <th>Product Name</th>
@@ -140,7 +158,7 @@
                         if (!empty($dataBill)) {
                             foreach ($dataBill as $index => $row) {
                     ?>
-                        <tr>
+                        <tr data-reference-id="<?= $row->ReferenceId; ?>">
                         <?php
                             $statusId;
                             $statusBadge;
@@ -161,6 +179,8 @@
                             $dueDateFormated = date('j F Y H:i', $dueDate);
                             $expiryDateFormated = date('j F Y H:i', $expiryDate);
                         ?>
+                            <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
+                            <td class="d-none"><?= $row->ReferenceId; ?></td>
                             <td><?= $row->ExternalId; ?></td>
                             <td><?= $row->FirstName.' '.$row->LastName; ?></td>
                             <td><?= $row->ProductName; ?></td>
@@ -173,7 +193,7 @@
                             <td class="action-column">
                                 <!-- Tambahkan button action sesuai kebutuhan -->
                                 <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
-                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>(<?= $row->ExternalId; ?>)"></i>
+                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
                             </td>
                         <tr>
                     <?php
@@ -287,11 +307,8 @@
         $('#exportModal').modal('hide');
     }
         
-    // Fungsi untuk mengambil data dari controller menggunakan AJAX
-    
-
-        
-    $('#searchDataText').on('input', function () {
+    // Search Data di table yang sudah di olah
+    $('#searchDataText<?=$idTabMenu;?>').on('input', function () {
         // Ambil nilai dari input pencarian
         var searchValue = $(this).val().toLowerCase();
 
@@ -328,373 +345,64 @@
             row.style.display = visible ? '' : 'none';
         }
     }
+    // End Search Data di table yang sudah di olah
 
-    function exportToCSV() {
-        // Tampilkan alert "Mohon Tunggu"
-        Swal.fire({
-            title: 'Mohon Tunggu',
-            text: 'Proses sedang berlangsung...',
-            icon: 'info',
-            timer: 2000,
-            timerProgressBar: true,
-            button: false,
-            confirmButtonColor: '#1abc9c',
-        });
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
-        // Ambil semua baris tabel
-        var rows = $("#dataTableBill<?=$idTabMenu;?>").find("tr");
-
-        // Ambil header CSV (hanya sekali)
-        var headerRow = rows.first().children().not(".action-column").map(function() {
-            return $(this).text();
-        }).get().join(",") + "\n";
-
-        // Tambahkan header ke CSV
-        var csv = headerRow;
-
-        // Tambahkan data CSV (tanpa header lagi)
-        rows.each(function(i, row) {
-            if (i > 0) { // Mulai dari baris kedua (skip header)
-                csv += $(row).children().not(".action-column").map(function() {
-                    return $(this).text();
-                }).get().join(",") + "\n";
-            }
-        });
-
-        // Buat link download CSV
-        var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-        var link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "DataCustomer_Periode_"+startDate+"[to]"+endDate+".csv"; // Sesuaikan nama file CSV
-
-        // Tampilkan link download CSV
-        $(document.body).append(link);
-        link.click(); // Langsung klik link untuk memulai download
-        // Tampilkan alert "Berhasil Print"
-        Swal.fire({
-            title: 'Berhasil Export CSV',
-            text: 'Data Customers berhasil diexport to csv!',
-            icon: 'success',
-            confirmButtonColor: '#1abc9c',
-        });
-    }
-
-    function printTable() {
-        // Tampilkan alert "Mohon Tunggu"
-        Swal.fire({
-            title: 'Mohon Tunggu',
-            text: 'Proses sedang berlangsung...',
-            icon: 'info',
-            timer: 2000,
-            timerProgressBar: true,
-            button: false,
-            confirmButtonColor: '#1abc9c',
-        });
-
-        // Sembunyikan kolom Action untuk print
-        $(".action-column", "#dataTableUsers").hide();
-
-        // Konfigurasi print
-        $("#dataTableUsers").printThis({
-            pageTitle: "Data Customers",
-            header: "<h3>Data Customers</h3>",
-            style: "table { table-layout: fixed; width: 100%; }",
-            orientation: "landscape",
-            afterPrint: function() {
-                // Tampilkan kembali kolom Action setelah print
-                $(".action-column", "#dataTableUsers").show();
-
-                // Tampilkan alert "Berhasil Print"
+    function deleteDataBill<?= $idTabMenu; ?>($invId) {
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: $invId,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/deleteBill',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
                 Swal.fire({
-                    title: 'Berhasil Print',
-                    text: 'Data Customers berhasil dicetak!',
-                    icon: 'success',
-                    confirmButtonColor: '#1abc9c',
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                Swal.fire({
+                    title: "Congratulations!",
+                    text: "Your data has been delete!",
+                    icon: "success"
+                });
+                fetchData();
+            },
+            error: function (error) {
+                // Menyembunyikan elemen loading jika terjadi kesalahan
+                Swal.fire({
+                    title: "Attandace!",
+                    text: "Your data failed to delete!",
+                    icon: "failed"
                 });
             }
         });
     }
 
-    function exportToPdf() {
-        // Tampilkan alert "Mohon Tunggu"
-        Swal.fire({
-            title: 'Mohon Tunggu',
-            text: 'Proses sedang berlangsung...',
-            icon: 'info',
-            timer: 2000,
-            timerProgressBar: true,
-            button: false,
-            confirmButtonColor: '#1abc9c',
-        });
-        var element = document.getElementById("dataTableUsers");
 
-        const columnsToExclude = document.querySelectorAll('.action-column');
-        columnsToExclude.forEach(column => column.remove());
-        // Atur properti pdf
-        var pdfOptions = {
-            margin: 10,
-            filename: 'data_export.pdf',
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'A2', orientation: 'portrait' },
-            output: 'blob'  // Tentukan output sebagai blob
-        };
-
-        // Buat objek untuk ekspor pdf
-        var pdfExporter = new html2pdf(element, pdfOptions);
-
-        // Ekspor ke PDF
-        pdfExporter.toPdf().then(function (pdfBlob) {
-            // Unduh file PDF
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(pdfBlob);
-            link.download = pdfOptions.filename;
-            link.click();
-        });
-        // Tampilkan alert "Berhasil Print"
-        Swal.fire({
-            title: 'Berhasil Export PDF',
-            text: 'Data Customers berhasil diexport to pdf!',
-            icon: 'success',
-            confirmButtonColor: '#1abc9c',
-        });
-    }
-
-
-    $("#copyButton").click(function() {
-        // Tampilkan alert "Mohon Tunggu"
-        Swal.fire({
-            title: 'Mohon Tunggu',
-            text: 'Proses sedang berlangsung...',
-            icon: 'info',
-            timer: 2000,
-            timerProgressBar: true,
-            button: false,
-            confirmButtonColor: '#1abc9c', // Warna biru
-        });
-        var rows = [];
-        var table = $("#dataTableUsers");
-        var headers = $("thead th", table).map(function() {
-        return $(this).text().trim();
-        }).get();
-
-        $("tbody tr", table).each(function() {
-        var rowData = {};
-        $("td:not(.action-column)", this).each(function(index) {
-            rowData[headers[index]] = $(this).text().trim();
-        });
-        rows.push(rowData);
-        });
-
-        var csvData = "";
-        csvData += Object.keys(rows[0]).filter(header => header !== 'Action').join('\t') + '\r\n';
-        $.each(rows, function(i, row) {
-        var values = Object.values(row).filter((value, index) => Object.keys(rows[0])[index] !== 'Action');
-        csvData += values.join('\t') + '\r\n';
-        });
-
-        new ClipboardJS('#copyButton', {
-        text: function() {
-            return csvData;
-        }
-        }).on('success', function(e) {
-            // Tampilkan alert "Berhasil Print"
-            Swal.fire({
-                title: 'Berhasil Copy',
-                text: 'Data Customers berhasil dicopy!',
-                icon: 'success',
-                confirmButtonColor: '#1abc9c', // Warna biru
-                // cancelButtonColor: '#d33', // Warna merah (jika ada tombol Cancel)
-            });
-        }).on('error', function(e) {
-        alert('Failed to copy data');
-        });
-    });
-    function deleteDataBill<?= $idTabMenu; ?>($invId) {
-        alert($invId);
-    }
-    /* Ini pake vanilla JS
-        function copyToClipboard() {
-        var rows = [];
-        var table = document.getElementById("dataTableUsers");
-        var headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
-
-        Array.from(table.querySelectorAll("tbody tr")).forEach(row => {
-            var rowData = {};
-            Array.from(row.cells).forEach((cell, index) => {
-                if (!cell.classList.contains('action-column')) {
-                    rowData[headers[index]] = cell.innerText.trim();
-                }
-            });
-            rows.push(rowData);
-        });
-
-        var csvData = '';
-        csvData += Object.keys(rows[0]).filter(header => header !== 'Action').join('\t') + '\r\n';
-        for (var i = 0; i < rows.length; i++) {
-            var values = Object.values(rows[i]).filter((value, index) => Object.keys(rows[0])[index] !== 'Action');
-            csvData += values.join('\t') + '\r\n';
-        }
-
-        var clipboard = new ClipboardJS('#copyButton', {
-            text: function () {
-                return csvData;
-            }
-        });
-
-        clipboard.on('success', function (e) {
-            alert('Data copied to clipboard');
-        });
-
-        clipboard.on('error', function (e) {
-            alert('Failed to copy data');
-        });
-    }*/
-
-    $('#btn-filter').click(function() {
-        // Toggle kelas 'show' untuk menampilkan atau menyembunyikan slider menu
-        $("#filterSlider").toggleClass("show");
-    });
-    // Bind event click pada tombol close
-    $("#closeFilterBtn").click(function() {
-        // Sembunyikan slider menu dengan menghapus kelas "show"
-        $("#filterSlider").removeClass("show");
-    });
-
-    // searchDateFilter.click(function() {
-    //     $( "#filterDateRage" ).click();
-    // });
-    // Mendapatkan tanggal saat ini
-    $('#filterDateCustomer').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
-        },
-        "startDate": moment().subtract(1, 'year').startOf('day'),
-        "endDate": moment().endOf('day').endOf('year'),
-        "drops": "auto",
-            "locale": {
-            "format": "DD/MM/YYYY",
-            "separator": " - ",
-            "applyLabel": "Apply",
-            "cancelLabel": "Cancel",
-            "fromLabel": "From",
-            "toLabel": "To",
-            "customRangeLabel": "Custom",
-            "daysOfWeek": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-            "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            "firstDay": 1
-        }
-    }, function(start, end, label) {
-        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        
-        // Mendapatkan elemen span
-        var searchDateSpan = $('#searchdatepick');
-        // Menentukan format tanggal yang sesuai
-        var dateFormat = 'DD/MM/YYYY';
-        var startDateText = start.format(dateFormat);
-        var endDateText = end.format(dateFormat);
-
-        // Memperbarui teks pada elemen span sesuai dengan pilihan tanggal
-        if (label === 'Custom Range') {
-            searchDateSpan.text(startDateText + ' - ' + endDateText);
-        } else {
-            searchDateSpan.text(label);
-        }
-
-        // Tambahan: Memperbarui atribut startdate dan enddate jika diperlukan
-        searchDateSpan.attr('startdate', start.format('YYYY-MM-DD HH:mm:ss'));
-        searchDateSpan.attr('enddate', end.format('YYYY-MM-DD HH:mm:ss'));
-    });
-
-        // Panggil fungsi updateSearchDateText saat halaman dimuat
-        $(document).ready(function () {
-        updateSearchDateText();
-    });
-
-    // Event handler untuk button reset filter
-    // $('#resetFilter').on('click', function () {
-    //     resetFilter();
-    //     $('#closeFilterBtn').click();
-    // });
-
-    // // Event handler untuk button apply filter
-    // $('#applyFilter').on('click', function () {
-    //     applyFilter();
-    //     $('#closeFilterBtn').click();
-    // });
-
-    // Fungsi untuk mereset filter ke 1 tahun terakhir
-    // function resetFilter() {
-    //     $('#filterDateCustomer').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
-    //     $('#filterDateCustomer').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
-    //     // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
-    //     updateSearchDateText();
-    //     var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-    //     var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
-    //     var filterData = {
-    //         startDate: startDate,
-    //         endDate: endDate
-    //     }
-    //     fetchData(filterData);
-    // }
-
-    // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
-    // function applyFilter() {
-    //     var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-    //     var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
-    //     var filterData = {
-    //         startDate: startDate,
-    //         endDate: endDate
-    //     }
-    //     fetchData(filterData);
-    // }
-
-    // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
-    function updateSearchDateText() {
-        var searchDateSpan = $('#searchdatepick');
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate;
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate;
-        var label = $('#filterDateCustomer').data('daterangepicker').chosenLabel;
-
-        var dateFormat = 'DD/MM/YYYY';
-        var startDateText = startDate.format(dateFormat);
-        var endDateText = endDate.format(dateFormat);
-
-        if (label === 'Custom Range') {
-            searchDateSpan.text(startDateText + ' - ' + endDateText);
-        } else {
-            searchDateSpan.text("Last Year");
-        }
-
-        searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
-        searchDateSpan.attr('enddate', endDate.format('YYYY-MM-DD HH:mm:ss'));
-    }
-
-    // buat trigger modal form add customer
+    // buat trigger modal form add Bill
     $("#btnmodal<?=$idTabMenu;?>").on("click", function () {
         // Show the logout modal
         // alert('asdasdsa');
         $("#formAddBlModal<?=$idTabMenu;?>").modal("show");
     });
 
+    // Function Refresh Data After insert Data
     function fetchData() {
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
         var url = base_url+'CustomerController/getListCsData';
-        // console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
-        // requestData = filterData;
-        console.log('fetchData',base_url);
-
-        // console.log('fetchData',requestData);
-        // console.log(requestData);
         // Menggunakan jQuery untuk melakukan AJAX request
         $.ajax({
             url: base_url+'customer/BillCustomer_Controller/getListBillData',
@@ -729,7 +437,9 @@
                         var dueDate = moment(value.DueDate).format('D MMMM YYYY hh:mm');
                         var expiryDate = moment(value.ExpiryDate).format('D MMMM YYYY hh:mm');
                         $('#dataTableBill<?=$idTabMenu;?> tbody').append(`
-                            <tr>
+                            <tr data-reference-id="${value.ReferenceId}">
+                                <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
+                                <td class="d-none">${value.ReferenceId}</td>
                                 <td>${value.ExternalId}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.ProductName}</td>
@@ -741,8 +451,7 @@
                                 <td title="${value.ExpiryDate}">${expiryDate}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
-                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
+                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                 </td>
                             </tr>
                         `);
@@ -760,6 +469,7 @@
             }
         });
     }
+    // End Function Refresh Data After insert Data
 
     function formatRupiah(angka) {
         var angkaClear = angka.replace(/\D/g, '')
@@ -768,4 +478,106 @@
         var formatted = ribuan.join('.').split('').reverse().join('');
         return 'Rp ' + formatted.replace(/^[.]/, '');
     }
+
+    $("#selectAllBtn<?=$idTabMenu;?>").click(function() {
+        // Mengambil semua checkbox dengan class checkboxBill
+        var checkboxes = $(".checkboxBill");
+
+        // Memeriksa apakah semua checkbox terpilih
+        var allChecked = checkboxes.length === checkboxes.filter(":checked").length;
+
+        // Jika semua checkbox sudah terpilih, setel ulang (unchecked) semua checkbox
+        if (allChecked) {
+            checkboxes.prop("checked", false);
+            $(this).html('<i class="fa fa-square-check mr-1"></i>Select All');
+        } else {
+            // Jika belum semua terpilih, setel semua checkbox terpilih
+            checkboxes.prop("checked", true);
+            $(this).html('<i class="fa fa-square mr-1"></i>Uncheck All');
+        }
+    });
+
+    function deleteSelectedData<?=$idTabMenu;?>() {
+        var selectedData = getSelectedData();
+        // Lakukan sesuatu dengan data yang dipilih, seperti mengirimnya ke server untuk dihapus
+        console.log('222',selectedData);
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: selectedData,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/deleteBill',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                console.log(data);
+                console.log(typeof data);
+                var status;
+                if(typeof data == 'object'){
+                    status = data.status;
+                }
+                if(typeof data == 'array'){
+                    status = data[0].status;
+                }
+
+                if(status == 'success') {
+                    Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your data has been delete!",
+                        icon: "success"
+                    });
+                    fetchData();
+                }else{
+                    Swal.fire({
+                        title: "Attandace!",
+                        text: "Your data failed to delete!",
+                        icon: "failed"
+                    });
+                }
+
+            }
+            // error: function (error) {
+            //     // Menyembunyikan elemen loading jika terjadi kesalahan
+            //     Swal.fire({
+            //         title: "Attandace!",
+            //         text: "Your data failed to delete!",
+            //         icon: "failed"
+            //     });
+            // }
+        });
+    }
+
+    function getSelectedData() {
+        var selectedData = [];
+
+        // Loop melalui semua checkbox yang dicentang
+        var checkboxes = document.querySelectorAll('#dataTableBill<?=$idTabMenu;?> .checkboxBill:checked');
+        checkboxes.forEach(function (checkbox) {
+            // Dapatkan baris terkait dengan checkbox yang dicentang
+            var row = checkbox.closest('tr');
+
+            // Dapatkan nilai ReferenceId dari atribut data
+            var referenceId = row.getAttribute('data-reference-id');
+
+            // Tambahkan nilai ReferenceId ke dalam array
+            selectedData.push(referenceId);
+        });
+
+        // Kembalikan array data yang dipilih
+        return selectedData;
+    }
+
 </script>
