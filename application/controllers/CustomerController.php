@@ -57,7 +57,7 @@ class CustomerController extends CI_Controller {
         // $startDate = $this->input->post('startDate');
         // $endDate = $this->input->post('endDate');
         $siteId = $this->getSiteId();
-        $select = 'b.ExternalId AS ExternalId,
+        $select = 'b.ReferenceId, b.ExternalId AS ExternalId,
         c.FirstName AS FirstName, c.LastName AS LastName,
         pd.Name AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,

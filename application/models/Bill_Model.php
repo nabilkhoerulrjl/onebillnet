@@ -67,8 +67,43 @@ class Bill_Model extends CI_Model {
         return $response;
     }
 
-    public function deleteBill($billId) {
-        $this->db->where_in('Id', $billId);
-        $this->db->delete('Bill');
+    public function deleteBill($refId) {
+        $variableType = gettype($refId);
+    
+        if ($variableType == 'string') {
+            $this->db->where('ReferenceId', $refId);
+        }
+        if ($variableType == 'array') {
+            $this->db->where_in('ReferenceId', $refId);
+        }
+    
+        // Compile delete query
+        $compiledQuery = $this->db->get_compiled_delete('Bill', false);
+    
+        // Hapus data berdasarkan ReferenceId
+        $deleteResult = $this->db->delete('Bill');
+    
+        // Output query mentah
+        // echo $compiledQuery;
+        
+        // Periksa apakah penghapusan berhasil
+        if ($deleteResult) {
+            return true; // Penghapusan berhasil
+        } else {
+            return false; // Penghapusan gagal
+        }
+    }
+
+    public function checkExistingBill($customerId, $periodeBill) {
+        $this->db->select('Id');
+        $this->db->from('Bill');
+        $this->db->where('Periode', $periodeBill);
+        $this->db->where_in('CustomerId', $customerId);
+
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
+        $query = $this->db->get();
+        // log_message('debug', 'SQL Query: ' . $rawQuery);
+        return $query->num_rows() > 0;
     }
 }

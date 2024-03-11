@@ -117,6 +117,18 @@
             <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
                 <input type="text" class="p-1 form-control form-control-sm p-2 mr-0" id="searchDataText<?=$idTabMenu;?>" placeholder="Search Data in Table" style="border-top: none; border-left: none; border-right: none; margin-right: 8px;">
             </div>
+            <div id="exportButtons d-flex">
+                <button type="button" id="selectAllBtn<?=$idTabMenu;?>" class="btn btn-outline-secondary btn-sm" 
+                data-toggle="tooltip" data-placement="top" title="Copy Data" data-original-title="tooltip on top">
+                    <i class="fa fa-square-check mr-1"></i>
+                    Select All
+                </button>
+                <button type="button" id="csvButton" class="btn btn-outline-success btn-sm"
+                data-toggle="Export to CSV" onclick="deleteSelectedData<?=$idTabMenu;?>()" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
+                    <i class="fa fa-trash mr-1"></i>
+                    Delete
+                </button>
+            </div>
         </div>
         <div id="overlay" class="d-flex justify-content-center align-items-center flex-column">
             <div id="overlayLoading" class="spinner-border text-primary" style="width: 3rem;height: 3rem; display: none;" role="status">
@@ -128,6 +140,7 @@
             <table class="table table-hover" id="dataTableBill<?=$idTabMenu;?>">
                 <thead>
                     <tr>
+                        <th class="d-none">Ref Id</th>
                         <th>Inv Id</th>
                         <th>Customer Name</th>
                         <th>Product Name</th>
@@ -145,7 +158,7 @@
                         if (!empty($dataBill)) {
                             foreach ($dataBill as $index => $row) {
                     ?>
-                        <tr>
+                        <tr data-reference-id="<?= $row->ReferenceId; ?>">
                         <?php
                             $statusId;
                             $statusBadge;
@@ -166,6 +179,8 @@
                             $dueDateFormated = date('j F Y H:i', $dueDate);
                             $expiryDateFormated = date('j F Y H:i', $expiryDate);
                         ?>
+                            <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
+                            <td class="d-none"><?= $row->ReferenceId; ?></td>
                             <td><?= $row->ExternalId; ?></td>
                             <td><?= $row->FirstName.' '.$row->LastName; ?></td>
                             <td><?= $row->ProductName; ?></td>
@@ -178,7 +193,7 @@
                             <td class="action-column">
                                 <!-- Tambahkan button action sesuai kebutuhan -->
                                 <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
-                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>(<?= $row->ExternalId; ?>)"></i>
+                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
                             </td>
                         <tr>
                     <?php
@@ -333,7 +348,44 @@
     // End Search Data di table yang sudah di olah
 
     function deleteDataBill<?= $idTabMenu; ?>($invId) {
-        alert($invId);
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: $invId,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/deleteBill',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                Swal.fire({
+                    title: "Congratulations!",
+                    text: "Your data has been delete!",
+                    icon: "success"
+                });
+                fetchData();
+            },
+            error: function (error) {
+                // Menyembunyikan elemen loading jika terjadi kesalahan
+                Swal.fire({
+                    title: "Attandace!",
+                    text: "Your data failed to delete!",
+                    icon: "failed"
+                });
+            }
+        });
     }
 
 
@@ -349,14 +401,8 @@
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
         var url = base_url+'CustomerController/getListCsData';
-        // console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
-        // requestData = filterData;
-        console.log('fetchData',base_url);
-
-        // console.log('fetchData',requestData);
-        // console.log(requestData);
         // Menggunakan jQuery untuk melakukan AJAX request
         $.ajax({
             url: base_url+'customer/BillCustomer_Controller/getListBillData',
@@ -391,7 +437,9 @@
                         var dueDate = moment(value.DueDate).format('D MMMM YYYY hh:mm');
                         var expiryDate = moment(value.ExpiryDate).format('D MMMM YYYY hh:mm');
                         $('#dataTableBill<?=$idTabMenu;?> tbody').append(`
-                            <tr>
+                            <tr data-reference-id="${value.ReferenceId}">
+                                <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
+                                <td class="d-none">${value.ReferenceId}</td>
                                 <td>${value.ExternalId}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.ProductName}</td>
@@ -403,8 +451,7 @@
                                 <td title="${value.ExpiryDate}">${expiryDate}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
-                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
+                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                 </td>
                             </tr>
                         `);
@@ -431,4 +478,106 @@
         var formatted = ribuan.join('.').split('').reverse().join('');
         return 'Rp ' + formatted.replace(/^[.]/, '');
     }
+
+    $("#selectAllBtn<?=$idTabMenu;?>").click(function() {
+        // Mengambil semua checkbox dengan class checkboxBill
+        var checkboxes = $(".checkboxBill");
+
+        // Memeriksa apakah semua checkbox terpilih
+        var allChecked = checkboxes.length === checkboxes.filter(":checked").length;
+
+        // Jika semua checkbox sudah terpilih, setel ulang (unchecked) semua checkbox
+        if (allChecked) {
+            checkboxes.prop("checked", false);
+            $(this).html('<i class="fa fa-square-check mr-1"></i>Select All');
+        } else {
+            // Jika belum semua terpilih, setel semua checkbox terpilih
+            checkboxes.prop("checked", true);
+            $(this).html('<i class="fa fa-square mr-1"></i>Uncheck All');
+        }
+    });
+
+    function deleteSelectedData<?=$idTabMenu;?>() {
+        var selectedData = getSelectedData();
+        // Lakukan sesuatu dengan data yang dipilih, seperti mengirimnya ke server untuk dihapus
+        console.log('222',selectedData);
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: selectedData,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/deleteBill',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                console.log(data);
+                console.log(typeof data);
+                var status;
+                if(typeof data == 'object'){
+                    status = data.status;
+                }
+                if(typeof data == 'array'){
+                    status = data[0].status;
+                }
+
+                if(status == 'success') {
+                    Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your data has been delete!",
+                        icon: "success"
+                    });
+                    fetchData();
+                }else{
+                    Swal.fire({
+                        title: "Attandace!",
+                        text: "Your data failed to delete!",
+                        icon: "failed"
+                    });
+                }
+
+            }
+            // error: function (error) {
+            //     // Menyembunyikan elemen loading jika terjadi kesalahan
+            //     Swal.fire({
+            //         title: "Attandace!",
+            //         text: "Your data failed to delete!",
+            //         icon: "failed"
+            //     });
+            // }
+        });
+    }
+
+    function getSelectedData() {
+        var selectedData = [];
+
+        // Loop melalui semua checkbox yang dicentang
+        var checkboxes = document.querySelectorAll('#dataTableBill<?=$idTabMenu;?> .checkboxBill:checked');
+        checkboxes.forEach(function (checkbox) {
+            // Dapatkan baris terkait dengan checkbox yang dicentang
+            var row = checkbox.closest('tr');
+
+            // Dapatkan nilai ReferenceId dari atribut data
+            var referenceId = row.getAttribute('data-reference-id');
+
+            // Tambahkan nilai ReferenceId ke dalam array
+            selectedData.push(referenceId);
+        });
+
+        // Kembalikan array data yang dipilih
+        return selectedData;
+    }
+
 </script>

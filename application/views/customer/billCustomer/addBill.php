@@ -332,27 +332,32 @@
                         });
                     },
                     success: function(response) {
-                        // Handle response dari Controller
-                        Swal.fire({
-                            title: "Congratulations!",
-                            text: "Your data has been save!",
-                            icon: "success"
-                        });
-                        console.log(response);
-                        var startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-                        var endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
-                        
-                        var filterData = {
-                            startDate: startDate,
-                            endDate: endDate
-                        }
+                            console.log(response);
+                            // responseObject = response;
+                            if(response){
+                                var responseObject = JSON.parse(response);
+                            }
+                            // console.log(value.CustomerId);
 
-                        fetchData();
+                            console.log(responseObject.status);
+                        // Handle response dari Controller
+                        if(responseObject.status == 'success') {
+                            Swal.fire({
+                                title: "Congratulations!",
+                                text: "Your data has been save!",
+                                icon: "success"
+                            });
+                            fetchData();
+                        }
+                        if(responseObject.status == 'error'){
+                            Swal.fire({
+                                title: "Attandace!",
+                                text: "Your data failed to save!",
+                                icon: "failed"
+                            });
+                            // console.log(response);
+                        }
                         // Tambahan: Refresh halaman atau lakukan aksi lain jika diperlukan
-                    },
-                    error: function(error) {
-                        // Handle error
-                        console.log(error);
                     }
                 });
             }
