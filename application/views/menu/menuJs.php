@@ -43,8 +43,8 @@
     openTabGeneral('add_bill_customer','Add Bill Customer', 'fa-file-circle-plus', 'CustomerController/addBillCustomer', 'Get' );
   }
   
-    function addTabDeliveryHistory() {
-    openTabGeneral('delivery_history','Delivery History', 'fa-history', 'broadcast/BillReminder_Controller/deliveryHistory', 'Get' );
+  function addTabDeliveryHistory() {
+    openTabGeneral('delivery_history','Delivery History', 'fa-history', 'broadcast/DeliveryHistory_Controller/index', 'Get' );
   }
 
   function openTabGeneral(NameID,TittleText, Icon,UrlTarget, MethodAction, form_data){

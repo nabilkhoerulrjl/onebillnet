@@ -54,7 +54,7 @@
                     <a href="javascript:void(0)" onclick="addTabBillReminder()" class="nav-link "><span class="pcoded-micon"><i class="fa-solid fa-tower-broadcast"></i></span><span class="pcoded-mtext">Broadcast Billing</span></a>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:void(0)" onclick="addTabDeliveryHistory()" class="nav-link "><span class="pcoded-micon"><i class="fa-solid fa-history"></i></span><span class="pcoded-mtext">Delevery History</span></a>
+                    <a href="javascript:void(0)" onclick="addTabDeliveryHistory()" class="nav-link "><span class="pcoded-micon"><i class="fa-solid fa-history"></i></span><span class="pcoded-mtext">Delivery History</span></a>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Report</label>

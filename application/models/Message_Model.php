@@ -28,4 +28,17 @@ class Message_Model extends CI_Model
             return $result->Id;
         }
     }
+
+    public function getMessageHistory($select, $where) {
+        $this->db->select($select);
+        $this->db->from('Message');
+        $this->db->where('SiteId', $where['SiteId']);
+        $this->db->where('CreateDate >=', $where['StartDate']);
+        $this->db->where('CreateDate <=', $where['EndDate']);
+        $this->db->order_by('Id', 'desc');
+        $rawQuery = $this->db->last_query();
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

@@ -57,15 +57,15 @@
         right: 0; /* Pindahkan ke dalam layar saat ditampilkan */
     }
 
-    #filterDateCustomer .text-truncate,
-    #filterDateCustomer .fa,
-    #filterDateCustomer span {
+    #filterDateMH .text-truncate,
+    #filterDateMH .fa,
+    #filterDateMH span {
         color: #373a3c; 
     }
 
-    #filterDateCustomer:hover .text-truncate,
-    #filterDateCustomer:hover .fa,
-    #filterDateCustomer:hover span {
+    #filterDateMH:hover .text-truncate,
+    #filterDateMH:hover .fa,
+    #filterDateMH:hover span {
         color: #373a3c; 
     }
 
@@ -103,8 +103,8 @@
     </div>
     <div class="ibox-content p-4">
         <div class="tools-table d-flex align-items-end justify-content-between mb-3">
-            <div id="exportButtons d-flex">
-                <button type="button" id="selectAllBtn" class="btn btn-outline-secondary btn-sm" 
+            <div id="exportButtons d-flex d-none">
+                <!-- <button type="button" id="selectAllBtn" class="btn btn-outline-secondary btn-sm" 
                 data-toggle="tooltip" data-placement="top" title="Copy Data" data-original-title="tooltip on top">
                     <i class="fa fa-square-check mr-1"></i>
                     Select All
@@ -113,7 +113,7 @@
                 data-toggle="Export to CSV" onclick="exportToCSV()" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
                     <i class="fa fa-share-from-square mr-1"></i>
                     Resend
-                </button>
+                </button> -->
             </div>
             <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
                 <input type="text" class="p-1 form-control form-control-sm p-2 mr-1" id="searchDataText" placeholder="Search Data in Table" style="border-top: none;border-left: none;border-right: none;margin-right: 8px;">
@@ -121,22 +121,22 @@
                     <i class="fa fa-filter"></i>
                 </button>
             </div>
-            <div id="filterSlider" class="slider-menu">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
-                    <button type="button" class="close"  id="closeFilterBtn" class="close-btn">
+                    <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">
                         <i class="fa fa-x fa-xs"></i>
                     </button>
 				</div>
-                <div id="sidebarBodyFilter">
+                <div id="sidebarBodyFilter<?=$idTabMenu;?>">
                     <div class="setings-item b-none p-box">
 						<div class="row p-2">
 							<div class="col-sm-12">
-								<button id="filterDateCustomer" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
+								<button id="filterDateMH" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
                                     <i class="fa fa-calendar-days pr-1"></i>
                                     <div class="text-truncate">
                                         <b>
-                                        <span id="searchdatepick" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
+                                        <span id="searchdatepick<?=$idTabMenu;?>" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
                                         </b>
                                         <i style="padding-right: 5px;" class="fa fa-angle-down"></i>
                                     </div>
@@ -165,7 +165,6 @@
             <table class="table table-hover" id="dataTableUsers">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>#</th>
                         <th>Media</th>
                         <th>Subject</th>
@@ -175,10 +174,78 @@
                         <th>Send Date</th>
                         <th>ReSend Date</th>
                         <th>Remarks</th>
-                        <th class="action-column">Action</th>
+                        <!-- <th class="action-column">Action</th> -->
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                        if (!empty($dataHistory)) {
+                            foreach ($dataHistory as $index => $row) {
+                    ?>
+                        <tr data-reference-id="<?= $row->Id; ?>">
+                        <?php
+                            $statusId;
+                            $statusBadge;
+                            $dtatusBilling = '';
+                            if($row->StatusId == 'MES1') {
+                                $statusId = 'New';
+                                $statusBadge = 'badge-primary';
+                            }
+                            if($row->StatusId == 'MES2') {
+                                $statusId = 'Sent';
+                                $statusBadge = 'badge-success';
+                            }
+                            if($row->StatusId == 'MES3') {
+                                $statusId = 'Received';
+                                $statusBadge = 'badge-warning';
+                            }
+                            if($row->StatusId == 'MES4') {
+                                $statusId = 'Sending';
+                                $statusBadge = 'badge-secondary';
+                            }
+                            if($row->StatusId == 'MES5') {
+                                $statusId = 'Send Failed';
+                                $statusBadge = 'badge-danger';
+                            }
+
+                            if($row->MediaId == 'WHATP') {
+                                $mediaName = 'whatsapp';
+                                $media = '<i class="fa-brands fa-whatsapp"></i>';
+                            }
+                            $sendDate = strtotime($row->SendDate); 
+
+                            $sendDateFormated = date('j F Y H:i', $sendDate);
+                            if($row->ResendDate == ''){
+                                $resendDateFormated = '-';
+                            }else{
+                                $resendDate = strtotime($row->ResendDate); 
+                                $resendDateFormated = date('j F Y H:i', $resendDate);
+                            }
+                        ?>
+                            <!-- <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td> -->
+                            <!-- <td class="d-none"><?= $row->Id; ?></td> -->
+                            <td><?= $index+1; ?></td>
+                            <td title="<?=$mediaName?>"><?= $media; ?></td>
+                            <td><?= $row->Subject; ?></td>
+                            <td><?= $row->From; ?></td>                            
+                            <td><?= $row->To; ?></td>
+                            <td><span class="badge <?= $statusBadge; ?>"><?= $statusId; ?></span></td>
+                            <td title="<?=$row->SendDate;?>"><?=$sendDateFormated;?></td>                             
+                            <td title="<?=$row->ResendDate;?>"><?=$resendDateFormated;?></td>
+                            <td><?= $row->Remarks; ?></td>
+
+                            <!-- <td class="action-column"> -->
+                                <!-- Tambahkan button action sesuai kebutuhan -->
+                                <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
+                                <!-- <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
+                            </td> -->
+                        <tr>
+                    <?php
+                            }
+                        } else {
+                            echo '<td colspan="10" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Bill not Found</span></td>';
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -200,45 +267,18 @@
 <script>
     // Menjalankan fungsi fetchData saat halaman dimuat
     $(document).ready(function () {
-        var startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
-        var endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
-        
-        var filterData = {
-            startDate: startDate,
-            endDate: endDate
-        }
-        console.log('filterData',filterData);
 
-        // fetchData(filterData);
-        fetchData(filterData);
     });
-    var base_url = '<?= base_url()?>';
-    // Fungsi untuk menampilkan modal
-    function showExportModal() {
-        $('#exportModal').modal('show');
-    }
 
-    // Fungsi untuk menyembunyikan modal
-    function hideExportModal() {
-        $('#exportModal').modal('hide');
-    }
-        
     // Fungsi untuk mengambil data dari controller menggunakan AJAX
     function fetchData(filterData) {
         // Ganti dengan URL controller Anda 
-        var url = base_url+'MessageController/getListData';
+        var url = base_url+'broadcast/DeliveryHistory_Controller/getRefreshData';
         console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
-        // if(filterData == "") {
-        //     requestData = {
-        //         startDate: startDate,
-        //         endDate: endDate
-        //     };
-        // }else{
-            requestData = filterData;
-            console.log('fetchData',requestData);
-        // }
+        requestData = filterData;
+        console.log('fetchData',requestData);
 
         // console.log(requestData);
         // Menggunakan jQuery untuk melakukan AJAX request
@@ -246,64 +286,71 @@
             url: url,
             method: 'POST',
             dataType: 'json',
-            data: requestData,
+            data: filterData,
             beforeSend: function() {
                 // Menampilkan elemen loading sebelum permintaan dikirim
                 $('#overlayLoading').show();
                 $('#overlay').show();
             },
             success: function (data) {
+                        console.log(data);
                 // Menyembunyikan elemen loading setelah data diterima
-                $('#overlayLoading').hide();
-                $('#overlay').hide();
                 if(data.length > 0){
                     // Clear data dari table
                     $('#dataTableUsers tbody').empty();
                     // Masukkan data ke dalam tabel
                     $.each(data, function (index, value) {
                         //init variable
-                        var StatusSubsribe = '';
-                        var SubscribeBadge = '';
-                        var StatusBilling = '';
-                        var BillingBadge = '';
-                        //kondisi untuk status bill dan subscribe
-                        if(value.StatusSubsribe == 'CRS1'){
-                            StatusSubsribe = 'Active';
-                            SubscribeBadge = 'badge-success';
+                        var statusId;
+                        var statusBadge;
+                        if(value.StatusId == 'MES1') {
+                            statusId = 'New';
+                            statusBadge = 'badge-primary';
                         }
-                        if(value.StatusSubsribe == 'CRS2'){
-                            StatusSubsribe = 'Not Active';
-                            SubscribeBadge = 'badge-warning';
+                        if(value.StatusId == 'MES2') {
+                            statusId = 'Sent';
+                            statusBadge = 'badge-success';
                         }
-                        if(value.StatusBill == 'BLS1'){
-                            StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-success';
+                        if(value.StatusId == 'MES3') {
+                            statusId = 'Received';
+                            statusBadge = 'badge-warning';
                         }
-                        if(value.StatusBill == 'BLS2'){
-                            StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-warning';
+                        if(value.StatusId == 'MES4') {
+                            statusId = 'Sending';
+                            statusBadge = 'badge-secondary';
+                        }
+                        if(value.StatusId == 'MES5') {
+                            statusId = 'Send Failed';
+                            statusBadge = 'badge-danger';
                         }
                         // Gunakan moment.js untuk memformat tanggal
-                        var DateSubsribe = moment(DateSubsribe).format('D MMMM YYYY');
+                        var sendDate    = moment(value.SendDate).format('D MMMM YYYY');
+                        var resendDate  = moment(value.ModifyDate).format('D MMMM YYYY');
+                        if(value.ModifyDate == ''){
+                            resendDate = '-';
+                        }
+                        if(value.MediaId == 'WHATP') {
+                            var mediaName = 'whatsapp';
+                            var media = '<i class="fa-brands fa-whatsapp"></i>';
+                        }
+                        // <td><input type="checkbox" id="checkboxHistory" class="checkboxHistory cursor-pointer"></td>
+                        // <td class="action-column">
+                        //     <!-- Tambahkan button action sesuai kebutuhan -->
+                        //     <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
+                        //     <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
+                        // </td>
                         $('#dataTableUsers tbody').append(`
                             <tr>
-                                <td><input type="checkbox" id="checkboxHistory" class="checkboxHistory cursor-pointer"></td>
-                                <td>${value.CustomerId}</td>
-                                <td>${value.FirstName} `+` ${value.LastName}</td>
-                                <td>${value.Whatsapp}</td>
-                                <td>${value.RtRw}</td>
-                                <td>${value.Subdistrict}</td>
-                                <td>${value.Ward}</td>
-                                <td>${value.City}</td>
-                                <td>${value.ProductName}</td>
-                                <td><span class="badge ${SubscribeBadge}">${StatusSubsribe}</span></td>
-                                <td><span class="badge ${BillingBadge}">${StatusBilling}</span></td>
-                                <td title="${value.DateSubsribe}">${DateSubsribe}</td>
-                                <td class="action-column">
-                                    <!-- Tambahkan button action sesuai kebutuhan -->
-                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
-                                </td>
+                                <td>${index+1}</td>
+                                <td title="${mediaName}">${media}</td>
+                                <td>${value.Subject}</td>
+                                <td>${value.From}</td>
+                                <td>${value.To}</td>
+                                <td><span class="badge ${statusBadge}">${statusId}</span></td>
+                                <td>${value.Status}</td>
+                                <td title="${value.SendDate}">${sendDate}</td>
+                                <td title="${value.ResendDate}">${resendDate}</td>
+                                <td>${value.Remarks}</td>
                             </tr>
                         `);
                     });
@@ -319,6 +366,16 @@
                 console.error('Error:', error);
             }
         });
+    }
+    var base_url = '<?= base_url()?>';
+    // Fungsi untuk menampilkan modal
+    function showExportModal() {
+        $('#exportModal').modal('show');
+    }
+
+    // Fungsi untuk menyembunyikan modal
+    function hideExportModal() {
+        $('#exportModal').modal('hide');
     }
 
         
@@ -371,8 +428,8 @@
             button: false,
             confirmButtonColor: '#1abc9c',
         });
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        var startDate = $('#filterDateMH').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var endDate = $('#filterDateMH').data('daterangepicker').endDate.format('YYYY-MM-DD');
         // Ambil semua baris tabel
         var rows = $("#dataTableUsers").find("tr");
 
@@ -549,19 +606,19 @@
 
     $('#btn-filter').click(function() {
         // Toggle kelas 'show' untuk menampilkan atau menyembunyikan slider menu
-        $("#filterSlider").toggleClass("show");
+        $("#filterSlider<?=$idTabMenu;?>").toggleClass("show");
     });
     // Bind event click pada tombol close
-    $("#closeFilterBtn").click(function() {
+    $("#closeFilterBtn<?=$idTabMenu;?>").click(function() {
         // Sembunyikan slider menu dengan menghapus kelas "show"
-        $("#filterSlider").removeClass("show");
+        $("#filterSlider<?=$idTabMenu;?>").removeClass("show");
     });
 
     // searchDateFilter.click(function() {
     //     $( "#filterDateRage" ).click();
     // });
     // Mendapatkan tanggal saat ini
-    $('#filterDateCustomer').daterangepicker({
+    $('#filterDateMH').daterangepicker({
         ranges: {
             'Today': [moment(), moment()],
             // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -569,10 +626,10 @@
             // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
+            'Last 3 Months': [moment().subtract(3, 'months').startOf('day'), moment().endOf('day')]
         },
-        "startDate": moment().subtract(1, 'year').startOf('day'),
-        "endDate": moment().endOf('day').endOf('year'),
+        "startDate": moment().subtract(3, 'months').startOf('day'),
+        "endDate": moment().endOf('day'),
         "drops": "auto",
             "locale": {
             "format": "DD/MM/YYYY",
@@ -590,7 +647,7 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         
         // Mendapatkan elemen span
-        var searchDateSpan = $('#searchdatepick');
+        var searchDateSpan = $('#searchdatepick<?=$idTabMenu;?>');
         // Menentukan format tanggal yang sesuai
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = start.format(dateFormat);
@@ -616,23 +673,23 @@
     // Event handler untuk button reset filter
     $('#resetFilter').on('click', function () {
         resetFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Event handler untuk button apply filter
     $('#applyFilter').on('click', function () {
         applyFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Fungsi untuk mereset filter ke 1 tahun terakhir
     function resetFilter() {
-        $('#filterDateCustomer').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
-        $('#filterDateCustomer').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
+        $('#filterDateMH').data('daterangepicker').setStartDate(moment().subtract(3, 'months').startOf('day'));
+        $('#filterDateMH').data('daterangepicker').setEndDate(moment().endOf('day'));
         // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
         updateSearchDateText();
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var startDate = $('#filterDateMH').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateMH').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         var filterData = {
             startDate: startDate,
             endDate: endDate
@@ -642,8 +699,8 @@
 
     // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
     function applyFilter() {
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var startDate = $('#filterDateMH').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateMH').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         var filterData = {
             startDate: startDate,
             endDate: endDate
@@ -653,21 +710,37 @@
 
     // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
     function updateSearchDateText() {
-        var searchDateSpan = $('#searchdatepick');
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate;
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate;
-        var label = $('#filterDateCustomer').data('daterangepicker').chosenLabel;
+        var searchDateSpan = $('#searchdatepick<?=$idTabMenu;?>');
+        var startDate = $('#filterDateMH').data('daterangepicker').startDate;
+        var endDate = $('#filterDateMH').data('daterangepicker').endDate;
+        var label = $('#filterDateMH').data('daterangepicker').chosenLabel;
 
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = startDate.format(dateFormat);
         var endDateText = endDate.format(dateFormat);
-
+// '': [moment(), moment()],
+//             // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+//             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+//             // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+//             'This Month': [moment().startOf('month'), moment().endOf('month')],
+//             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+//             'Last 3 Months': [moment().subtract(3, 'months').startOf('day'), moment().endOf('day')],
+//             'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
         if (label === 'Custom Range') {
             searchDateSpan.text(startDateText + ' - ' + endDateText);
+        } else if(label == 'Today') {
+            searchDateSpan.text("Today");
+        } else if(label == 'Last 7 Days') {
+            searchDateSpan.text("Last 7 Days");
+        } else if(label == 'This Month') {
+            searchDateSpan.text("This Month");
+        } else if(label == 'Last Month') {
+            searchDateSpan.text("Last Month");
         } else {
-            searchDateSpan.text("Last Year");
+            searchDateSpan.text("Last 3 Months");
         }
-
+        console.log(searchDateSpan.text);
+        console.log(searchDateSpan.chosenLabel);
         searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
         searchDateSpan.attr('enddate', endDate.format('YYYY-MM-DD HH:mm:ss'));
     }
