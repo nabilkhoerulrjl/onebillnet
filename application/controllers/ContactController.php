@@ -18,6 +18,12 @@ class ContactController extends CI_Controller {
         $this->load->view('customer/listCustomer');
     }
 
+    public function viewContact() {
+        $data['idTabMenu'] = 'Contact256';
+        $data['dataContact']  = $this->getListContactData();
+        $this->load->view('customer/contact/index',$data);
+    }
+
     public function view($contactId) {
         // Tampilkan detail kontak berdasarkan ID
         $data['contact'] = $this->Contact_model->getContactById($contactId);
@@ -70,4 +76,41 @@ class ContactController extends CI_Controller {
         // Redirect ke halaman daftar kontak
         redirect('contact/index');
     }
+
+    public function getListContactData() {
+        // $startDate = $this->input->post('startDate');
+        // $endDate = $this->input->post('endDate');
+        $siteId = $this->getSiteId();
+        $select = 'ct.Id, ct.Name, ct.Email,
+        ct.Phone, ct.Whatsapp, gt.GroupName, ct.StatusId';
+        $join1   = ['ContactGroup AS gt', 'ct.GroupId = gt.Id', 'left'];
+        $where  = $siteId;
+        $data = $this->Contact_Model->getAllData($select, $join1, $where);
+        return $data;
+    }
+
+    public function getSiteId()
+    {
+		$siteId  ="0";
+		// Load the session library
+		$this->load->library('session');
+        if ($this->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->session->userdata("siteid");
+        }
+        return $siteId;
+	}
+
+    private function getUserId()
+	{
+		// Check if the variable is defined
+		$userId  ="0";
+        $this->load->library('session');
+        if ($this->session->has_userdata("id")) {
+            // Retrieve its value
+            $userId = $this->session->userdata("id");
+        }
+		
+		return $userId;
+	}
 }

@@ -39,6 +39,10 @@
     openTabGeneral('bill_customer','Bill Customer', 'fa-file-invoice-dollar', 'CustomerController/billCustomer', 'Get' );
   }
 
+  function addTabListContact() {
+    openTabGeneral('contact','Contact', 'fa-address-book', 'ContactController/viewContact', 'Get' );
+  }
+
   function addTabAddBill() {
     openTabGeneral('add_bill_customer','Add Bill Customer', 'fa-file-circle-plus', 'CustomerController/addBillCustomer', 'Get' );
   }

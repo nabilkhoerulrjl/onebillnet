@@ -9,6 +9,18 @@
             return $query->row_array();
         }
 
+        public function getAllData($select, $join, $where) {
+            $this->db->select($select);
+            $this->db->from('Contact AS ct');
+            $this->db->join($join[0], $join[1], $join[2]);
+            $this->db->where('ct.SiteId', $where);
+            $this->db->order_by('Id', 'desc');
+            $rawQuery = $this->db->last_query();
+
+            $query = $this->db->get();
+            return $query->result();
+        }
+
         public function getContactByAny($select, $where) {
             $this->db->select($select);
             $this->db->from('Contact');
