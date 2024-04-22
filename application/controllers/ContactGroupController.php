@@ -22,12 +22,16 @@ class ContactGroupController extends CI_Controller {
 
     public function getListDataContactGroup() {
         $siteId = $this->getSiteId();
-		$select = 'ContactGroup.Id,ContactGroup.GroupName';
-		$where = array(
-			'SiteId' => $siteId,
-		);
-		$this->load->model('ContactGroup_Model');
-		$data = $this->ContactGroup_Model->getAllContactGroup($select, $where);
+		$select = 'cg.Id,cg.GroupName';
+        $join   = ['Contact AS ct', 'ct.GroupId = cg.Id', 'left'];
+        $join2   = ['CustomerGroup AS csg', 'csg.GroupContactId = cg.Id', 'left'];
+        $where = array(
+            'SiteId' => $siteId,
+            'StatusId' => 'CTS1',
+        );
+        $groupby = '`cg`.`Id`';
+        $this->load->model('ContactGroup_Model');
+        $data = $this->ContactGroup_Model->getAllContactGroup($select, $join, $join2, $where, $groupby);
         // var_dump($data);
         echo json_encode($data);
 

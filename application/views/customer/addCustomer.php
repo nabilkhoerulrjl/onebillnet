@@ -215,7 +215,7 @@
             //     console.log(pair[0] + ', ' + capitalizeWords(pair[1]));
             // }
 
-        if (!firstName || !lastName || !countryCode || !whatsapp || !email ||  !product || !contactGroup || !address ) {
+        if (!firstName || !lastName || !countryCode || !whatsapp || !product || !address ) {
             // Jika ada setidaknya satu kolom yang kosong, lakukan sesuatu, contohnya:
             Swal.fire({
                 title: 'Attention',
@@ -237,13 +237,24 @@
                 contentType: false, // Untuk mengirim file, harus diatur false
                 beforeSend: function() {
                     // Menampilkan elemen loading sebelum permintaan dikirim
-                    // $('#overlayLoading').show();
-                    // $('#overlay').show();
+                    Swal.fire({
+                        title: 'Mohon Tunggu',
+                        text: 'Proses sedang berlangsung...',
+                        icon: 'info',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        button: false,
+                    });
                 },
                 success: function(response) {
                     // Handle response dari Controller
                     console.log(response);
-                    // Tambahan: Refresh halaman atau lakukan aksi lain jika diperlukan
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data Customer Berhasil Ditambah',
+                        icon: 'success',
+                        confirmButtonColor: '#1abc9c',
+                    });
                 },
                 error: function(error) {
                     // Handle error

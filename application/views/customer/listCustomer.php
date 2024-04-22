@@ -175,7 +175,7 @@
         
         <!-- Tabel ZingGrid -->
         <div class="table-responsive">
-            <table class="table table-hover" id="dataTableUsers">
+            <table class="table table-hover" id="dataTableCS<?=$idTabMenu;?>">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -192,6 +192,11 @@
                 <tbody>
                 </tbody>
             </table>
+        </div>
+        <div class="pagination-container mt-3">
+            <ul class="pagination pagination<?=$idTabMenu;?> justify-content-end">
+                <!-- Tombol paginasi akan ditambahkan di sini -->
+            </ul>
         </div>
     </div>
 </div>
@@ -277,7 +282,7 @@
                 $('#overlay').hide();
                 if(data.length > 0){
                     // Clear data dari table
-                    $('#dataTableUsers tbody').empty();
+                    $('#dataTableCS<?=$idTabMenu;?> tbody').empty();
                     // Masukkan data ke dalam tabel
                     $.each(data, function (index, value) {
                         //init variable
@@ -307,7 +312,7 @@
                         }
                         // Gunakan moment.js untuk memformat tanggal
                         var DateActive = moment(DateActive).format('D MMMM YYYY');
-                        $('#dataTableUsers tbody').append(`
+                        $('#dataTableCS<?=$idTabMenu;?> tbody').append(`
                             <tr>
                                 <td>${index+1}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
@@ -326,8 +331,72 @@
                         `);
                     });
                 }else{
-                    $('#dataTableUsers tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
+                    $('#dataTableCS<?=$idTabMenu;?> tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
                 }
+
+                // Pagging TableCS
+                var itemsPerPage = 15; // Jumlah item per halaman
+                var $tableRows = $('#dataTableCS<?=$idTabMenu;?> tbody tr');
+                var totalItems = $tableRows.length;
+                var totalPages = Math.ceil(totalItems / itemsPerPage);
+                var currentPage = 1;
+                var maxVisiblePages = 5;
+
+                // Fungsi untuk menampilkan item pada halaman tertentu
+                function showPage<?=$idTabMenu;?>(page) {
+                    $tableRows.hide().slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
+                }
+
+                // Fungsi untuk menampilkan tombol paginasi
+                function showPagination<?=$idTabMenu;?>() {
+                    $('.pagination<?=$idTabMenu;?>').empty();
+
+                    if (totalPages > maxVisiblePages) {
+                        var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                        var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+                        if (startPage > 1) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
+                        }
+
+                        for (var i = startPage; i <= endPage; i++) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                        }
+
+                        if (endPage < totalPages) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
+                        }
+                    } else {
+                        for (var i = 1; i <= totalPages; i++) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                        }
+                    }
+
+                    $('.pagination<?=$idTabMenu;?> li').removeClass('active');
+                    $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
+                }
+
+                // Inisialisasi tampilan halaman pertama dan tombol paginasi
+                showPage<?=$idTabMenu;?>(currentPage);
+                showPagination<?=$idTabMenu;?>();
+
+                // Handle klik pada tombol paginasi
+                $(document).on('click', '.pagination<?=$idTabMenu;?> a', function (e) {
+                    e.preventDefault();
+                    var pageText = $(this).text();
+
+                    if (pageText === 'Previous') {
+                        currentPage = Math.max(1, currentPage - 1);
+                    } else if (pageText === 'Next') {
+                        currentPage = Math.min(totalPages, currentPage + 1);
+                    } else {
+                        currentPage = parseInt(pageText);
+                    }
+
+                    showPage<?=$idTabMenu;?>(currentPage);
+                    showPagination<?=$idTabMenu;?>();
+                });
+                // End Pagging TableBill
                 
             },
             error: function (error) {
@@ -350,7 +419,7 @@
 
     // Fungsi untuk memfilter data di tabel HTML
     function filterTableData(searchValue) {
-        var table = document.getElementById('dataTableUsers');
+        var table = document.getElementById('dataTableCS<?=$idTabMenu;?>');
         console.log(table);
 
         // Ambil semua baris dalam tabel, kecuali baris header
@@ -392,7 +461,7 @@
         var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
         var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
         // Ambil semua baris tabel
-        var rows = $("#dataTableUsers").find("tr");
+        var rows = $("#dataTableCS<?=$idTabMenu;?>").find("tr");
 
         // Ambil header CSV (hanya sekali)
         var headerRow = rows.first().children().not(".action-column").map(function() {
@@ -442,17 +511,17 @@
         });
 
         // Sembunyikan kolom Action untuk print
-        $(".action-column", "#dataTableUsers").hide();
+        $(".action-column", "#dataTableCS<?=$idTabMenu;?>").hide();
 
         // Konfigurasi print
-        $("#dataTableUsers").printThis({
+        $("#dataTableCS<?=$idTabMenu;?>").printThis({
             pageTitle: "Data Customers",
             header: "<h3>Data Customers</h3>",
             style: "table { table-layout: fixed; width: 100%; }",
             orientation: "landscape",
             afterPrint: function() {
                 // Tampilkan kembali kolom Action setelah print
-                $(".action-column", "#dataTableUsers").show();
+                $(".action-column", "#dataTableCS<?=$idTabMenu;?>").show();
 
                 // Tampilkan alert "Berhasil Print"
                 Swal.fire({
@@ -476,7 +545,7 @@
             button: false,
             confirmButtonColor: '#1abc9c',
         });
-        var element = document.getElementById("dataTableUsers");
+        var element = document.getElementById("dataTableCS<?=$idTabMenu;?>");
 
         const columnsToExclude = document.querySelectorAll('.action-column');
         columnsToExclude.forEach(column => column.remove());
@@ -522,7 +591,7 @@
             confirmButtonColor: '#1abc9c', // Warna biru
         });
         var rows = [];
-        var table = $("#dataTableUsers");
+        var table = $("#dataTableCS<?=$idTabMenu;?>");
         var headers = $("thead th", table).map(function() {
         return $(this).text().trim();
         }).get();
@@ -562,7 +631,7 @@
     /* Ini pake vanilla JS
         function copyToClipboard() {
         var rows = [];
-        var table = document.getElementById("dataTableUsers");
+        var table = document.getElementById("dataTableCS<?=$idTabMenu;?>");
         var headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
 
         Array.from(table.querySelectorAll("tbody tr")).forEach(row => {
