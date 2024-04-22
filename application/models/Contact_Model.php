@@ -4,17 +4,28 @@
             parent::__construct();
         }
 
-        public function getContactById($contactId) {
-            $query = $this->db->get_where('Contact', array('Id' => $contactId));
-            return $query->row_array();
+        public function getContactById($select, $where) {
+            // $query = $this->db->get_where('Contact', array('Id' => $contactId));
+            // return $query->row_array();
+            $this->db->select($select);
+            $this->db->from('Contact AS ct');
+            $this->db->where('ct.SiteId', $where['SiteId']);
+            $this->db->where('ct.StatusId', $where['StatusId']);
+            $this->db->where('ct.Id', $where['Id']);
+            // $this->db->order_by('Id', 'desc');
+            // $rawQuery = $this->db->last_query();
+
+            $query = $this->db->get();
+            return $query->result();
         }
 
         public function getAllData($select, $join, $where) {
             $this->db->select($select);
             $this->db->from('Contact AS ct');
             $this->db->join($join[0], $join[1], $join[2]);
-            $this->db->where('ct.SiteId', $where);
-            $this->db->order_by('Id', 'desc');
+            $this->db->where('ct.SiteId', $where['SiteId']);
+            $this->db->where('ct.StatusId', $where['StatusId']);
+            // $this->db->order_by('Id', 'desc');
             $rawQuery = $this->db->last_query();
 
             $query = $this->db->get();
@@ -59,7 +70,15 @@
         public function updateContact($contactId, $data) {
             $this->db->where('Id', $contactId);
             $this->db->update('Contact', $data);
+            // Memeriksa apakah ada baris yang terpengaruh oleh operasi update
+            if ($this->db->affected_rows() > 0) {
+                return true; // Jika ada baris yang terpengaruh, update berhasil
+            } else {
+                return false; // Jika tidak ada baris yang terpengaruh, update gagal
+            }
         }
+
+        
 
         public function deleteContact($contactId) {
             $this->db->delete('Contact', array('Id' => $contactId));

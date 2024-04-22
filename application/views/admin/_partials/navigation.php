@@ -41,7 +41,7 @@
                     <ul class="pcoded-submenu">
                         <li><a href="javascript:void(0)" onclick="addTabListCustomers()">Customer</a></li>
                         <li><a href="javascript:void(0)" onclick="addTabListContact()">Contact</a></li>
-                        <li><a href="javascript:void(0)" onclick="addTabListGroupContact()">Group Contact</a></li>
+                        <li><a href="javascript:void(0)" onclick="addTabListContactGroup()">Contact & Group</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

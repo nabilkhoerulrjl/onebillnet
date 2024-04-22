@@ -103,9 +103,15 @@
             }
         }
 
-        public function updateCustomer($contactId, $data) {
-            $this->db->where('Id', $contactId);
-            $this->db->update('Contact', $data);
+        public function updateCustomer($customerId, $data) {
+            $this->db->where('Id', $customerId);
+            $this->db->update('Customer', $data);
+            // Memeriksa apakah ada baris yang terpengaruh oleh operasi update
+            if ($this->db->affected_rows() > 0) {
+                return true; // Jika ada baris yang terpengaruh, update berhasil
+            } else {
+                return false; // Jika tidak ada baris yang terpengaruh, update gagal
+            }
         }
 
         public function deleteCustomer($contactId) {

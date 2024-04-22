@@ -21,14 +21,14 @@ class ContactGroup_Model extends CI_Model {
     }
 
     // Fungsi untuk mendapatkan semua data grup kontak
-    public function getAllContactGroup($select,$where) {
+    public function getAllContactGroup($select, $join, $join2, $where, $groupby) {
         $this->db->select($select);
-        $this->db->from('ContactGroup');
-
-        // Iterasi melalui array $where dan menambahkan kondisi WHERE
-        foreach ($where as $column => $values) {
-            $this->db->where($column, $values);
-        }
+        $this->db->from('ContactGroup AS cg');
+        $this->db->join($join[0], $join[1], $join[2]);
+        $this->db->join($join2[0], $join2[1], $join2[2]);
+        $this->db->where('ct.SiteId', $where['SiteId']);
+        $this->db->where('ct.StatusId', $where['StatusId']);
+        $this->db->group_by($groupby);
     
         $query = $this->db->get();
         $sql = $this->db->last_query();
