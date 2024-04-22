@@ -53,6 +53,7 @@ $route['default_controller'] = 'welcome';
 $route['dashboard'] = 'dashboard/mainDash_Controller';
 $route['dashboard'] = 'dashboard/winboxDash_Controller';
 $route['customer'] = 'customer/listCustomer_Controller';
+$route['customer'] = 'customer/ContactGroupController';
 $route['setting'] = 'setting/Company_Controller';
 $route['message'] = 'Message_Controller';
 $route['fonnte'] = 'Fonnte_Controller';

@@ -102,7 +102,6 @@
         text-overflow: ellipsis;
     }
 </style>
-<!-- <?php $this->load->view("customer/billCustomer/addBill.php") ?> -->
 <div class="wrapper wrapper-content bg-white">
     <div class="text-header col-md p-4">
         <h3 class="font-weight-bold">Data Contact</h3>

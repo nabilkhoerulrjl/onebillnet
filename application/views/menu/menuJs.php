@@ -43,6 +43,10 @@
     openTabGeneral('contact','Contact', 'fa-address-book', 'ContactController/viewContact', 'Get' );
   }
 
+  function addTabListContactGroup() {
+    openTabGeneral('Contact_and_Group','Contact & Group', 'fa-address-book', 'customer/ContactGroupController/index', 'Get' );
+  }
+
   function addTabAddBill() {
     openTabGeneral('add_bill_customer','Add Bill Customer', 'fa-file-circle-plus', 'CustomerController/addBillCustomer', 'Get' );
   }
