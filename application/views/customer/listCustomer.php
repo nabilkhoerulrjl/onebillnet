@@ -175,26 +175,28 @@
         
         <!-- Tabel ZingGrid -->
         <div class="table-responsive">
-            <table class="table table-hover" id="dataTableUsers">
+            <table class="table table-hover" id="dataTableCS<?=$idTabMenu;?>">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>Whatsapp</th>
-                        <th>RT/RW</th>
-                        <th>Kelurahan</th>
-                        <th>Kecamatan</th>
-                        <th>Kota</th>
+                        <th>Email</th>
                         <th>Product</th>
-                        <th>Status Subsribe</th>
-                        <th>Status Billing</th>
-                        <th>Date Subsribe</th>
+                        <th>Status</th>
+                        <th>Date Active</th>
+                        <th>Address</th>
                         <th class="action-column">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
+        </div>
+        <div class="pagination-container mt-3">
+            <ul class="pagination pagination<?=$idTabMenu;?> justify-content-end">
+                <!-- Tombol paginasi akan ditambahkan di sini -->
+            </ul>
         </div>
     </div>
 </div>
@@ -280,46 +282,46 @@
                 $('#overlay').hide();
                 if(data.length > 0){
                     // Clear data dari table
-                    $('#dataTableUsers tbody').empty();
+                    $('#dataTableCS<?=$idTabMenu;?> tbody').empty();
                     // Masukkan data ke dalam tabel
                     $.each(data, function (index, value) {
                         //init variable
                         var StatusSubsribe = '';
                         var SubscribeBadge = '';
                         var StatusBilling = '';
-                        var BillingBadge = '';
                         //kondisi untuk status bill dan subscribe
-                        if(value.StatusSubsribe == 'CRS1'){
+                        if(value.StatusActive == 'CRS1'){
                             StatusSubsribe = 'Active';
                             SubscribeBadge = 'badge-success';
                         }
-                        if(value.StatusSubsribe == 'CRS2'){
-                            StatusSubsribe = 'Not Active';
+                        if(value.StatusActive == 'CRS2'){
+                            StatusSubsribe = 'InActive';
+                            SubscribeBadge = 'badge-secondary';
+                        }
+                        if(value.StatusActive == 'CRS3'){
+                            StatusSubsribe = 'InActive';
                             SubscribeBadge = 'badge-warning';
                         }
                         if(value.StatusBill == 'BLS1'){
                             StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-success';
+                            BillingBadge = 'badge-danger';
                         }
                         if(value.StatusBill == 'BLS2'){
                             StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-warning';
+                            BillingBadge = 'badge-dark';
                         }
                         // Gunakan moment.js untuk memformat tanggal
-                        var DateSubsribe = moment(DateSubsribe).format('D MMMM YYYY');
-                        $('#dataTableUsers tbody').append(`
+                        var DateActive = moment(DateActive).format('D MMMM YYYY');
+                        $('#dataTableCS<?=$idTabMenu;?> tbody').append(`
                             <tr>
-                                <td>${value.CustomerId}</td>
+                                <td>${index+1}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.Whatsapp}</td>
-                                <td>${value.RtRw}</td>
-                                <td>${value.Subdistrict}</td>
-                                <td>${value.Ward}</td>
-                                <td>${value.City}</td>
+                                <td>${value.Email}</td>
                                 <td>${value.ProductName}</td>
                                 <td><span class="badge ${SubscribeBadge}">${StatusSubsribe}</span></td>
-                                <td><span class="badge ${BillingBadge}">${StatusBilling}</span></td>
-                                <td title="${value.DateSubsribe}">${DateSubsribe}</td>
+                                <td title="${value.DateActive}">${DateActive}</td>
+                                <td title="${value.Address}">${value.Address}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
                                     <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
@@ -329,8 +331,72 @@
                         `);
                     });
                 }else{
-                    $('#dataTableUsers tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
+                    $('#dataTableCS<?=$idTabMenu;?> tbody').html(`<td colspan="12" class="pt-3 pb-0"><span class="d-flex justify-content-center h5 text-secondary">Data Customer not Found</span></td>`);
                 }
+
+                // Pagging TableCS
+                var itemsPerPage = 15; // Jumlah item per halaman
+                var $tableRows = $('#dataTableCS<?=$idTabMenu;?> tbody tr');
+                var totalItems = $tableRows.length;
+                var totalPages = Math.ceil(totalItems / itemsPerPage);
+                var currentPage = 1;
+                var maxVisiblePages = 5;
+
+                // Fungsi untuk menampilkan item pada halaman tertentu
+                function showPage<?=$idTabMenu;?>(page) {
+                    $tableRows.hide().slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
+                }
+
+                // Fungsi untuk menampilkan tombol paginasi
+                function showPagination<?=$idTabMenu;?>() {
+                    $('.pagination<?=$idTabMenu;?>').empty();
+
+                    if (totalPages > maxVisiblePages) {
+                        var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                        var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+                        if (startPage > 1) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
+                        }
+
+                        for (var i = startPage; i <= endPage; i++) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                        }
+
+                        if (endPage < totalPages) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
+                        }
+                    } else {
+                        for (var i = 1; i <= totalPages; i++) {
+                            $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                        }
+                    }
+
+                    $('.pagination<?=$idTabMenu;?> li').removeClass('active');
+                    $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
+                }
+
+                // Inisialisasi tampilan halaman pertama dan tombol paginasi
+                showPage<?=$idTabMenu;?>(currentPage);
+                showPagination<?=$idTabMenu;?>();
+
+                // Handle klik pada tombol paginasi
+                $(document).on('click', '.pagination<?=$idTabMenu;?> a', function (e) {
+                    e.preventDefault();
+                    var pageText = $(this).text();
+
+                    if (pageText === 'Previous') {
+                        currentPage = Math.max(1, currentPage - 1);
+                    } else if (pageText === 'Next') {
+                        currentPage = Math.min(totalPages, currentPage + 1);
+                    } else {
+                        currentPage = parseInt(pageText);
+                    }
+
+                    showPage<?=$idTabMenu;?>(currentPage);
+                    showPagination<?=$idTabMenu;?>();
+                });
+                // End Pagging TableBill
                 
             },
             error: function (error) {
@@ -353,7 +419,7 @@
 
     // Fungsi untuk memfilter data di tabel HTML
     function filterTableData(searchValue) {
-        var table = document.getElementById('dataTableUsers');
+        var table = document.getElementById('dataTableCS<?=$idTabMenu;?>');
         console.log(table);
 
         // Ambil semua baris dalam tabel, kecuali baris header
@@ -395,7 +461,7 @@
         var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
         var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
         // Ambil semua baris tabel
-        var rows = $("#dataTableUsers").find("tr");
+        var rows = $("#dataTableCS<?=$idTabMenu;?>").find("tr");
 
         // Ambil header CSV (hanya sekali)
         var headerRow = rows.first().children().not(".action-column").map(function() {
@@ -445,17 +511,17 @@
         });
 
         // Sembunyikan kolom Action untuk print
-        $(".action-column", "#dataTableUsers").hide();
+        $(".action-column", "#dataTableCS<?=$idTabMenu;?>").hide();
 
         // Konfigurasi print
-        $("#dataTableUsers").printThis({
+        $("#dataTableCS<?=$idTabMenu;?>").printThis({
             pageTitle: "Data Customers",
             header: "<h3>Data Customers</h3>",
             style: "table { table-layout: fixed; width: 100%; }",
             orientation: "landscape",
             afterPrint: function() {
                 // Tampilkan kembali kolom Action setelah print
-                $(".action-column", "#dataTableUsers").show();
+                $(".action-column", "#dataTableCS<?=$idTabMenu;?>").show();
 
                 // Tampilkan alert "Berhasil Print"
                 Swal.fire({
@@ -479,7 +545,7 @@
             button: false,
             confirmButtonColor: '#1abc9c',
         });
-        var element = document.getElementById("dataTableUsers");
+        var element = document.getElementById("dataTableCS<?=$idTabMenu;?>");
 
         const columnsToExclude = document.querySelectorAll('.action-column');
         columnsToExclude.forEach(column => column.remove());
@@ -525,7 +591,7 @@
             confirmButtonColor: '#1abc9c', // Warna biru
         });
         var rows = [];
-        var table = $("#dataTableUsers");
+        var table = $("#dataTableCS<?=$idTabMenu;?>");
         var headers = $("thead th", table).map(function() {
         return $(this).text().trim();
         }).get();
@@ -565,7 +631,7 @@
     /* Ini pake vanilla JS
         function copyToClipboard() {
         var rows = [];
-        var table = document.getElementById("dataTableUsers");
+        var table = document.getElementById("dataTableCS<?=$idTabMenu;?>");
         var headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
 
         Array.from(table.querySelectorAll("tbody tr")).forEach(row => {

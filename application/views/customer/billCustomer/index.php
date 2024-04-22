@@ -206,7 +206,7 @@
             </table>
         </div>
         <div class="pagination-container mt-3">
-            <ul class="pagination justify-content-end">
+            <ul class="pagination pagination<?=$idTabMenu;?> justify-content-end">
                 <!-- Tombol paginasi akan ditambahkan di sini -->
             </ul>
         </div>
@@ -241,45 +241,45 @@
         var maxVisiblePages = 5;
 
         // Fungsi untuk menampilkan item pada halaman tertentu
-        function showPage(page) {
+        function showPage<?=$idTabMenu;?>(page) {
             $tableRows.hide().slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
         }
 
         // Fungsi untuk menampilkan tombol paginasi
-        function showPagination() {
-            $('.pagination').empty();
+        function showPagination<?=$idTabMenu;?>() {
+            $('.pagination<?=$idTabMenu;?>').empty();
 
             if (totalPages > maxVisiblePages) {
                 var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
                 var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
                 if (startPage > 1) {
-                    $('.pagination').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
+                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
                 }
 
                 for (var i = startPage; i <= endPage; i++) {
-                    $('.pagination').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
                 }
 
                 if (endPage < totalPages) {
-                    $('.pagination').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
+                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
                 }
             } else {
                 for (var i = 1; i <= totalPages; i++) {
-                    $('.pagination').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
                 }
             }
 
-            $('.pagination li').removeClass('active');
-            $('.pagination li:contains(' + currentPage + ')').addClass('active');
+            $('.pagination<?=$idTabMenu;?> li').removeClass('active');
+            $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
         }
 
         // Inisialisasi tampilan halaman pertama dan tombol paginasi
-        showPage(currentPage);
-        showPagination();
+        showPage<?=$idTabMenu;?>(currentPage);
+        showPagination<?=$idTabMenu;?>();
 
         // Handle klik pada tombol paginasi
-        $(document).on('click', '.pagination a', function (e) {
+        $(document).on('click', '.pagination<?=$idTabMenu;?> a', function (e) {
             e.preventDefault();
             var pageText = $(this).text();
 
@@ -291,8 +291,8 @@
                 currentPage = parseInt(pageText);
             }
 
-            showPage(currentPage);
-            showPagination();
+            showPage<?=$idTabMenu;?>(currentPage);
+            showPagination<?=$idTabMenu;?>();
         });
         // End Pagging TableBill
     });

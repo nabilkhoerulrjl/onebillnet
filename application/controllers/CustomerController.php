@@ -13,7 +13,9 @@ class CustomerController extends CI_Controller {
         // Tampilkan daftar semua kontak
         // $data['contacts'] = $this->Contact_model->getAllContacts();
         // Contoh data customer (gantilah dengan cara mendapatkan data sesuai proyek Anda)
-        $this->load->view('customer/listCustomer');
+        $random_id = $this->ramdomId();
+		$data['idTabMenu'] = 'listcustomer'.$random_id;
+		$this->load->view('customer/listCustomer',$data);
     }
 
     public function billCustomer() {
@@ -102,47 +104,41 @@ class CustomerController extends CI_Controller {
         // Mengambil data dari POST
         $firstName = $this->input->post('firstName');
         $lastName = $this->input->post('lastName');
-        $nikNumber = $this->input->post('nikNumber');
-        $email = $this->input->post('email');
         $whatsapp = $this->input->post('whatsapp');
+        $email = $this->input->post('email');
         $product = $this->input->post('product');
-        $cityBorn = $this->input->post('cityBorn');
-        $dateOfBirth = $this->input->post('dateOfBirth');
-        $gender = $this->input->post('gender');
-        $province = $this->input->post('province');
-        $city = $this->input->post('city');
-        $kecamatan = $this->input->post('kecamatan');
-        $kelurahan = $this->input->post('kelurahan');
-        $rtRw = $this->input->post('rtRw');
         $contactGroup = $this->input->post('contactGroup');
+        // var_dump($contactGroup);
+        if($contactGroup == ''){
+            $contactGroup = NULL;
+        }
         $address = $this->input->post('address');
-        $myImage = $this->input->post('myImage');
 
         $userId = $this->getUserId();
 
-        $imageId = $this->uploadImage($myImage,$userId);
+        // $imageId = $this->uploadImage($myImage,$userId);
 
         $dataCustomer = array(
             'FirstName' => $firstName,
             'LastName' => $lastName,
-            'NikNumber' => $nikNumber,
+            'NikNumber' => NULL,
             'ProductId' => $product,
             'SiteId' => $siteId,
-            'StatusId' => 'CRS2',
-            'CityBorn' => $cityBorn,
-            'DateOfBirth' => $dateOfBirth,
-            'Gender' => $gender,
+            'StatusId' => 'CRS3',
+            'CityBorn' => NULL,
+            'DateOfBirth' => NULL,
+            'Gender' => NULL,
             'Phone' => NULL,
             'whatsapp' => $whatsapp,
             'Email' => $email,
             'Address' => $address,
             'LastLogin' => NULL,
-            'ImageId' => $imageId,
-            'RtRw' => $rtRw,
-            'ward' => $kelurahan,
-            'Subdistrict' => $kecamatan,
-            'City' => $city,
-            'Province' => $province,
+            'ImageId' => NULL,
+            'RtRw' => NULL,
+            'ward' => NULL,
+            'Subdistrict' => NULL,
+            'City' => NULL,
+            'Province' => NULL,
             'Creator' => $userId,
             'CreateDate' => date('Y-m-d H:i:s'),
             'Modifier' => $userId,
@@ -156,9 +152,9 @@ class CustomerController extends CI_Controller {
             'FirstName' => $firstName,
             'LastName' => $lastName,
             'Email' => $email,
-            'Phone' => NULL,
+            'Phone' => $whatsapp,
             'whatsapp' => $whatsapp,
-            'Mobile' => NULL,
+            'Mobile' => $whatsapp,
             'CustomerId' => $customerId,
             'GroupId' => $contactGroup,
             'StatusId' => 'CTS2',
@@ -191,6 +187,18 @@ class CustomerController extends CI_Controller {
 		
 		return $userId;
 	}
+
+    public function ramdomId()
+    {
+        // Mendefinisikan panjang maksimal ID
+        $max_length = 5;
+
+        // Generate random ID
+        $random_id = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $max_length);
+
+        // Print the random ID
+        return $random_id;
+    }
 
     public function uploadImage($imageData,$userId) {
         ini_set('upload_max_filesize', '20M');

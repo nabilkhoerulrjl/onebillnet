@@ -10,12 +10,10 @@
         }
 
         public function getCustomerAll($siteId, $startDate, $endDate) {
-            $this->db->select('c.Id as CustomerId, c.FirstName, c.LastName, c.Whatsapp, c.RtRw, c.Ward, c.Subdistrict, c.City, c.Province, pd.Name as ProductName, c.StatusId as StatusSubsribe,  c.ActiveDate as DateSubsribe');//b.StatusId as StatusBill,
+            $this->db->select('c.Id as CustomerId, c.FirstName, c.LastName, c.Whatsapp, c.Email, pd.Name as ProductName, c.StatusId as StatusActive,  c.ActiveDate as ActiveDate,  c.Address as Address');//b.StatusId as StatusBill,
             $this->db->from('Customer as c');
             $this->db->join('Product as pd', 'c.ProductId = pd.Id', 'left');
-            // $this->db->join('Bill as b', 'c.Id = b.CustomerId', 'left');
             $this->db->where('c.SiteId', $siteId);
-            $this->db->where('c.StatusId', 'CRS1');
             if($startDate !== NULL && $endDate !== NULL) {
                 $this->db->where('c.CreateDate >=', $startDate);
                 $this->db->where('c.CreateDate <=', $endDate);
@@ -103,9 +101,15 @@
             }
         }
 
-        public function updateCustomer($contactId, $data) {
-            $this->db->where('Id', $contactId);
-            $this->db->update('Contact', $data);
+        public function updateCustomer($customerId, $data) {
+            $this->db->where('Id', $customerId);
+            $this->db->update('Customer', $data);
+            // Memeriksa apakah ada baris yang terpengaruh oleh operasi update
+            if ($this->db->affected_rows() > 0) {
+                return true; // Jika ada baris yang terpengaruh, update berhasil
+            } else {
+                return false; // Jika tidak ada baris yang terpengaruh, update gagal
+            }
         }
 
         public function deleteCustomer($contactId) {

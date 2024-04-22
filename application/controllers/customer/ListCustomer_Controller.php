@@ -27,6 +27,8 @@ class ListCustomer_Controller extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('customer/listCustomer');
+		$random_id = $this->ramdomId();
+		$data['idTabMenu'] = 'listcustomer'.$random_id;
+		$this->load->view('customer/listCustomer',$data);
 	}
 }
