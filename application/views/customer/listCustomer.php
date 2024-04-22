@@ -181,14 +181,11 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Whatsapp</th>
-                        <th>RT/RW</th>
-                        <th>Kelurahan</th>
-                        <th>Kecamatan</th>
-                        <th>Kota</th>
+                        <th>Email</th>
                         <th>Product</th>
-                        <th>Status Subsribe</th>
-                        <th>Status Billing</th>
-                        <th>Date Subsribe</th>
+                        <th>Status</th>
+                        <th>Date Active</th>
+                        <th>Address</th>
                         <th class="action-column">Action</th>
                     </tr>
                 </thead>
@@ -287,39 +284,39 @@
                         var StatusSubsribe = '';
                         var SubscribeBadge = '';
                         var StatusBilling = '';
-                        var BillingBadge = '';
                         //kondisi untuk status bill dan subscribe
-                        if(value.StatusSubsribe == 'CRS1'){
+                        if(value.StatusActive == 'CRS1'){
                             StatusSubsribe = 'Active';
                             SubscribeBadge = 'badge-success';
                         }
-                        if(value.StatusSubsribe == 'CRS2'){
-                            StatusSubsribe = 'Not Active';
+                        if(value.StatusActive == 'CRS2'){
+                            StatusSubsribe = 'InActive';
+                            SubscribeBadge = 'badge-secondary';
+                        }
+                        if(value.StatusActive == 'CRS3'){
+                            StatusSubsribe = 'InActive';
                             SubscribeBadge = 'badge-warning';
                         }
                         if(value.StatusBill == 'BLS1'){
                             StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-success';
+                            BillingBadge = 'badge-danger';
                         }
                         if(value.StatusBill == 'BLS2'){
                             StatusBilling = 'Not Paid';
-                            BillingBadge = 'badge-warning';
+                            BillingBadge = 'badge-dark';
                         }
                         // Gunakan moment.js untuk memformat tanggal
-                        var DateSubsribe = moment(DateSubsribe).format('D MMMM YYYY');
+                        var DateActive = moment(DateActive).format('D MMMM YYYY');
                         $('#dataTableUsers tbody').append(`
                             <tr>
-                                <td>${value.CustomerId}</td>
+                                <td>${index+1}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.Whatsapp}</td>
-                                <td>${value.RtRw}</td>
-                                <td>${value.Subdistrict}</td>
-                                <td>${value.Ward}</td>
-                                <td>${value.City}</td>
+                                <td>${value.Email}</td>
                                 <td>${value.ProductName}</td>
                                 <td><span class="badge ${SubscribeBadge}">${StatusSubsribe}</span></td>
-                                <td><span class="badge ${BillingBadge}">${StatusBilling}</span></td>
-                                <td title="${value.DateSubsribe}">${DateSubsribe}</td>
+                                <td title="${value.DateActive}">${DateActive}</td>
+                                <td title="${value.Address}">${value.Address}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
                                     <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>

@@ -188,143 +188,34 @@
     }
     // selectElement.append($("<option>").val("").text(defaultText).prop("selected", true));
 
-    // Fungsi untuk mengisi elemen input select dengan data wilayah
-    function fillSelect(selectElement, data, defaultText) {
-        console.log(selectElement, data, defaultText);
-      selectElement.empty(); // Kosongkan opsi sebelum mengisi yang baru
-      
-      // Tambahkan elemen default sebagai panduan
-      selectElement.append($("<option>").val("").text(defaultText).prop("selected", true));
-
-      // Isi elemen input select dengan data wilayah
-      $.each(data, function(index, wilayah) {
-        selectElement.append($("<option>").val(wilayah.id).text(wilayah.name));
-      });
-    }
-
-    // Fungsi untuk mengisi elemen input select Kota/Kabupaten berdasarkan id provinsi
-    function fillCitySelect(provinceId) {
-      var fillCitySelect = $("#city");
-      fillCitySelect.empty(); // Kosongkan opsi sebelum mengisi yang baru
-
-      // Jika provinsi belum dipilih (nilai null atau kosong), tidak perlu mengambil data kota/kabupaten
-      if (!provinceId) {
-        return;
-      }
-
-      // Panggil API untuk mendapatkan data kota/kabupaten berdasarkan id provinsi
-      var apiUrl = "https://nabilkhoerulrjl.github.io/api-wilayah-indonesia/api/regencies/" + provinceId + ".json";
-      getData(apiUrl, function(data) {
-        fillSelect(fillCitySelect, data, "Select City");
-        // Setelah mengisi kota/kabupaten, panggil fungsi untuk mengisi kecamatan
-        fillCitySelect.on('change', function() {
-          var selectedCityId = $(this).val();
-          fillKecamatanSelect(selectedCityId);
-        });
-      });
-    }
-
-    // Fungsi untuk mengisi elemen input select Kecamatan berdasarkan id kota/kabupaten
-    function fillKecamatanSelect(cityId) {
-      var kecamatanSelect = $("#kecamatan");
-      kecamatanSelect.empty(); // Kosongkan opsi sebelum mengisi yang baru
-
-      // Jika kota/kabupaten belum dipilih (nilai null atau kosong), tidak perlu mengambil data kecamatan
-      if (!cityId) {
-        return;
-      }
-
-      // Panggil API untuk mendapatkan data kecamatan berdasarkan id kota/kabupaten
-      var apiUrl = "https://nabilkhoerulrjl.github.io/api-wilayah-indonesia/api/districts/" + cityId + ".json";
-      getData(apiUrl, function(data) {
-        fillSelect(kecamatanSelect, data, "Select Kecamatan");
-        // Setelah mengisi kecamatan, panggil fungsi untuk mengisi kelurahan
-        kecamatanSelect.on('change', function() {
-          var selectedKecamatanId = $(this).val();
-          fillKelurahanSelect(selectedKecamatanId);
-        });
-      });
-    }
-
-    // Fungsi untuk mengisi elemen input select Kelurahan berdasarkan id kecamatan
-    function fillKelurahanSelect(kecamatanId) {
-      var kelurahanSelect = $("#kelurahan");
-      kelurahanSelect.empty(); // Kosongkan opsi sebelum mengisi yang baru
-
-      // Jika kecamatan belum dipilih (nilai null atau kosong), tidak perlu mengambil data kelurahan
-      if (!kecamatanId) {
-        return;
-      }
-
-      // Panggil API untuk mendapatkan data kelurahan berdasarkan id kecamatan
-      var apiUrl = "https://nabilkhoerulrjl.github.io/api-wilayah-indonesia/api/villages/" + kecamatanId + ".json";
-      getData(apiUrl, function(data) {
-        fillSelect(kelurahanSelect, data, "Select Kelurahan");
-      });
-    }
-
-    // Panggil fungsi getData untuk mengambil data provinsi dan isi elemen select
-    getData("https://nabilkhoerulrjl.github.io/api-wilayah-indonesia/api/provinces.json", function(data) {
-        fillSelect($("#province"), data, "Select Provinces");
-    //   fillSelect($("#province"), data);
-      // Setelah mengisi provinsi, panggil fungsi untuk mengisi kota/kabupaten
-      $("#province").on('change', function() {
-        var selectedProvinsiId = $(this).val();
-        console.log(selectedProvinsiId);
-        fillCitySelect(selectedProvinsiId);
-      });
-    });
-
-    
-
     $('#saveDataCustomer').on('click', function(e) {
         e.preventDefault(); // Menghentikan aksi default form submit
 
         // Mengambil nilai dari input form
         var firstName = $('#firstName').val();
         var lastName = $('#lastName').val();
-        var nikNumber = $('#nikNumber').val();
-        var email = $('#email').val();
         var countryCode = $('#countryCode').val();
         var whatsapp = $('#whatsapp').val();
+        var email = $('#email').val();
         var product = $('#product').val();
-        var cityBorn = $('#cityBorn').val();
-        var dateOfBirth = $('#dateOfBirth').val();
-        var image = $('#myImage')[0].files[0]; // Mendapatkan file gambar
-        var gender = $('#gender').val();
         var contactGroup = $('#contactGroup').val(); // Adjust this based on your form structure
         var address = $('#address').val();
-        var province = $('#province option:selected').text();
-        var city = $('#city  option:selected').text();
-        var kecamatan = $('#kecamatan  option:selected').text();
-        var kelurahan = $('#kelurahan  option:selected').text();
-        var rtRw = $('#rtrw').val();
         var formData = new FormData();
             formData.append('firstName', firstName);
             formData.append('lastName', lastName);
-            formData.append('nikNumber', nikNumber);
-            formData.append('email', email);
             formData.append('countryCode', countryCode);
             formData.append('whatsapp', whatsapp);
+            formData.append('email', email);
             formData.append('product', product);
-            formData.append('cityborn', cityBorn);
-            formData.append('dateOfBirth', dateOfBirth);
-            formData.append('myImage', image);
-            formData.append('gender', gender);
             formData.append('contactGroup', contactGroup);
             formData.append('address', address);
-            formData.append('province', capitalizeWords(province));
-            formData.append('city', capitalizeWords(city));
-            formData.append('kecamatan', capitalizeWords(kecamatan));
-            formData.append('kelurahan', capitalizeWords(kelurahan));
-            formData.append('rtRw', rtRw);
             console.log('formData',formData);
             // Tampilkan data di console log
             // for (var pair of formData.entries()) {
             //     console.log(pair[0] + ', ' + capitalizeWords(pair[1]));
             // }
 
-        if (!firstName || !lastName || !email || !countryCode || !whatsapp || !product || !cityBorn || !dateOfBirth || !image || !gender || !contactGroup || !address || !province || !city || !kecamatan || !kelurahan || !rtRw) {
+        if (!firstName || !lastName || !countryCode || !whatsapp || !email ||  !product || !contactGroup || !address ) {
             // Jika ada setidaknya satu kolom yang kosong, lakukan sesuatu, contohnya:
             Swal.fire({
                 title: 'Attention',
