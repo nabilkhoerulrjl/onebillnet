@@ -118,13 +118,17 @@ class BillReminder_Controller extends CI_Controller {
 	public function getContactGroup()
 	{
 		$siteId = $this->getSiteId();
-		$select = 'Id,GroupName,Description';
-		$where = array(
-			'SiteId' => $siteId,
-		);
-		$this->load->model('ContactGroup_Model');
-		$data['dataContactGroup'] = $this->ContactGroup_Model->getAllContactGroup($select, $where);
-        return $data['dataContactGroup'];
+		$select = 'cg.Id, cg.GroupName, cg.Description';
+		$join   = ['Contact AS ct', 'ct.GroupId = cg.Id', 'left'];
+        $join2   = ['CustomerGroup AS csg', 'csg.GroupContactId = cg.Id', 'left'];
+        $where = array(
+            'SiteId' => $siteId,
+            'StatusId' => 'CTS1',
+        );
+        $groupby = '`cg`.`Id`';
+        $this->load->model('ContactGroup_Model');
+        $data = $this->ContactGroup_Model->getAllContactGroup($select, $join, $join2, $where, $groupby);
+        return $data;
 	}
 
 
