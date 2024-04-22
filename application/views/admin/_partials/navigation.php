@@ -56,7 +56,7 @@
                 <li class="nav-item">
                     <a href="javascript:void(0)" onclick="addTabDeliveryHistory()" class="nav-link "><span class="pcoded-micon"><i class="fa-solid fa-history"></i></span><span class="pcoded-mtext">Delivery History</span></a>
                 </li>
-                <li class="nav-item pcoded-menu-caption">
+                <!-- <li class="nav-item pcoded-menu-caption">
                     <label>Report</label>
                 </li>
                 <li class="nav-item">
@@ -84,7 +84,7 @@
                         <li><a href="auth-signin.html" target="_blank">Sign in</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a href="sample-page.html" class="nav-link "><span class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a></li>
+                <li class="nav-item"><a href="sample-page.html" class="nav-link "><span class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a></li> -->
 
             </ul>
             
