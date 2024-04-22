@@ -46,14 +46,8 @@
                                     <div class="form-group has-icon-left">
                                         <label for="whatsapp"><i class="fa fa-whatsapp"></i> WhatsApp <span style="color:red;">*</span></label>
                                         <div class="position-relative">
-                                        <div class="row">
-                                            <div class="col-md-3 col-lg-3 p-r-0">
-                                                <input type="text" class="form-control form-control-sm" value="+62" id="countryCode" name="whatsapp" disabled required> 
-                                            </div>
-                                            <div class="col-md-9 col-lg-9 p-l-0">
-                                                <input type="number" class="form-control form-control-sm" placeholder="WhatsApp Number" id="whatsapp" name="whatsapp" required>
-                                            </div>
-                                        </div>
+                                            <input type="number" class="form-control form-control-sm" placeholder="WhatsApp Number e.g 628 or 08" id="whatsapp" name="whatsapp" required>
+                                            <input type="hidden" class="form-control form-control-sm" value="+62" id="countryCode" name="whatsapp" disabled required> 
                                         </div>
                                     </div>
                                 </div>
