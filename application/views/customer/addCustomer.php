@@ -15,7 +15,7 @@
     }
 </style>
 <div class="modal fade" id="formAddCSModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add Customer Form</h5>
@@ -26,7 +26,7 @@
                     <form class="form form-vertical">
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-md-6 col-lg-4">
+                                <div class="col-md-12 col-lg-12">
                                     <div class="form-group has-icon-left">
                                         <label for="firstName"><i class="fa fa-user"></i> First Name <span style="color:red;">*</span></label>
                                         <div class="position-relative">
@@ -34,7 +34,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4">
+                                <div class="col-md-12 col-lg-12">
                                     <div class="form-group has-icon-left">
                                         <label for="lastName"><i class="fa fa-user"></i> Last Name <span style="color:red;">*</span></label>
                                         <div class="position-relative">
@@ -42,23 +42,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="last-name"><i class="fa fa-address-card"></i> NIK</label>
-                                        <div class="position-relative">
-                                            <input type="number" class="form-control form-control-sm" placeholder="NIK Number" id="nikNumber" name="nikNumber" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                        <div class="position-relative">
-                                        <input type="email" class="form-control form-control-sm" placeholder="Email" id="email" name="email">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4">
+                                <div class="col-md-6 col-lg-6">
                                     <div class="form-group has-icon-left">
                                         <label for="whatsapp"><i class="fa fa-whatsapp"></i> WhatsApp <span style="color:red;">*</span></label>
                                         <div class="position-relative">
@@ -73,7 +57,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4">
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="form-group has-icon-left">
+                                        <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                                        <div class="position-relative">
+                                        <input type="email" class="form-control form-control-sm" placeholder="Email" id="email" name="email">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
                                     <div class="form-group has-icon-left">
                                         <label for="product"><i class="fa fa-wifi"></i> Product <span style="color:red;">*</span></label>
                                         <div class="position-relative">
@@ -86,43 +78,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="cityBorn"><i class="fa fa-city"></i> City Born <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                        <input type="text" class="form-control form-control-sm" placeholder="City Born" id="cityBorn" name="cityBorn" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="dateOfBirth"><i class="fa fa-calendar-days"></i> Date of Birth <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                        <input type="date" class="form-control form-control-sm cursor-pointer" placeholder="City Born" id="dateOfBirth" name="dateOfBirth" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="form-group has-icon-left cursor-pointer" onchange="return checkImageSize()">
-                                        <label for="myImage"><i class="fa fa-id-badge"></i> Image <span style="color:red;">*</span></label>
-                                        <div class="position-relative form-control form-control-sm dot-text cursor-pointer">
-                                            <input type="file" id="myImage" name="myImage" accept="image/png, image/jpg, image/jpeg" />
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6 col-lg-6">
-                                    <div class="form-group has-icon-left">
-                                        <label for="gender"><i class="fa fa-venus-mars"></i> Gender <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                            <select class="form-control form-control-sm cursor-pointer" id="gender" name="typeTarget">
-                                                <option value="">Select Gender</option>
-                                                <option value="Laki-Laki">Laki - Laki</option>
-                                                <option value="Perempuan">Perempuan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-lg-6">
                                     <div class="form-group has-icon-left">
                                         <label for="contactGroup"><i class="fa fa-address-book"></i> Contact Group</label>
                                         <div class="position-relative">
@@ -140,60 +96,6 @@
                                         <label for="address"><i class="fa fa-user"></i> Address <span style="color:red;">*</span></label>
                                         <div class="position-relative">
                                             <textarea class="form-control form-control-sm" placeholder="Full Address" id="address" name="address" required></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group has-icon-left">
-                                        <label for="province"><i class="fa fa-montain-sun"></i> Province <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                            <select class="form-control form-control-sm cursor-pointer" name="province" id="province">
-                                            <option selected>Select Provinces</option>
-                                            <option value="" disabled>
-                                                    <span class="sr-only text-center">Loading...</span>
-                                                </option>    
-                                        </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group has-icon-left">
-                                        <label for="city"><i class="fa fa-city"></i> City <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                            <select class="form-control form-control-sm cursor-pointer" name="city" id="city">
-                                                <option selected disabled>Select City</option>
-                                                <option value="" disabled>
-                                                    <span class="sr-only text-center">Loading...</span>
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="kecamatan"><i class="fa fa-tree-city"></i> Kecamatan <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                            <select class="form-control form-control-sm cursor-pointer" name="kecamatan" id="kecamatan">
-                                                <option selected disabled>Select Kecamatan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="keluarahan"><i class="fa fa-tree-city"></i> Kelurahan <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                            <select class="form-control form-control-sm cursor-pointer" name="kelurahan" id="kelurahan">
-                                                <option selected disabled>Select Kelurahan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group has-icon-left">
-                                        <label for="rtrw"><i class="fa fa-user"></i> Rt/Rw <span style="color:red;">*</span></label>
-                                        <div class="position-relative">
-                                        <input type="text" class="form-control form-control-sm" placeholder="Rt/Rw" id="rtrw" name="rtrw" required>
                                         </div>
                                     </div>
                                 </div>
