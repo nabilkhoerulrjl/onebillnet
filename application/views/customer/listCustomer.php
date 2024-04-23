@@ -102,7 +102,19 @@
         <h3 class="font-weight-bold">Data Customers</h3>
     </div>
     <div class="ibox-content p-4">
-        <div class="wrapper-btn-add d-flex justify-content-end pb-2">
+        <div class="wrapper-btn-add d-flex align-items-end justify-content-between pb-2">
+            <div id="deleteButton d-flex">
+                <button type="button" id="selectAllBtn<?=$idTabMenu;?>" class="btn btn-outline-secondary btn-sm" 
+                data-toggle="tooltip" data-placement="top" title="Copy Data" data-original-title="tooltip on top">
+                    <i class="fa fa-square-check mr-1"></i>
+                    Select All
+                </button>
+                <button type="button" id="csvButton" class="btn btn-outline-success btn-sm"
+                data-toggle="Export to CSV" onclick="deleteSelectedData<?=$idTabMenu;?>()" data-placement="top" title="Export to CSV" data-original-title="Export to CSV">
+                    <i class="fa fa-trash mr-1"></i>
+                    Delete
+                </button>
+            </div>
             <button type="button" class="btn btn-sm btn-primary" id="btnmodal">
                 <i class="fa fa-user-plus fa-sm pr-1"></i>Add Customer
             </button>
@@ -178,6 +190,7 @@
             <table class="table table-hover" id="dataTableCS<?=$idTabMenu;?>">
                 <thead>
                     <tr>
+                        <th class="d-none">Ref Id</th>
                         <th>#</th>
                         <th>Name</th>
                         <th>Whatsapp</th>
@@ -313,7 +326,9 @@
                         // Gunakan moment.js untuk memformat tanggal
                         var DateActive = moment(DateActive).format('D MMMM YYYY');
                         $('#dataTableCS<?=$idTabMenu;?> tbody').append(`
-                            <tr>
+                            <tr data-reference-id="${value.Id}">
+                                <td><input type="checkbox" id="checkboxCs<?=$idTabMenu;?>" class="checkboxCs cursor-pointer"></td>
+                                <td class="d-none">${value.Id}</td>
                                 <td>${index+1}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.Whatsapp}</td>
@@ -827,12 +842,11 @@
                     beforeSend: function() {
                         // Menampilkan pemberitahuan Swal saat permintaan dikirim
                         Swal.fire({
-                            title: 'Deleting Data...',
+                            title: 'Loading',
+                            icon: "info",
+                            text: 'Please wait...',
                             allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            onOpen: () => {
-                                Swal.showLoading();
-                            }
+                            showConfirmButton: false,
                         });
                     },
                     success: function (data) {
@@ -899,5 +913,106 @@
                 // Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    $("#selectAllBtn<?=$idTabMenu;?>").click(function() {
+        // Mengambil semua checkbox dengan class checkboxCs
+        var checkboxes = $(".checkboxCs");
+
+        // Memeriksa apakah semua checkbox terpilih
+        var allChecked = checkboxes.length === checkboxes.filter(":checked").length;
+
+        // Jika semua checkbox sudah terpilih, setel ulang (unchecked) semua checkbox
+        if (allChecked) {
+            checkboxes.prop("checked", false);
+            $(this).html('<i class="fa fa-square-check mr-1"></i>Select All');
+        } else {
+            // Jika belum semua terpilih, setel semua checkbox terpilih
+            checkboxes.prop("checked", true);
+            $(this).html('<i class="fa fa-square mr-1"></i>Uncheck All');
+        }
+    });
+
+    function deleteSelectedData<?=$idTabMenu;?>() {
+        var selectedData = getSelectedData<?=$idTabMenu;?>();
+        // Lakukan sesuatu dengan data yang dipilih, seperti mengirimnya ke server untuk dihapus
+        console.log('222',selectedData);
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: selectedData,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'Customer_Controller/deleteCustomer',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                console.log(data);
+                console.log(typeof data);
+                var status;
+                if(typeof data == 'object'){
+                    status = data.status;
+                }
+                if(typeof data == 'array'){
+                    status = data[0].status;
+                }
+
+                if(status == 'success') {
+                    Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your data has been delete!",
+                        icon: "success"
+                    });
+                    fetchData();
+                }else{
+                    Swal.fire({
+                        title: "Attandace!",
+                        text: "Your data failed to delete!",
+                        icon: "failed"
+                    });
+                }
+
+            }
+            // error: function (error) {
+            //     // Menyembunyikan elemen loading jika terjadi kesalahan
+            //     Swal.fire({
+            //         title: "Attandace!",
+            //         text: "Your data failed to delete!",
+            //         icon: "failed"
+            //     });
+            // }
+        });
+    }
+
+    function getSelectedData<?=$idTabMenu;?>() {
+        var selectedData = [];
+
+        // Loop melalui semua checkbox yang dicentang
+        var checkboxes = document.querySelectorAll('#dataTableCS<?=$idTabMenu;?> .checkboxCs:checked');
+        checkboxes.forEach(function (checkbox) {
+            // Dapatkan baris terkait dengan checkbox yang dicentang
+            var row = checkbox.closest('tr');
+
+            // Dapatkan nilai ReferenceId dari atribut data
+            var referenceId = row.getAttribute('data-reference-id');
+
+            // Tambahkan nilai ReferenceId ke dalam array
+            selectedData.push(referenceId);
+        });
+
+        // Kembalikan array data yang dipilih
+        return selectedData;
     }
 </script>
