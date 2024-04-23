@@ -324,8 +324,8 @@
                                 <td title="${value.Address}">${value.Address}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
-                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteData(${value.id})"></i>
+                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editDataCs<?=$idTabMenu?>('${value.Id}')"></i>
+                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataCs<?=$idTabMenu?>('${value.Id}')"></i>
                                 </td>
                             </tr>
                         `);
@@ -797,4 +797,107 @@
         // alert('asdasdsa');
         $("#formAddCSModal").modal("show");
     });
+
+    function deleteDataCs<?=$idTabMenu?>(id){
+        Swal.fire({
+            title: 'Do you want to delete this data?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: 'Yes',
+            denyButtonText: 'No',
+            customClass: {
+                actions: 'my-actions',
+                // cancelButton: 'order-1 right-gap',
+                confirmButton: 'order-2',
+                denyButton: 'order-3',
+        },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var base_url = '<?= base_url()?>';
+                var url = base_url+'CustomerController/deleteCustomer';
+                var requestData = {
+                    Id: id,
+                };
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: requestData,
+                    beforeSend: function() {
+                        // Menampilkan pemberitahuan Swal saat permintaan dikirim
+                        Swal.fire({
+                            title: 'Deleting Data...',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            onOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function (data) {
+                        // Menyembunyikan pemberitahuan Swal setelah permintaan berhasil
+                        Swal.close();
+                        console.log(data.success);
+                        if(data.success == true){
+                            // Refresh data table agar menjadi terbaru
+                            var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+                            var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+                            var filterData = {
+                                startDate: startDate,
+                                endDate: endDate
+                            }
+                            fetchData(filterData);
+                            // Tampilkan pemberitahuan Swal bahwa data berhasil dihapus
+                            Swal.fire('Data deleted successfully', '', 'success');
+                        } else {
+                            // Tampilkan pemberitahuan Swal bahwa terjadi kesalahan
+                            Swal.fire('Error', 'Failed to delete data', 'error');
+                        }
+                        // if(data.length > 0){
+                        //     $("#editContactModal<?=$idTabMenu;?>").modal("show");
+                        //     var id = $('#editContactModal<?=$idTabMenu;?>').find('#id').val(data[0].Id);
+                        //     var firstName = $('#editContactModal<?=$idTabMenu;?>').find('#firstName').val(data[0].FirstName);
+                        //     var lastName = $('#editContactModal<?=$idTabMenu;?>').find('#lastName').val(data[0].LastName);
+                        //     var email = $('#editContactModal<?=$idTabMenu;?>').find('#email').val(data[0].Email);
+                        //     var phone = $('#editContactModal<?=$idTabMenu;?>').find('#phone').val(data[0].Phone);
+                        //     var whatsapp = $('#editContactModal<?=$idTabMenu;?>').find('#whatsapp').val(data[0].Whatsapp);
+                        //     var customerId = $('#editContactModal<?=$idTabMenu;?>').find('#customerId').val(data[0].CustomerId);
+                        //     $('#saveEditContact<?=$idTabMenu;?>').click(function(event) {
+                        //         event.preventDefault(); // Mencegah pengiriman formulir default
+
+                        //         // Memanggil fungsi saveEditContact dengan mengirimkan id
+                        //         saveEditContact<?=$idTabMenu;?>();
+                        //     });
+
+                        //     // var requestData = {
+                        //     //     id: id,
+                        //     //     firstName: firstName,
+                        //     //     lastName: lastName,
+                        //     //     email: email,
+                        //     //     phone: phone,
+                        //     //     whatsapp: whatsapp,
+                        //     // };
+
+
+
+                        //     console.log(data[0]);
+                        //     console.log(requestData);
+                        // }else{
+
+                        // }
+                    },
+                    error: function (error) {
+                        // Menyembunyikan elemen loading jika terjadi kesalahan
+                        $('#overlayLoading').hide();
+                        $('#overlay').hide();
+                        console.error('Error:', error);
+                    }
+                });
+                // Swal.fire('Saved!', '', 'success');
+            } else if (result.isDenied) {
+                // Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
 </script>

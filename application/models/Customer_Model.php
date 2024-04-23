@@ -10,7 +10,7 @@
         }
 
         public function getCustomerAll($siteId, $startDate, $endDate) {
-            $this->db->select('c.Id as CustomerId, c.FirstName, c.LastName, c.Whatsapp, c.Email, pd.Name as ProductName, c.StatusId as StatusActive,  c.ActiveDate as ActiveDate,  c.Address as Address');//b.StatusId as StatusBill,
+            $this->db->select('c.Id as Id, c.FirstName, c.LastName, c.Whatsapp, c.Email, pd.Name as ProductName, c.StatusId as StatusActive,  c.ActiveDate as ActiveDate,  c.Address as Address');//b.StatusId as StatusBill,
             $this->db->from('Customer as c');
             $this->db->join('Product as pd', 'c.ProductId = pd.Id', 'left');
             $this->db->where('c.SiteId', $siteId);
@@ -114,6 +114,27 @@
 
         public function deleteCustomer($contactId) {
             $this->db->delete('Contact', array('Id' => $contactId));
+        }
+
+        // Fungsi untuk menghapus data pelanggan dan kontak berdasarkan ID pelanggan
+        public function deleteCustomerAndContact($customerId) {
+            // Ambil ID kontak dari tabel 'contact' berdasarkan ID pelanggan
+            $this->db->select('Id');
+            $this->db->where('CustomerId', $customerId);
+            $contactIds = $this->db->get('Contact')->result_array();
+
+            // Dapatkan array dari ID kontak
+            $contactIdsArray = array_column($contactIds, 'Id');
+
+            // Hapus data kontak dari tabel 'contact' berdasarkan ID kontak yang ditemukan
+            if (!empty($contactIdsArray)) {
+                $this->db->where_in('Id', $contactIdsArray);
+                $this->db->delete('Contact');
+            }
+
+            // Hapus data pelanggan dari tabel 'customer' berdasarkan ID pelanggan
+            $this->db->where('Id', $customerId);
+            return $this->db->delete('Customer');
         }
 
         // Tambahkan metode lain sesuai kebutuhan Anda

@@ -259,11 +259,28 @@ class CustomerController extends CI_Controller {
     //     redirect('contact/view/' . $contactId);
     // }
 
-    // public function delete($contactId) {
-    //     // Hapus kontak berdasarkan ID
-    //     $this->Contact_model->deleteContact($contactId);
+    // Fungsi untuk menghapus data pelanggan dan kontak
+    public function deleteCustomer() {
+        // Periksa apakah ID pelanggan diberikan dalam permintaan POST
+        $customerId = $this->input->post('Id');
 
-    //     // Redirect ke halaman daftar kontak
-    //     redirect('contact/index');
-    // }
+        if(!empty($customerId)) {
+            // Panggil fungsi deleteCustomerAndContact dari model untuk menghapus data
+            $result = $this->Customer_Model->deleteCustomerAndContact($customerId);
+
+            // Beri respons JSON berdasarkan hasil penghapusan data
+            if($result) {
+                $response = array('success' => true);
+            } else {
+                $response = array('success' => false);
+            }
+        } else {
+            // Jika ID tidak diberikan, kirim respons dengan kesalahan
+            $response = array('success' => false, 'message' => 'No customer ID provided');
+        }
+
+        // Keluarkan respons JSON
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
 }
