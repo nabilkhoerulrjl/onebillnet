@@ -44,10 +44,10 @@
     /* CSS untuk slider menu */
     .slider-menu {
         position: absolute;
-        top: 35%;
+        /* top: 35%; */
         right: -300px; /* Atur posisi awal di luar layar */
         width: 300px;
-        height: 30%;
+        /* height: 30%; */
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         transition: right 0.3s ease-in-out;
@@ -145,6 +145,17 @@
                     <i class="fa fa-filter"></i>
                 </button>
             </div>
+            
+        </div>
+        <div id="overlay" class="d-flex justify-content-center align-items-center flex-column">
+            <div id="overlayLoading" class="spinner-border text-primary" style="width: 3rem;height: 3rem; display: none;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
+        </div>
+        
+        <!-- Tabel ZingGrid -->
+        <div class="table-responsive">
             <div id="filterSlider" class="slider-menu">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
@@ -178,16 +189,6 @@
 					</div>
                 </div>
             </div>
-        </div>
-        <div id="overlay" class="d-flex justify-content-center align-items-center flex-column">
-            <div id="overlayLoading" class="spinner-border text-primary" style="width: 3rem;height: 3rem; display: none;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-            <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
-        </div>
-        
-        <!-- Tabel ZingGrid -->
-        <div class="table-responsive">
             <table class="table table-hover" id="dataTableCS<?=$idTabMenu;?>">
                 <thead>
                     <tr>
