@@ -97,6 +97,7 @@
     }
 </style>
 <?php $this->load->view("customer/addCustomer.php") ?>
+<?php $this->load->view("customer/EditCustomer.php") ?>
 <div class="wrapper wrapper-content bg-white">
     <div class="text-header col-md p-4">
         <h3 class="font-weight-bold">Data Customers</h3>
@@ -191,6 +192,7 @@
                 <thead>
                     <tr>
                         <th class="d-none">Ref Id</th>
+                        <th></th>
                         <th>#</th>
                         <th>Name</th>
                         <th>Whatsapp</th>
@@ -332,8 +334,7 @@
                                 <td>${index+1}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.Whatsapp}</td>
-                                <td>${value.Email}</td>
-                                <td>${value.ProductName}</td>
+                                <td>${value.Email}</td>                                <td>${value.ProductName}</td>
                                 <td><span class="badge ${SubscribeBadge}">${StatusSubsribe}</span></td>
                                 <td title="${value.DateActive}">${DateActive}</td>
                                 <td title="${value.Address}">${value.Address}</td>
@@ -813,6 +814,13 @@
         $("#formAddCSModal").modal("show");
     });
 
+    // buat trigger modal form add customer
+    // $("#btnmodal").on("click", function () {
+    //     // Show the logout modal
+    //     // alert('asdasdsa');
+    //     $("#formEditCSModal").modal("show");
+    // });
+
     function deleteDataCs<?=$idTabMenu?>(id){
         Swal.fire({
             title: 'Do you want to delete this data?',
@@ -915,6 +923,181 @@
         })
     }
 
+    function editDataCs<?=$idTabMenu?>($id){
+        var base_url = '<?= base_url()?>';
+        var url = base_url+'CustomerController/getCustomerById';
+        var requestData = {
+            Id: $id,
+        };
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                // Menyembunyikan elemen loading setelah data diterima
+                console.log(data);
+                console.log(formatDate(data.ActiveDate));
+                Swal.close();
+                // if(data.length > 0){
+                $("#formEditCSModal<?=$idTabMenu;?>").modal("show");
+                // Memasukkan data ke dalam elemen input modal
+                $("#formEditCSModal<?=$idTabMenu;?>").modal("show");
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#id').val(data.Id);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#contactId').val(data.ContactId);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#firstName').val(data.FirstName);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#lastName').val(data.LastName);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#whatsapp').val(data.Whatsapp);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#email').val(data.Email);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#address').val(data.Address);
+                $('#formEditCSModal<?=$idTabMenu;?>').find('#dateActive').val(formatDate(data.ActiveDate));
+
+                // Ambil dan isi data produk, grup kontak, dan status aktif
+                $.ajax({
+                    url: 'ProductController/getListDataProduct',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        var productSelect = $('#formEditCSModal<?=$idTabMenu;?>').find('#product');
+                        console.log(productSelect);
+                        productSelect.empty();
+                        $.each(response, function(index, product) {
+                            productSelect.append($('<option>', {
+                                value: product.Id,
+                                text: product.Name
+                            }));
+                        });
+                        productSelect.val(data.ProductId); // Set nilai pilihan produk sesuai dengan data yang diterima
+                    },
+                    error: function(error) {
+                        console.error('Error fetching product data:', error);
+                    }
+                });
+
+                 // Ambil elemen contactGroup
+                var contactGroupSelect = $('#formEditCSModal<?=$idTabMenu;?>').find('#contactGroup');
+
+                // Periksa apakah elemen contactGroup kosong atau tidak memiliki data
+                var isContactGroupEmpty = contactGroupSelect.children().length === 0;
+                // console.log(contactGroupSelect.children().length);
+                // Bersihkan pilihan sebelum menambahkan yang baru
+                contactGroupSelect.empty(); 
+
+                // Tambahkan opsi "Select Contact Group" sebagai opsi default yang terpilih jika elemen kosong atau tidak memiliki data
+                if (isContactGroupEmpty == false) {
+                    contactGroupSelect.append($('<option>', {
+                        value: '',
+                        text: 'Select Contact Group',
+                        selected: true // Menetapkan opsi ini sebagai opsi default yang terpilih
+                    }));
+                }
+
+                // Ambil data grup kontak
+                $.ajax({
+                    url: 'ContactGroupController/getListDataContactGroup',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        // Tambahkan opsi untuk setiap grup kontak jika data tidak null
+                        if (response && response.length > 0) {
+                            $.each(response, function(index, contactGroup) {
+                                contactGroupSelect.append($('<option>', {
+                                    value: contactGroup.Id,
+                                    text: contactGroup.GroupName
+                                }));
+                            });
+                        }
+
+                        // Set nilai pilihan grup kontak sesuai dengan data yang diterima, jika ada
+                        contactGroupSelect.val(data.GroupContactId);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching contact group data:', error);
+                    }
+                });
+
+                $.ajax({
+                    url: 'ReferenceController/getStatusCustomer',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        var statusActiveSelect = $('#formEditCSModal<?=$idTabMenu;?>').find('#statusActive');
+                        console.log(statusActiveSelect);
+                        statusActiveSelect.empty();
+                        var statusText;
+                        $.each(response, function(index, statusActive) {
+
+                            if(statusActive.Code == 'CRS1'){
+                                statusText = 'Active';
+                                SubscribeBadge = 'badge-success';
+                            }
+                            if(statusActive.Code == 'CRS2'){
+                                statusText = 'InActive';
+                                SubscribeBadge = 'badge-secondary';
+                            }
+                            if(statusActive.Code == 'CRS3'){
+                                statusText = 'Pending';
+                                SubscribeBadge = 'badge-warning';
+                            }
+                            if(statusActive.Code == 'CRS4'){
+                                statusText = 'Suspended';
+                                SubscribeBadge = 'badge-danger';
+                            }
+                            if(statusActive.Code == 'CRS5'){
+                                statusText = 'Stopped';
+                                SubscribeBadge = 'badge-dark';
+                            }
+                            statusActiveSelect.append($('<option>', {
+                                value: statusActive.Code,
+                                text: statusText
+                            }));
+                        });
+                        statusActiveSelect.val(data.StatusActive); // Set nilai pilihan status aktif sesuai dengan data yang diterima
+                    },
+                    error: function(error) {
+                        console.error('Error fetching active status data:', error);
+                    }
+                });
+
+                    // var requestData = {
+                    //     id: id,
+                    //     firstName: firstName,
+                    //     lastName: lastName,
+                    //     email: email,
+                    //     phone: phone,
+                    //     whatsapp: whatsapp,
+                    // };
+
+
+
+                    console.log(data[0]);
+                    console.log(requestData);
+                // }else{
+
+                // }
+                
+            },
+            error: function (error) {
+                // Menyembunyikan elemen loading jika terjadi kesalahan
+                $('#overlayLoading').hide();
+                $('#overlay').hide();
+                console.error('Error:', error);
+            }
+        });
+        
+    }
+
     $("#selectAllBtn<?=$idTabMenu;?>").click(function() {
         // Mengambil semua checkbox dengan class checkboxCs
         var checkboxes = $(".checkboxCs");
@@ -1014,5 +1197,17 @@
 
         // Kembalikan array data yang dipilih
         return selectedData;
+    }
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return String([year, month, day].join('-'));
     }
 </script>

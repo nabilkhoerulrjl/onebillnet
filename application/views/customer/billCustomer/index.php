@@ -141,6 +141,7 @@
                 <thead>
                     <tr>
                         <th class="d-none">Ref Id</th>
+                        <th></th>
                         <th>Inv Id</th>
                         <th>Customer Name</th>
                         <th>Product Name</th>

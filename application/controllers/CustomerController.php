@@ -41,6 +41,13 @@ class CustomerController extends CI_Controller {
         $this->load->view('contact/view', $data);
     }
 
+    public function getCustomerById() {
+        $id = $this->input->post('Id');
+        $data = $this->Customer_Model->getCustomerById($id);
+        echo json_encode($data);
+
+    }
+
     public function getListCsData() {
         $startDate = $this->input->post('startDate');
         $endDate = $this->input->post('endDate');
@@ -139,6 +146,7 @@ class CustomerController extends CI_Controller {
             'Subdistrict' => NULL,
             'City' => NULL,
             'Province' => NULL,
+            'ActiveDate' => date('Y-m-d H:i:s'),
             'Creator' => $userId,
             'CreateDate' => date('Y-m-d H:i:s'),
             'Modifier' => $userId,
@@ -282,5 +290,109 @@ class CustomerController extends CI_Controller {
         // Keluarkan respons JSON
         header('Content-Type: application/json');
         echo json_encode($response);
+    }
+
+    public function editCustomer()
+    {
+        $id = $this->input->post('id');
+        $contactId = $this->input->post('contactId');
+        $firstName = $this->input->post('firstName');
+        $lastName = $this->input->post('lastName');
+        $whatsapp = $this->input->post('whatsapp');
+        $email = $this->input->post('email');
+        $product = $this->input->post('product');
+        $contactGroup = $this->input->post('contactGroup');
+        if($contactGroup == ''){
+            $contactGroup = NULL;
+        }
+        $statusActive = $this->input->post('statusActive');
+        $dateActive = $this->input->post('dateActive');
+        $address = $this->input->post('address');
+
+        $modifier = $this->getUserId();
+        $siteId = $this->getSiteId();
+        // Mapping Data Contact
+        $data = array(
+            'Name' => $firstName.' '.$lastName,
+            'FirstName' => $firstName,
+            'LastName' => $lastName,
+            'Email' => $email,
+            'Phone' => $whatsapp,
+            'Whatsapp' => $whatsapp,
+            'Mobile' => $whatsapp,
+            'GroupId' => $contactGroup,
+            'Modifier' => $modifier,
+            'ModifyDate' => date("Y-m-d H:i:s"),
+        );
+        // Mapping Data Customer
+        $dataCustomer = array(
+            'FirstName' => $firstName,
+            'LastName' => $lastName,
+            'ProductId' => $product,
+            'StatusId' => $statusActive,
+            'Phone' => $whatsapp,
+            'Whatsapp' => $whatsapp,
+            'Email' => $email,
+            'Address' => $address,
+            // 'ActiveDate' => $dateActive,
+            'Modifier' => $modifier,
+            'ModifyDate' => date("Y-m-d H:i:s"),
+        );
+
+        // Panggil model untuk melakukan update data
+        $this->load->model('Contact_Model');
+        $result = $this->Contact_Model->updateContact($contactId, $data);
+
+        // Tanggapi hasil dari pembaruan data
+        if ($result) {
+            if(isset($contactGroup)){
+                // Mapping Data Customer Group
+                $dataCG = array(
+                    'SiteId' => $siteId,
+                    'ContactId' => $contactId,
+                    'CustomerId' => $id,
+                    'GroupContactId' => $contactGroup,
+                );
+                $select = 'Id';
+                $arrWhere = array(
+                    'SiteId' => $siteId,
+                    'CustomerId' => $id
+                );
+                $resultCG = $this->CustomerGroup_Model->getDataByCustomerId($select,$arrWhere);
+                if($resultCG){
+                    $this->CustomerGroup_Model->editData($id,$dataCG);
+                }else{
+                    $this->CustomerGroup_Model->storeData($dataCG);
+                }
+            }else{
+                $select = 'Id';
+                $arrWhere = array(
+                    'SiteId' => $siteId,
+                    'CustomerId' => $id
+                );
+                $resultCG = $this->CustomerGroup_Model->getDataByCustomerId($select,$arrWhere);
+                if($resultCG){
+                    $this->CustomerGroup_Model->deleteData($id);
+                }
+            }
+            $this->load->model('Customer_Model');
+            $resultCustomer = $this->Customer_Model->updateCustomer($id, $dataCustomer);
+            if ($resultCustomer) {
+                // Jika berhasil, kirim respons JSON ke klien
+                $response['success'] = true;
+                $response['message'] = 'Data contact berhasil diperbarui.';
+                echo json_encode($response);
+            } else {
+                // Jika gagal, kirim respons JSON ke klien
+                $response['success'] = false;
+                $response['message'] = 'Gagal memperbarui data contact.';
+                echo json_encode($response);
+            }
+        } else {
+            // Jika gagal, kirim respons JSON ke klien
+            $response['success'] = false;
+            $response['message'] = 'Gagal memperbarui data contact.';
+            echo json_encode($response);
+        }
     }
 }

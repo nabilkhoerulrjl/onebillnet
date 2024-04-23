@@ -4,9 +4,13 @@
             parent::__construct();
         }
 
-        public function getCustomerById($contactId) {
-            $query = $this->db->get_where('Contact', array('Id' => $contactId));
-            return $query->row_array();
+        public function getCustomerById($Id) {
+            $this->db->select('c.Id as Id, c.FirstName, c.LastName, c.Whatsapp, c.Email, c.StatusId as StatusActive,  c.ActiveDate as ActiveDate, c.ProductId as ProductId, crg.GroupContactId, ct.Id as ContactId, c.Address as Address');//b.StatusId as StatusBill,
+            $this->db->from('Customer as c');
+            $this->db->join('CustomerGroup as crg', 'c.Id = crg.CustomerId', 'left');
+            $this->db->join('Contact as ct', 'c.Id = ct.CustomerId', 'left');
+            $this->db->where('c.Id', $Id);
+            return $this->db->get()->row_array();
         }
 
         public function getCustomerAll($siteId, $startDate, $endDate) {

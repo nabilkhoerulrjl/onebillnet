@@ -19,7 +19,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add Customer Form</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
+                <button type="button" class="close" onclick="cleanForm<?=$idTabMenu;?>()" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
             </div>
             <div class="modal-body">
                 <div class="card-content">
@@ -243,6 +243,7 @@
                 success: function(response) {
                     // Handle response dari Controller
                     console.log(response);
+                    cleanForm<?=$idTabMenu;?>();
                     Swal.fire({
                         title: 'Success',
                         text: 'Data Customer Berhasil Ditambah',
@@ -286,6 +287,21 @@
         }
 
         return true; // Melanjutkan pengiriman formulir jika ukuran file sesuai
+    }
+
+    function cleanForm<?=$idTabMenu;?>() {
+        // Bersihkan nilai dari semua input dan textarea di dalam formulir
+        $('#firstName').val('');
+        $('#lastName').val('');
+        $('#whatsapp').val('');
+        $('#email').val('');
+        $('#product').val('');
+        $('#contactGroup').val('');
+        $('#address').val('');
+
+        // Reset seleksi default pada select box
+        $('#product').prop('selectedIndex', 0);
+        $('#contactGroup').prop('selectedIndex', 0);
     }
 
 </script>
