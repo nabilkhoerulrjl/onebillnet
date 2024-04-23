@@ -14,5 +14,11 @@ class File_Model extends CI_Model {
             return false;
         }
     }
+
+    public function getFileById($fileId) {
+        $this->db->where('Id', $fileId);
+        $query = $this->db->get('File');
+        return $query->row_array();
+    }
 }
 ?>
