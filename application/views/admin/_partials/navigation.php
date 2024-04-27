@@ -40,7 +40,7 @@
                     <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="fa fa-users"></i></span><span class="pcoded-mtext">Data Customer</span></a>
                     <ul class="pcoded-submenu">
                         <li><a href="javascript:void(0)" onclick="addTabListCustomers()">Customer</a></li>
-                        <li><a href="javascript:void(0)" onclick="addTabListContact()">Contact</a></li>
+                        <!-- <li><a href="javascript:void(0)" onclick="addTabListContact()">Contact</a></li> -->
                         <li><a href="javascript:void(0)" onclick="addTabListContactGroup()">Contact & Group</a></li>
                     </ul>
                 </li>
