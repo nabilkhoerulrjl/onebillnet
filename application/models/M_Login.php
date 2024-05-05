@@ -1,10 +1,9 @@
 <?php
     class M_Login extends CI_Model {
         function loginData($table, $where) {
-            $this->db->select('Users.Id AS Id, Users.Email AS Email, Users.Password AS Password, Users.Name AS UserName, Roles.Name AS RoleName, File.Content AS Picture, Users.SiteId');
+            $this->db->select('Users.Id AS Id, Users.Email AS Email, Users.Password AS Password, Users.Name AS UserName, Roles.Name AS RoleName, Users.ImageId AS ImageId, Users.SiteId');
             $this->db->from('Users');
             $this->db->join('Roles', 'Users.RoleId = Roles.Id', 'inner');
-            $this->db->join('File', 'Users.ImageId = File.Id', 'left');
             $this->db->where($where);
         
             $query = $this->db->get();
@@ -12,16 +11,16 @@
             if ($query->num_rows() > 0) {
                 $result = $query->row();
         
-                // Convert blob to image resource
-                $imageResource = imagecreatefromstring($result->Picture);
+                // // Convert blob to image resource
+                // $imageResource = imagecreatefromstring($result->Picture);
         
-                // Create a JPEG file and output it to a variable
-                ob_start();
-                imagejpeg($imageResource);
-                $jpegData = ob_get_clean();
+                // // Create a JPEG file and output it to a variable
+                // ob_start();
+                // imagejpeg($imageResource);
+                // $jpegData = ob_get_clean();
         
-                // Store the JPEG data in the result object
-                $result->JpegPicture = $jpegData;
+                // // Store the JPEG data in the result object
+                // $result->JpegPicture = $jpegData;
         
                 return $result;
             } else {

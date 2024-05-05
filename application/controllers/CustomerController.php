@@ -237,7 +237,7 @@ class CustomerController extends CI_Controller {
         );
 
         // Panggil fungsi model untuk insert data
-        $insertedId = $this->File_Model->insertFile($fileData);
+        $insertedId = $this->FileModel->insertFile($fileData);
         if ($insertedId !== false) {
             // Data berhasil di-insert, $insertedId berisi ID dari baris yang baru
             return $insertedId;

@@ -50,7 +50,8 @@ class Bill_Model extends CI_Model {
     public function updateBill($billId, $data) {
         // var_dump($data);
         // $this->db->where_in('Id', $billId);
-        $success = $this->db->update_batch('Bill', $data, 'Id');
+        $success = $this->db->update('Bill', $data, array('Id' => $billId));
+        // $this->db->update_batch('Bill', $data, 'Id');
 
         if ($success) {
             $response = array(
@@ -100,7 +101,7 @@ class Bill_Model extends CI_Model {
         $this->db->where('Periode', $periodeBill);
         $this->db->where_in('CustomerId', $customerId);
 
-        $rawQuery = $this->db->last_query();
+        // $rawQuery = $this->db->last_query();
         // var_dump($rawQuery);
         $query = $this->db->get();
         // log_message('debug', 'SQL Query: ' . $rawQuery);

@@ -79,6 +79,22 @@
             return $query->result();
         }
 
+        public function getCustomerBill($select, $join, $where) {
+
+            $this->db->select($select);
+            $this->db->from('Customer as c');
+            $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
+            $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
+            $this->db->where('c.SiteId', 1);
+            $this->db->where('c.StatusId','CRS1');
+            $this->db->where_in('c.Id',$where);
+            $rawQuery = $this->db->last_query();
+            // var_dump($rawQuery);
+            // die();
+            $query = $this->db->get();
+            return $query->result();
+        }
+
         public function insertCustomer($data) {
                 // Memulai transaksi database
             $this->db->trans_start();

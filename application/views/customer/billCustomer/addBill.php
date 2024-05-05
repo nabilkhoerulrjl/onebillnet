@@ -164,7 +164,7 @@
                 // Tambahkan data ke dalam select option
                 $.each(data, function(index, item) {
                     console.log(item.FirstName);
-                    select.append('<option value="' + item.CustomerId + '">' + item.FirstName + ' ' + item.LastName + '</option>');
+                    select.append('<option value="' + item.Id + '">' + item.FirstName + ' ' + item.LastName + '</option>');
                 });
             },
             error: function(err) {
@@ -285,6 +285,7 @@
 
             // Mengambil nilai dari input form
             var customerId = $('select[name="customer"]').val();
+            console.log(customerId);
             // var amount = $('#amount').attr('data-origin');
             var periode = $('#periode').val();
             var dueDate = $('#dueDate').val();
@@ -366,7 +367,7 @@
         $('#resetDataBill').on('click', function(e) {
             $('select[name="customer"]').val(null).trigger('change');
             // $('#amount').attr('data-origin','');
-            $('#periode').val('');
+            $('#').val('');
             $('#dueDate').val('');
             $('#statusPayment').attr('data');
             $('#descriptions').val('');

@@ -18,11 +18,11 @@
         $config['language'] = 'english';
         $config['charset'] = 'UTF-8';
         $config['subclass_prefix'] = 'MY_';
+        $config['composer_autoload'] = 'vendor/autoload.php';
     }
     // Config Opsional
     $config['url_suffix'] = '';
     $config['enable_hooks'] = FALSE;
-    $config['composer_autoload'] = FALSE;
     $config['permitted_uri_chars'] = 'a-z 0-9~%.:_-';
     $config['enable_query_strings'] = FALSE;
     $config['controller_trigger'] = 'c';

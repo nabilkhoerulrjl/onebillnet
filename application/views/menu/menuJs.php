@@ -11,7 +11,6 @@
 
 <script>
   function addTabDashboard() {
-    alert('asdasdasd');
     openTabGeneral('main_dashboard','Main Dashboard', 'fa-gauge', 'dashboard/MainDash_Controller/index', 'Get' );
   }
 

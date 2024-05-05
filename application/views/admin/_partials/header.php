@@ -2,7 +2,7 @@
     <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
     <a href="#!" class="b-brand">
         <!-- ========   change your logo hear   ============ -->
-        <img src="<?= base_url() ?>public/images/logo.png" alt="" class="logo">
+        <img src="<?=$iconHeaderNav;?>" alt="" class="logo" width="70">
         <img src="<?= base_url() ?>public/images/logo-icon.png" alt="" class="logo-thumb">
     </a>
     <a href="#!" class="mob-toggler">
@@ -11,7 +11,7 @@
 </div>
 <div class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a href="#!" class="pop-search"><i class="feather icon-search"></i></a>
             <div class="search-bar">
                 <input type="text" class="form-control border-0 shadow-none" placeholder="Search hear">
@@ -19,8 +19,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-        </li>
-        <li class="nav-item">
+        </li> -->
+        <!-- <li class="nav-item">
             <div class="dropdown">
                 <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
                     Dropdown
@@ -33,8 +33,8 @@
                     </ul>
                 </div>
             </div>
-        </li>
-        <li class="nav-item">
+        </li> -->
+        <!-- <li class="nav-item">
             <div class="dropdown mega-menu">
                 <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
                     Mega
@@ -86,10 +86,10 @@
                     </div>
                 </div>
             </div>
-        </li>
+        </li> -->
     </ul>
     <ul class="navbar-nav ml-auto">
-        <li>
+        <!-- <li>
             <div class="dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">
                     <i class="icon feather icon-bell"></i>
@@ -152,7 +152,7 @@
                     </div>
                 </div>
             </div>
-        </li>
+        </li> -->
         <li>
             <div class="dropdown drp-user">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -160,17 +160,18 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-notification">
                     <div class="pro-head"> 
-                        <img src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" class="img-radius" alt="User-Profile-Image">
+                        <img src="http://localhost/onebillnet/File/getFile/44" class="img-radius" alt="User-Profile-Image">
+                        <!-- <img src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" class="img-radius" alt="User-Profile-Image"> -->
                         <span><?= $this->session->userdata('name');?></span>
                         <a href="#" id="logoutBtn" class="dud-logout" title="Logout">
                             <i class="feather icon-log-out"></i>
                         </a>
                     </div>
-                    <ul class="pro-body">
+                    <!-- <ul class="pro-body">
                         <li><a href="user-profile.html" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
                         <li><a href="email_inbox.html" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
                         <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
         </li>
