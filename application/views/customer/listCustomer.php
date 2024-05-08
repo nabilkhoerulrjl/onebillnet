@@ -122,13 +122,13 @@
                     All
                 </button>
                 <button type="button" id="invoiceButton" class="btn btn-outline-primary btn-sm"
-                data-toggle="Generate Selected Invoice Bill" onclick="generateInvoices<?=$idTabMenu;?>()" data-placement="top" title="Generate Selected Invoice Bill" data-original-title="Generate Selected Invoice Bill">
+                data-toggle="Generate Selected Invoice Bill" onclick="generateInvBill<?=$idTabMenu;?>()" data-placement="top" title="Generate Selected Invoice Bill" data-original-title="Generate Selected Invoice Bill">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                 </button>
-                <button type="button" id="deleteButton" class="btn btn-outline-danger btn-sm"
-                data-toggle="Delete Selected Data" onclick="deleteSelectedData<?=$idTabMenu;?>()" data-placement="top" title="Delete Selected Data" data-original-title="Delete Selected Data">
-                    <i class="fa fa-trash mr-1"></i>
-                </button>
+                <!-- <button type="button" id="UnsubsCsButton" class="btn btn-outline-danger btn-sm"
+                data-toggle="Unsubsribe Customer Selected Data" onclick="deleteSelectedData<?=$idTabMenu;?>()" data-placement="top" title="Unsubsribe Customer Selected Data" data-original-title="Unsubsribe Customer Selected Data">
+                    <i class="fa fa-ban mr-1"></i>
+                </button> -->
             </div>
             <button type="button" class="btn btn-sm btn-primary" id="btnmodal">
                 <i class="fa fa-user-plus fa-sm pr-1"></i>Add Customer
@@ -357,7 +357,8 @@
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
                                     <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editDataCs<?=$idTabMenu?>('${value.Id}')"></i>
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataCs<?=$idTabMenu?>('${value.Id}')"></i>
+                                    <i class="fa fa-circle-info fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Detail Data" onclick="detailDataCs<?=$idTabMenu?>('${value.Id}')"></i>
+                                    <!-- <i class="fa fa-ban fa-lg cursor-pointer" style="color:red;" title="Unsubsribe Customer" onclick="deleteDataCs<?=$idTabMenu?>('${value.Id}')"></i> -->
                                 </td>
                             </tr>
                         `);
@@ -1204,15 +1205,13 @@
         
     }
 
-    function generateInvoices<?=$idTabMenu;?>() {
+    function generateInvBill<?=$idTabMenu;?>() {
         var selectedData = getSelectedData<?=$idTabMenu;?>();
         // Lakukan sesuatu dengan data yang dipilih, seperti mengirimnya ke server untuk dihapus
-        console.log('222',selectedData);
         if(selectedData.length > 0 ){
             Swal.fire({
                 title: "Enter Periode Invoice Bill",
-                html:
-                    '<input type="month" class="form-control form-control-sm cursor-pointer" id="periodeBill" name="periodeBill" required>',
+                html: '<input type="month" class="form-control form-control-sm cursor-pointer" id="periodeBill" name="periodeBill" required>',
                 showCancelButton: true,
                 confirmButtonText: "Generate",
                 preConfirm: () => {
@@ -1239,9 +1238,7 @@
                             });
                         },
                         success: function (data) {
-                            console.log('data',data);
-                            var status;
-
+                            // console.log('data',data);
                             // Periksa tipe data yang diterima
                             if (Array.isArray(data)) {
                                 status = data[0].status;
@@ -1256,58 +1253,6 @@
                                     title: "Congratulations!",
                                     text: "Invoice tagihan berhasil dibuat!",
                                     icon: "success"
-                                });
-                                                // Define the HTML content
-
-                                $.get(base_url + 'welcome/invoicepdf', function(template) {
-                                    // Di sini Anda dapat menangani template yang telah dimuat
-                                    var invoiceTemplate = template;
-                                    const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>PDF Document</title>
-    </head>
-    <body>
-      <div>${contentToSave}</div>
-    </body>
-    </html>
-  `;
-                                    const blob = new Blob([htmlContent], { type: 'application/pdf' });
-
-                                    // Membuat URL objek dari blob
-                                    const url = URL.createObjectURL(blob);
-
-                                    // Membuat elemen anchor untuk mengunduh file
-                                    const a = document.createElement('a');
-                                    a.href = url;
-                                    a.download = 'content.pdf';
-                                    document.body.appendChild(a);
-
-                                    // Mengunduh file
-                                    a.click();
-
-                                    // Menghapus elemen anchor
-                                    document.body.removeChild(a);
-
-                                    // Membersihkan URL objek
-                                    URL.revokeObjectURL(url);
-                                    // printFrame.window.print();
-                                    // console.log(invoiceTemplate);
-    // var val = htmlToPdfmake(invoiceTemplate);
-    // var dd = {
-    //     content:val,
-    //     cssStyle: { path: "<?= base_url()?>/public/css/style-invoice-pdf.css"}
-    // };
-    // pdfMake.createPdf(dd).download();
-                                    // Lakukan operasi yang diperlukan pada template, seperti mengganti teks, mengatur nilai, dll.
-                                    // invoiceTemplate.find('#invoice_id').text('12345');
-                                    // invoiceTemplate.find('#customer_name').text('John Doe');
-
-                                    // Setelah template siap, Anda dapat melanjutkan dengan merender ke PDF
-                                    // renderInvoiceToPDF(invoiceTemplate);
                                 });
                                 // fetchData(); // Panggil fungsi untuk memperbarui data setelah berhasil menghapus
                             } else if(status === 'info'){
@@ -1336,64 +1281,6 @@
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             });
-
-            var base_url = '<?= base_url()?>';
-            // Menyiapkan data untuk dikirim
-            var requestData = {
-                ReferenceId: selectedData,
-            };
-            // Menggunakan jQuery untuk melakukan AJAX request
-            // $.ajax({
-            //     url: base_url+'Customer_Controller/deleteCustomer',
-            //     method: 'POST',
-            //     dataType: 'json',
-            //     data: requestData,
-            //     beforeSend: function() {
-            //         // Menampilkan elemen loading sebelum permintaan dikirim
-            //         Swal.fire({
-            //             title: 'Loading',
-            //             icon: "info",
-            //             text: 'Please wait...',
-            //             allowOutsideClick: false,
-            //             showConfirmButton: false,
-            //         });
-            //     },
-            //     success: function (data) {
-            //         console.log(data);
-            //         console.log(typeof data);
-            //         var status;
-            //         if(typeof data == 'object'){
-            //             status = data.status;
-            //         }
-            //         if(typeof data == 'array'){
-            //             status = data[0].status;
-            //         }
-
-            //         if(status == 'success') {
-            //             Swal.fire({
-            //                 title: "Congratulations!",
-            //                 text: "Your data has been delete!",
-            //                 icon: "success"
-            //             });
-            //             fetchData();
-            //         }else{
-            //             Swal.fire({
-            //                 title: "Attandace!",
-            //                 text: "Your data failed to delete!",
-            //                 icon: "failed"
-            //             });
-            //         }
-
-            //     }
-            //     // error: function (error) {
-            //     //     // Menyembunyikan elemen loading jika terjadi kesalahan
-            //     //     Swal.fire({
-            //     //         title: "Attandace!",
-            //     //         text: "Your data failed to delete!",
-            //     //         icon: "failed"
-            //     //     });
-            //     // }
-            // });
         }else{
             Swal.fire({
                 title: "Attandace!",
@@ -1401,12 +1288,10 @@
                 icon: "failed"
             });
         }
-        
     }
 
     function getSelectedData<?=$idTabMenu;?>() {
         var selectedData = [];
-
         // Loop melalui semua checkbox yang dicentang
         var checkboxes = document.querySelectorAll('#dataTableCS<?=$idTabMenu;?> .checkboxCs:checked');
         checkboxes.forEach(function (checkbox) {

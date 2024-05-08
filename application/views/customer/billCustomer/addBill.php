@@ -68,7 +68,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Add Bill Form</h5>
+                <h5 class="modal-title" id="myModalLabel">Add Bill Invoice</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
             </div>
             <div class="modal-body">
@@ -78,7 +78,7 @@
                             <div class="row">
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-group has-icon-left">
-                                        <label for="customer"><i class="fa fa-user"></i> Customer Name <span style="color:red;">*</span></label>
+                                        <label for="customer"><i class="fa fa-user"></i> Customer <span style="color:red;">*</span></label>
                                         <!-- <div class="position-relative"> -->
                                             <select class="form-control form-control-sm multiple-select-customer" name="customer" id="customer" multiple="multiple" style="width: 100%">
                                                 <option value="">Select Customers</option>
@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-lg-12">
+                                <!-- <div class="col-md-12 col-lg-12">
                                     <div class="form-group has-icon-left">
                                         <label for="dueDate"><i class="fa fa-calendar-days"></i> Due Date <span style="color:red;">*</span></label>
                                         <div class="position-relative">
@@ -125,9 +125,9 @@
                                             <textarea class="form-control form-control-sm" placeholder="Descriptions" id="descriptions" name="descriptions" required></textarea>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" id="saveDataBill" class="btn btn-primary me-1 mb-1">Submit</button>
+                                    <button type="submit" id="saveDataBill" class="btn btn-primary me-1 mb-1">Add</button>
                                     <button type="reset" id="resetDataBill" class="btn btn-light-secondary me-1 mb-1">Reset</button>
                                 </div>
                             </div>
@@ -284,28 +284,19 @@
             e.preventDefault(); // Menghentikan aksi default form submit
 
             // Mengambil nilai dari input form
-            var customerId = $('select[name="customer"]').val();
-            console.log(customerId);
-            // var amount = $('#amount').attr('data-origin');
             var periode = $('#periode').val();
-            var dueDate = $('#dueDate').val();
-            var status = $('#statusPayment').attr('data');
-            var descriptions = $('#descriptions').val();
-            var formData = new FormData();
-                formData.append('customerId', customerId);
-                // formData.append('amount', amount);
-                formData.append('periode', periode);
-                formData.append('dueDate', dueDate);
-                formData.append('status', status);
-                formData.append('descriptions', descriptions);
-                
-                // console.log('formData',formData);
-                // Tampilkan data di console log
-                // for (var pair of formData.entries()) {
-                //     console.log(pair[0] + ', ' + capitalizeWords(pair[1]));
-                // }
+            var customerId = $('select[name="customer"]').val();
+            if(customerId[0] == 'all'){
+                customerId = customerId.filter(function(customer) {
+                    return customer !== "all";
+                });
+            }
 
-            if (!customerId || !periode || !dueDate) {
+            var formData = new FormData();
+                formData.append('CustomerId', customerId);
+                formData.append('Periode', periode);
+
+            if (!customerId || !periode) {
                 // Jika ada setidaknya satu kolom yang kosong, lakukan sesuatu, contohnya:
                 Swal.fire({
                     title: 'Attention',
@@ -317,7 +308,7 @@
             } else {
                 // Mengirim data ke Controller menggunakan AJAX
                 $.ajax({
-                    url: base_url+'customer/BillCustomer_Controller/createBill', // Ganti dengan URL Controller CodeIgniter Anda
+                    url: base_url+'customer/BillCustomer_Controller/createBillInv', // Ganti dengan URL Controller CodeIgniter Anda
                     type: 'POST',
                     data: formData,
                     processData: false, // Untuk mengirim file, harus diatur false
@@ -333,30 +324,39 @@
                         });
                     },
                     success: function(response) {
-                            console.log(response);
-                            // responseObject = response;
-                            if(response){
-                                var responseObject = JSON.parse(response);
-                            }
-                            // console.log(value.CustomerId);
-
-                            console.log(responseObject.status);
+                        // responseObject = response;
+                        if(response){
+                            var responseObject = JSON.parse(response);
+                        }
                         // Handle response dari Controller
-                        if(responseObject.status == 'success') {
+                        // if(responseObject.status == 'success') {
+                        //     Swal.fire({
+                        //         title: "Congratulations!",
+                        //         text: "Your data has been save!",
+                        //         icon: "success"
+                        //     });
+                        //     fetchData();
+                        // }
+                        if (responseObject.status === 'success') {
                             Swal.fire({
                                 title: "Congratulations!",
-                                text: "Your data has been save!",
+                                text: "Invoice tagihan berhasil dibuat!",
                                 icon: "success"
                             });
                             fetchData();
-                        }
-                        if(responseObject.status == 'error'){
+                            // fetchData(); // Panggil fungsi untuk memperbarui data setelah berhasil menghapus
+                        } else if(responseObject.status === 'info'){
                             Swal.fire({
-                                title: "Attandace!",
-                                text: "Your data failed to save!",
-                                icon: "failed"
+                                title: "Attendance!",
+                                text: "Data Invoice tagihan sudah dibuat sebelumnya!",
+                                icon: "info"
                             });
-                            // console.log(response);
+                        }else{
+                            Swal.fire({
+                                title: "Attendance!",
+                                text: "Invoice tagihan gagal dibuat!",
+                                icon: "error"
+                            });
                         }
                         // Tambahan: Refresh halaman atau lakukan aksi lain jika diperlukan
                     }
