@@ -107,4 +107,31 @@ class Bill_Model extends CI_Model {
         // log_message('debug', 'SQL Query: ' . $rawQuery);
         return $query->num_rows() > 0;
     }
+
+    public function getTotalPageBill($siteid) {
+        // Query untuk mendapatkan pengaturan berdasarkan siteid dan code
+        $this->db->select('CEIL(COUNT(*) OVER () / 20) AS TotalPage');
+        $this->db->from('Bill');
+        $this->db->where('SiteId', $siteid);
+        $this->db->where('InvoiceId IS NOT NULL');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        // Kembalikan hasil query
+        return $query->result(); // Mengembalikan satu baris hasil query dalam bentuk array asosiatif
+    }
+
+    public function getInvoice($select, $join, $where) {
+        // var_dump($join['join1'][0]);
+        // var_dump($join['join2'][0]);
+        $this->db->select($select);
+        $this->db->from('Bill as b');
+        $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
+        $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
+        $this->db->where('c.SiteId',$where['SiteId']);
+        $this->db->where('b.ReferenceId',$where['ReferenceId']);
+        $query = $this->db->get();
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
+        return $query->result();
+    }
 }

@@ -15,7 +15,13 @@ class BillCustomer_Controller extends CI_Controller {
 
 	public function index()
 	{
-		// $this->load->view('customer/listCustomer');
+        $page = 1;
+        $data['idTabMenu'] = 'billCustomer255';
+        $data['dataBill']  = $this->getData($page);
+        $data['totalPage']  = $this->getTotalPageBill();
+        $data['currentPage'] = $page;
+        // var_dump($data['totalPage']);
+        $this->load->view('customer/billCustomer/index',$data);
 	}
 
     public function createBillInv()
@@ -27,6 +33,7 @@ class BillCustomer_Controller extends CI_Controller {
         $timeDueDate = '23:59:59';
         // Get data duedate bill
         $getDueDate = $this->getDueDateInvSet();
+        $getPrefixInv = $this->getPrefixInv();
         // $getDueDate = $this->getDueDateInvSet();
         $periodeBill = $periode.'-'.$getDueDate;
 
@@ -47,6 +54,7 @@ class BillCustomer_Controller extends CI_Controller {
         // Jika tidak lanjut insert
         // Gabungkan periode, tanggal, dan waktu
         $dateTimePeriode = date('Y-m-d H:i:s', strtotime("$periode-$getDueDate $timeDueDate"));
+        $formatPeriodeDesc = date("j F Y", strtotime("$periode-$getDueDate"));
         // Persiapkan data
         // Get Data Customer by Id
         $customerData   = $this->getCustomer($customerIdArr);
@@ -77,12 +85,14 @@ class BillCustomer_Controller extends CI_Controller {
             );
 
             // Mapping data untuk create invoice PaymentLink
+            // INV-{{Prefix Invoice}}-{{tanggal invoice dibuat}}-{{ProductId}}{{random Angka}}
             $invoiceData = [];
-            $newBillId = $this->ramdomId();
+            $randomNumber = $this->ramdomId();
+            $descriptions = $data->ProductName.' Periode '.$formatPeriodeDesc;
             $invoiceData = array(
-                'external_id' => 'INV-'.date("Ymd").'-'.$newBillId.$data->ProductId.$data->Id,
+                'external_id' => 'INV-'.$getPrefixInv.'-'.date("Ymd").'-'.$data->ProductId.$randomNumber,
                 'amount' => $data->Price, 
-                'description' => '$descriptions',
+                'description' => $descriptions,
                 'customer' => $customer,
                 'currency' => 'IDR',
                 'invoice_duration' => '2629056',
@@ -114,7 +124,7 @@ class BillCustomer_Controller extends CI_Controller {
                 // Create new PDF document
                 $mappingJSON = array(
                     'Id'            => $item->id,
-                    'ExternalId'    => $item->external_id,
+                    'InvoiceId'    => $item->external_id,
                     'Status'        => $item->status,
                     'ExpiryDate'    => $item->expiry_date,
                     'MerchantName'  => $item->merchant_name,
@@ -126,13 +136,16 @@ class BillCustomer_Controller extends CI_Controller {
                 $billData = array(
                     'CustomerId' => $data->Id,
                     'SiteId' => $siteId,
+                    'ProductId' => $data->ProductId, 
+                    'Product' => $data->ProductName, 
+                    'Description' => $data->Description, 
                     'Amount' => $data->Price, 
                     'Periode' => $periodeBill, 
                     'DueDate' => $dateTimePeriode,
                     'StatusId' => 'BLS2',
                     'PaymentDate' => null,
                     'PaymentLink' => $item->invoice_url,
-                    'ExternalId' => $item->external_id,
+                    'InvoiceId' => $item->external_id,
                     'ReferenceId' => $item->id,
                     'ExpiryDate' => $item->expiry_date, 
                     'ContentText' => $contentText, 
@@ -153,7 +166,7 @@ class BillCustomer_Controller extends CI_Controller {
         if (count($arrBillId) == 0) {
             echo json_encode(array('status' => 'error', 'message' => 'Failed to update data.'));
         } else {
-            echo json_encode(array('status' => 'success', 'message' => 'All data updated successfully.','data' => $resultsJson));
+            echo json_encode(array('status' => 'success', 'message' => 'All data updated successfully.'));
         }
     }
 
@@ -163,7 +176,7 @@ class BillCustomer_Controller extends CI_Controller {
         $select = 'c.Id as Id, c.FirstName AS GivenName, 
         c.LastName AS SurName, c.Whatsapp AS MobileNumber, 
         c.Email, c.Address, p.Id AS ProductId, 
-        p.Name AS ProductName, p.Amount AS Price';
+        p.Name AS ProductName, p.Description AS Description, p.Amount AS Price';
         $join   = ['Product AS p', 'c.ProductId = p.Id', 'left'];
         $where  = $customerId;
         $dataCustomer = $this->Customer_Model->getCustomer($select, $join, $where);
@@ -171,11 +184,12 @@ class BillCustomer_Controller extends CI_Controller {
         return $dataCustomer;
     }
 
-    public function getListBillData() {
-        // $startDate = $this->input->post('startDate');
-        // $endDate = $this->input->post('endDate');
+    public function getData($page) {
+        $page = $page;
+        $limit = 20;
+        $offset = abs(($page - 1) * $limit);
         $siteId = $this->getSiteId();
-        $select = 'b.ReferenceId, b.ExternalId AS ExternalId,
+        $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
         c.FirstName AS FirstName, c.LastName AS LastName,
         pd.Name AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,
@@ -187,16 +201,42 @@ class BillCustomer_Controller extends CI_Controller {
             'join2' => $join2,
         );
         $where  = $siteId;
-        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where);
-        echo json_encode($data);
+        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
+        return $data;
     }
+
+    // public function getRefreshBillData() {
+    //     $page = $this->input->post('Page');
+    //     // var_dump($page);
+        
+    //     $limit = 20;
+    //     $offset = abs(($page - 1) * $limit);
+    //     // var_dump($limit);
+    //     // var_dump($offset);
+    //     // $endDate = $this->input->post('endDate');
+    //     $siteId = $this->getSiteId();
+    //     $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
+    //     c.FirstName AS FirstName, c.LastName AS LastName,
+    //     pd.Name AS ProductName, b.Periode,
+    //     b.DueDate, b.Amount, b.StatusId,
+    //     b.PaymentLink, b.ExpiryDate';
+    //     $join1   = ['Product AS pd', 'c.ProductId = pd.Id', 'left'];
+    //     $join2   = ['Bill AS b', 'c.Id = b.CustomerId', 'left'];
+    //     $arrJoin = array(
+    //         'join1' => $join1,
+    //         'join2' => $join2,
+    //     );
+    //     $where  = $siteId;
+    //     $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
+    //     echo json_encode($data);
+    // }
 
     // Untuk Get Data yang akan digunakan sebagai Invoice PDF
     public function getInvBill($customerId) {
         
         $siteId = $this->getSiteId();
         $select = 'c.Id as Id, c.FirstName AS GivenName, c.LastName AS SurName, 
-        c.Whatsapp AS MobileNumber, c.Email, c.Address, b.ExternalId, 
+        c.Whatsapp AS MobileNumber, c.Email, c.Address, b.InvoiceId, 
         b.Periode, b.DueDate';
         $join2   = ['Bill AS b', 'c.Id = b.CustomerId', 'inner'];
         $arrJoin = array(
@@ -301,6 +341,17 @@ class BillCustomer_Controller extends CI_Controller {
         return $respone;
     }
 
+    public function getTotalPageBill() {
+        $siteId = $this->getSiteId();
+        $this->load->model('Bill_Model');
+        // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
+        $totalPage = $this->Bill_Model->getTotalPageBill($siteId);
+        // var_dump();
+        return $totalPage[0]->TotalPage;
+        
+    }
+
+
     // public function generateInvoicePdf($InvPdfData)
     // {
     //     $this->load->library('pdf_co_api');
@@ -361,6 +412,17 @@ class BillCustomer_Controller extends CI_Controller {
         return $setting["Value"];
     }
 
+    public function getPrefixInv()
+    {
+        $siteId = $this->getSiteId();
+        $code = 'PrefixInvoice';
+        $this->load->model('Setting_Model');
+        // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
+        $setting = $this->Setting_Model->getConfigSetting($siteId, $code);
+        
+        return $setting["Value"];
+    }
+
     public function getCompanyProfile(){
         $siteId = $this->getSiteId();
         // var_dump($siteId);
@@ -376,12 +438,18 @@ class BillCustomer_Controller extends CI_Controller {
     public function ramdomId()
     {
         // Mendefinisikan panjang maksimal ID
-        $max_length = 5;
+        $max_length = 3;
 
         // Generate random ID
-        $random_id = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $max_length);
+        $random_id = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $max_length);
 
         // Print the random ID
         return $random_id;
+    }
+
+    public function getBillData(){
+        $page = $this->input->post('Page');
+        $data = $this->getData($page);
+        echo json_encode($data);
     }
 }

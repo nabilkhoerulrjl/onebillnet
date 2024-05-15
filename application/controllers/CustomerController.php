@@ -19,9 +19,12 @@ class CustomerController extends CI_Controller {
     }
 
     public function billCustomer() {
+        $page = 1;
         $data['idTabMenu'] = 'billCustomer255';
-        $data['dataBill']  = $this->getListBillData();
-        // var_dump($data['dataBill']);
+        $data['dataBill']  = $this->getListBillData($page);
+        $data['totalPage']  = $this->getTotalPageBill();
+        $data['currentPage'] = $page;
+        // var_dump($data['totalPage']);
         $this->load->view('customer/billCustomer/index',$data);
     }
 
@@ -51,22 +54,17 @@ class CustomerController extends CI_Controller {
     public function getListCsData() {
         $startDate = $this->input->post('startDate');
         $endDate = $this->input->post('endDate');
-        // var_dump($startDate);
-        // var_dump($endDate);
-        // die();
         $siteId = $this->getSiteId();
-        // var_dump('s',$siteId);
-        // die();
         $data = $this->Customer_Model->getCustomerAll($siteId, $startDate, $endDate);
         echo json_encode($data);
-
     }
 
-    public function getListBillData() {
-        // $startDate = $this->input->post('startDate');
-        // $endDate = $this->input->post('endDate');
+    public function getListBillData($page) {
+        $page = $page;
+        $limit = 20;
+        $offset = 20;
         $siteId = $this->getSiteId();
-        $select = 'b.ReferenceId, b.ExternalId AS ExternalId,
+        $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
         c.FirstName AS FirstName, c.LastName AS LastName,
         pd.Name AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,
@@ -78,7 +76,7 @@ class CustomerController extends CI_Controller {
             'join2' => $join2,
         );
         $where  = $siteId;
-        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where);
+        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
         return $data;
     }
 
@@ -245,6 +243,16 @@ class CustomerController extends CI_Controller {
             // Gagal insert, tambahkan penanganan kesalahan jika diperlukan
             echo "Gagal insert data.";
         }
+    }
+
+    public function getTotalPageBill() {
+        $siteId = $this->getSiteId();
+        $this->load->model('Bill_Model');
+        // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
+        $totalPage = $this->Bill_Model->getTotalPageBill($siteId);
+        // var_dump();
+        return $totalPage[0]->TotalPage;
+        
     }
 
     // public function edit($contactId) {

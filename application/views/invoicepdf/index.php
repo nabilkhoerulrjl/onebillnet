@@ -10,8 +10,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-       	<link rel="stylesheet" href="<?= base_url()?>/public/css/style-invoice-pdf.css">
-        <style>		
+       <link rel="stylesheet" href="<?= base_url()?>/public/css/style-invoice-pdf.css">
+        <!-- <style>		
 		    *,
 		    *::after,
 		    *::before {
@@ -84,7 +84,7 @@
 		    }
 		
 		    .invoice {
-		        max-width: 850px;
+		        max-width: 900px;
 		        margin-right: auto;
 		        margin-left: auto;
 		        background-color: var(--white-color);
@@ -267,144 +267,118 @@
 		            display: none;
 		        }
 		    }
-		</style>
+		</style> -->
     </head>
     <body>
-        <div class = "invoice-wrapper" id = "print-area" style="background-color:pink;">
-            <section class="invoice">
-    <form action="http://[::1]/jirais/customerclient/bill" method="post">
-        <div style="margin-left: 5px;" class="row">
-            <div class="col-xs-12">
-            <h2 class="page-header">
-            <img src="http://[::1]/jirais/assets/img/logo.png" style="width:4%"><strong> PT. Jirais Global Network</strong><text style="font-size:0.8vw">  Support by</text><img src="http://[::1]/jirais/assets/img/logo-asnet.png" style="width:8%"><text style="font-size:0.8vw">
-            <small style="margin-right: 5px;" class="pull-right">Dicetak Tanggal : </small>
-            </text></h2>
+        <div class = "invoice-wrapper" id = "print-area">
+            <div class = "invoice">
+                <div class = "invoice-container">
+                    <div class = "invoice-head">
+                        <div class = "invoice-head-top">
+                            <div class = "invoice-head-top-left text-start">
+                                <img src = "<?=$iconCompany;?>" width="80">
+                                <h1 class="company-name"></h1>
+                            </div>
+                            <div class = "invoice-head-top-right text-end">
+                                <span class="vendor-name">Support by</span>
+                                <img src = "<?=$iconVendor;?>" width="80">
+                            </div>
+                        </div>
+                        <div class = "hr"></div>
+                        <div class = "invoice-head-middle">
+                            <div class = "invoice-head-middle-left text-start">
+                                <p><span class = "text-bold">Date</span>: <?=date("d F Y", strtotime($dataInvoice[0]->InvDate));?></p>
+                            </div>
+                            <div class = "invoice-head-middle-right text-end">
+                                <p><spanf class = "text-bold">Invoice No: </span><?=$dataInvoice[0]->InvoiceId;?></p>
+                            </div>
+                        </div>
+                        <div class = "hr"></div>
+                        <div class = "invoice-head-bottom">
+                            <div class = "invoice-head-bottom-left">
+                                <ul>
+                                    <li class = 'text-bold'>Invoiced Dari:</li>
+                                    <li>PT. <?=$dataInvoice[0]->ComName;?></li>
+                                    <li max-width: 50%;><?=$dataInvoice[0]->ComAddress;?></li>
+<!--                                    <li>kel. Bantarjati Kec. Bogor Utara,</li>
+                                    <li>Kota Bogor 16153</li>-->
+                                    <li>Phone : <?=$dataInvoice[0]->ComPhone;?></li>
+                                    <li>Email : <?=$dataInvoice[0]->ComEmail;?></li>
+                                </ul>
+                            </div>
+                            <div class = "invoice-head-bottom-right">
+                                <ul class = "text-end">
+                                    <li class = 'text-bold'>Untuk:</li>
+                                    <li><?=$dataInvoice[0]->FirstName;?> <?=$dataInvoice[0]->LastName;?></li>
+                                    <li max-width: 50%;><?=$dataInvoice[0]->CsAddress;?></li>
+                                    <li>Phone : <?=$dataInvoice[0]->CsPhone;?></li>
+                                    <li>Email : <?=$dataInvoice[0]->CsEmail;?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "overflow-view">
+                        <div class = "invoice-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td class = "text-bold">Product details</td>
+                                        <td class = "text-bold">Description</td>
+                                        <td class = "text-bold">QTY</td>
+                                        <td class = "text-bold">Amount</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+               
+                                    <tr>	
+	                                    <td><?=$dataInvoice[0]->Product;?></td>
+                                        <td><?=$dataInvoice[0]->Description;?></td>
+                                        <td>1</td>
+                                        <td class = "text-end"><?='Rp '.number_format($dataInvoice[0]->Amount, 0, ',', '.');?></td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td colspan="4">10</td>
+                                        <td>$500.00</td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                            <div class = "invoice-body-bottom">
+                                <div class = "invoice-body-info-item border-bottom">
+                                    <div class = "info-item-td text-end text-bold">Sub Total:</div>
+                                    <div class = "info-item-td text-end"><?='Rp '.number_format($dataInvoice[0]->Amount, 0, ',', '.');?></div>
+                                </div>
+                                <div class = "invoice-body-info-item border-bottom">
+									<?php $ppn = (11 / 100) * $dataInvoice[0]->Amount; ?>
+                                    <div class = "info-item-td text-end text-bold">Tax ppn 11%:</div>
+                                    <div class = "info-item-td text-end"><?='Rp '.number_format($ppn, 0, ',', '.');?></div>
+                                </div>
+                                <div class = "invoice-body-info-item">
+                                    <div class = "info-item-td text-end text-bold">Total:</div>
+                                    <div class = "info-item-td text-end"><?='Rp '.number_format($dataInvoice[0]->Amount+$ppn, 0, ',', '.');?></div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-14 text-sm text-neutral-700 m-t-3">
+                        <p class="text-main font-bold">PAYMENT DETAILS</p>
+                        <p>Bank Transfer</p>
+                        <p>Banks of Bank Central Asia</p>
+                        <p>Account Number: 123456678</p>
+                        <p>A.N: PT Jirais Global Network</p>
+                        <p>Online Payment</p>
+                        <p>Payment Link: <a href="<?=$dataInvoice[0]->PaymentLink;?>" target="_blank">Payment</a></p>
+                    </div>
+                    <div class = "invoice-foot">
+                        <p><span class = "text-bold text-center">NOTE:&nbsp;</span></p>
+                        <p>Jatuh Tempo Pembayaran 7 Hari Setelah Invoice ini Terbit</p>
+                        <p>Konfirmasi pembayaran bisa melalui WA admin Cantumkan Invoice Number/Customer ID</p>
+                        <p>Contact Admin</p>
+                        <p><?=$dataInvoice[0]->ComPhone;?></p>
+                        <p><?=$dataInvoice[0]->ComEmail;?></p>
+                    </div>
+                </div>
             </div>
-
-        </div>
-
-        <div style="margin-left: 5px;" class="row invoice-info">
-            <div class="col-sm-4 invoice-col">
-            Dari
-            <address>
-            <strong>Jirais Global Network</strong><br>
-            Jl. Ceremai ujung no.14 rt.02 rw.12<br>
-            kel.bantarjati kec.bogor utara, Kota Bogor 16153<br>
-            Phone: 082123002023 <br>
-            Email: jiraisglobalnetwork@gmail.com  <br>
-            </address>
-            <input type="hidden" name="vendorid" value="">
-            <input type="hidden" name="onu" value="">
-            <input type="hidden" name="sn" value="">
-            </div>
-
-            <div class="col-sm-4 invoice-col">
-            Untuk
-            <address>
-            <text><strong>Test</strong></text><br>
-            Ciremai Ujung RT 04/04 <br>
-            Desa Ciawi Kec Ciawi, Kota Bogor (16722)<br>
-            <input type="hidden" name="namacst" value="Test" <="" input="">
-            <input type="hidden" name="desa" value="1" <="" input="">
-            <input type="hidden" name="kecamatan" value="1" <="" input="">
-            <input type="hidden" name="kota" value="2" <="" input="">
-            <input type="hidden" name="pos" value="3" <="" input="">
-            <input type="hidden" name="nohp" value="081987817611" <="" input="">
-            Phone: 081987817611<br>
-            Email: -            </address>
-            </div>
-
-            <div class="col-sm-4 invoice-col">
-            <input type="hidden" name="invoice" value="IN2405050001">
-            Invoice No : <b>IN2405050001</b><br>
-            <br>
-            <text>Customer ID: <b> JGN/00000001</b></text><br>
-            <input type="hidden" name="cust_id" value="JGN/00000001">
-            <input type="hidden" name="id_cust" value="48">
-            <text>Jatuh Tempo: <b> 2024-May-10 </b></text><br>
-            <input type="hidden" name="due_date" value="2024-05-10" <="" input="">
-            </div>
-
-        </div>
-
-
-        <div style="margin-left: 5px;" class="row">
-            <div class="col-xs-12 table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Description</th>
-                            <th>Harga</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><text>Paket10 Mb Up to</text></td>
-                            <input type="hidden" name="namapaket" value="Paket10 Mb Up to">
-                            <input type="hidden" name="paket" value="91">
-                            <td>Prabayar Paket 10 Mbps up to<br>0000-00-00 s/d 0000-00-00</td>
-                            <input type="hidden" name="start_date" value="0000-00-00">
-                            <input type="hidden" name="end_date" value="0000-00-00">
-                            <input type="hidden" name="harga" value="150000">
-                            <td>Rp. 150,000</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <div style="margin-left: 5px;" class="row">
-            <div class="col-xs-6">
-            <p class="lead">Metode Pembayaran:</p>
-                <p> Bank Transfer </p>
-                <p><strong></strong></p><h5><strong>Bank Mandiri KC Kapten Muslihat Bogor No. Rekening 133-00-0512882-2 A/N Usaha Adi Sanggoro</strong></h5><p></p>
-                <!--
-                <p><strong><h5>Bank Syariah Indonesia 7207926536 a/n PT. Electronic Technology Indonesia</h5></strong></p>
-                <p>Pembayaran bisa Melalui QRIS a/n <strong>Electrotech Id </strong> scan QRcode Berikut :</p>
-                <p style="margin-left: 105px;"><img style="max-height: 160px;" src="http://[::1]/jirais/assets/img/qris.jpg"></p>
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
--->
-                Jatuh Tempo Pembayaran 5 Hari Setelah Invoice ini Terbit<br>
-                Konfirmasi pembayaran bisa melalui WA admin Cantumkan Invoice Number/Customer ID <br>
-                Kontak admin : 08515670304 / electrotechdotid@gmail.com.
-            <p></p>
-        </div>
-
-        <div class="col-xs-6">
-            <div class="table-responsive">
-                <h3>
-                        </h3><h3>
-                        </h3><table class="table">
-                    <tbody><tr><th style="width:50%"><h5><strong>PPN 11%</strong></h5></th>
-                        <td>
-                            <h5>Rp. 16,500</h5>
-                        </td>
-                        </tr>
-                        </tbody>
-                        <tbody><tr><th style="width:50%"><h4><strong>Total Pembayaran:</strong></h4></th>
-                        <td>
-                            <h4><strong>Rp. 166,500</strong></h4>
-                        </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        </div>
-
-
-        <div class="row no-print">
-            <div class="col-xs-12">
-                <a onclick="window.print()" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
-                    <button type="submit" name="billing" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
-                    </button>
-            </div>
-        </div>
-    </form>    
-</section>
         </div>
     </body>
 </html>

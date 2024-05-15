@@ -139,7 +139,7 @@
         <div class="table-responsive">
             <table class="table table-hover" id="dataTableBill<?=$idTabMenu;?>">
                 <thead>
-                    <tr>
+                    <tr class="thead-<?=$idTabMenu;?>" total-page="<?=$totalPage;?>">
                         <th class="d-none">Ref Id</th>
                         <th></th>
                         <th>Inv Id</th>
@@ -158,7 +158,9 @@
                     <?php
                         if (!empty($dataBill)) {
                             foreach ($dataBill as $index => $row) {
+                                // var_dump($row);
                     ?>
+                    
                         <tr data-reference-id="<?= $row->ReferenceId; ?>">
                         <?php
                             $statusId;
@@ -182,7 +184,7 @@
                         ?>
                             <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
                             <td class="d-none"><?= $row->ReferenceId; ?></td>
-                            <td><?= $row->ExternalId; ?></td>
+                            <td><?= $row->InvoiceId; ?></td>
                             <td><?= $row->FirstName.' '.$row->LastName; ?></td>
                             <td><?= $row->ProductName; ?></td>
                             <td><?= 'Rp ' . number_format($row->Amount, 0, ',', '.'); ?></td>
@@ -193,7 +195,7 @@
                             <td title="<?=$row->ExpiryDate;?>"><?=$expiryDateFormated;?></td> 
                             <td class="action-column">
                                 <!-- Tambahkan button action sesuai kebutuhan -->
-                                <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
+                                <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
                                 <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
                             </td>
                         <tr>
@@ -210,6 +212,27 @@
             <ul class="pagination pagination<?=$idTabMenu;?> justify-content-end">
                 <!-- Tombol paginasi akan ditambahkan di sini -->
             </ul>
+        </div>
+        <div id="pagination_container" class="mt-3">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                        <button id="prevPage<?=$idTabMenu;?>" class="page-link" aria-label="Halaman Sebelumnya">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Halaman Sebelumnya</span>
+                        </button>
+                    </li>
+                    <div id="pageNumbers<?=$idTabMenu;?>" class="d-flex justify-content-center">
+                        <!-- Nomor halaman akan ditampilkan di sini -->
+                    </div>
+                    <li class="page-item">
+                        <button id="nextPage<?=$idTabMenu;?>" class="page-link" aria-label="Halaman Berikutnya">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Halaman Berikutnya</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -234,68 +257,122 @@
         
         var idTabMenu = '<?= $idTabMenu; ?>';
         // Pagging TableBill
-        var itemsPerPage = 15; // Jumlah item per halaman
-        var $tableRows = $('#dataTableBill<?=$idTabMenu;?> tbody tr');
-        var totalItems = $tableRows.length;
-        var totalPages = Math.ceil(totalItems / itemsPerPage);
-        var currentPage = 1;
-        var maxVisiblePages = 5;
+        // var itemsPerPage = 15; // Jumlah item per halaman
+        // var $tableRows = $('#dataTableBill<?=$idTabMenu;?> tbody tr');
+        // var totalItems = $tableRows.length;
+        // var totalPages = Math.ceil(totalItems / itemsPerPage);
+        // var currentPage = 1;
+        // var maxVisiblePages = 5;
 
         // Fungsi untuk menampilkan item pada halaman tertentu
-        function showPage<?=$idTabMenu;?>(page) {
-            $tableRows.hide().slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
-        }
+        // function showPage<?=$idTabMenu;?>(page) {
+        //     $tableRows.hide().slice((page - 1) * itemsPerPage, page * itemsPerPage).show();
+        // }
 
-        // Fungsi untuk menampilkan tombol paginasi
-        function showPagination<?=$idTabMenu;?>() {
-            $('.pagination<?=$idTabMenu;?>').empty();
+        // // Fungsi untuk menampilkan tombol paginasi
+        // function showPagination<?=$idTabMenu;?>() {
+        //     $('.pagination<?=$idTabMenu;?>').empty();
 
-            if (totalPages > maxVisiblePages) {
-                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-                var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        //     if (totalPages > maxVisiblePages) {
+        //         var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        //         var endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-                if (startPage > 1) {
-                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
-                }
+        //         if (startPage > 1) {
+        //             $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Previous</a></li>');
+        //         }
 
-                for (var i = startPage; i <= endPage; i++) {
-                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
-                }
+        //         for (var i = startPage; i <= endPage; i++) {
+        //             $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+        //         }
 
-                if (endPage < totalPages) {
-                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
-                }
-            } else {
-                for (var i = 1; i <= totalPages; i++) {
-                    $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
-                }
-            }
+        //         if (endPage < totalPages) {
+        //             $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">Next</a></li>');
+        //         }
+        //     } else {
+        //         for (var i = 1; i <= totalPages; i++) {
+        //             $('.pagination<?=$idTabMenu;?>').append('<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>');
+        //         }
+        //     }
 
-            $('.pagination<?=$idTabMenu;?> li').removeClass('active');
-            $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
-        }
+        //     $('.pagination<?=$idTabMenu;?> li').removeClass('active');
+        //     $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
+        // }
 
-        // Inisialisasi tampilan halaman pertama dan tombol paginasi
-        showPage<?=$idTabMenu;?>(currentPage);
-        showPagination<?=$idTabMenu;?>();
+        // // Inisialisasi tampilan halaman pertama dan tombol paginasi
+        // showPage<?=$idTabMenu;?>(currentPage);
+        // showPagination<?=$idTabMenu;?>();
 
-        // Handle klik pada tombol paginasi
-        $(document).on('click', '.pagination<?=$idTabMenu;?> a', function (e) {
-            e.preventDefault();
-            var pageText = $(this).text();
+        // // Handle klik pada tombol paginasi
+        // $(document).on('click', '.pagination<?=$idTabMenu;?> a', function (e) {
+        //     e.preventDefault();
+        //     var pageText = $(this).text();
 
-            if (pageText === 'Previous') {
-                currentPage = Math.max(1, currentPage - 1);
-            } else if (pageText === 'Next') {
-                currentPage = Math.min(totalPages, currentPage + 1);
-            } else {
-                currentPage = parseInt(pageText);
-            }
+        //     if (pageText === 'Previous') {
+        //         currentPage = Math.max(1, currentPage - 1);
+        //     } else if (pageText === 'Next') {
+        //         currentPage = Math.min(totalPages, currentPage + 1);
+        //     } else {
+        //         currentPage = parseInt(pageText);
+        //     }
 
-            showPage<?=$idTabMenu;?>(currentPage);
-            showPagination<?=$idTabMenu;?>();
-        });
+        //     showPage<?=$idTabMenu;?>(currentPage);
+        //     showPagination<?=$idTabMenu;?>();
+        // });
         // End Pagging TableBill
+
+        function loadPageNumbers(currentPage, totalPages) {
+            var pageNumbersHTML = '';
+            var maxPages = 5; // Jumlah maksimal halaman yang akan ditampilkan
+
+            // Tentukan halaman awal dan akhir untuk ditampilkan
+            var startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
+            var endPage = Math.min(totalPages, startPage + maxPages - 1);
+
+            // Jika halaman terakhir adalah di bagian kanan, geser halaman awal ke kiri
+            if (endPage === totalPages) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+
+            // Generate HTML untuk nomor halaman
+            for (var i = startPage; i <= endPage; i++) {
+                // pageNumbersHTML += '<span class="pageNumber<?=$idTabMenu;?> ' + (i === currentPage ? 'active' : '') + '" data-page="' + i + '">' + i + '</span>';
+                pageNumbersHTML += '<li class="pageNumber<?=$idTabMenu;?> page-item ' + (i === currentPage ? 'active' : '') + '" data-page="' + i + '"><a class="page-link" href="#">' + i + '</a></li>';
+            }
+
+            $('#pageNumbers<?=$idTabMenu;?>').html(pageNumbersHTML);
+        }
+
+        var totalPages = parseInt($('.thead-<?=$idTabMenu;?>').attr('total-page'));
+        loadPageNumbers(1, totalPages);
+
+        // Tangani klik tombol halaman berikutnya
+        $('#nextPage<?=$idTabMenu;?>').click(function () {
+            var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+            var nextPage = Math.min(currentPage + 1, totalPages);
+            loadPageNumbers(nextPage, totalPages);
+            fetchData(nextPage);
+        });
+
+        // Tangani klik tombol halaman sebelumnya
+        $('#prevPage<?=$idTabMenu;?>').click(function () {
+            var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+            var prevPage = Math.max(currentPage - 1, 1);
+            loadPageNumbers(prevPage, totalPages);
+            fetchData(prevPage);
+        });
+
+        // Tangani klik nomor halaman
+        $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function () {
+            var page = parseInt($(this).data('page'));
+            loadPageNumbers(page, totalPages);
+            fetchData(page);
+        });
+
+        // Tangani klik nomor halaman
+        $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function() {
+            var page = $(this).data('page');
+            fetchData(page);
+        });
     });
     var base_url = '<?= base_url()?>';
     // Fungsi untuk menampilkan modal
@@ -398,17 +475,18 @@
     });
 
     // Function Refresh Data After insert Data
-    function fetchData() {
+    function fetchData(page) {
+        console.log(page)
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
         var url = base_url+'CustomerController/getListCsData';
-        // Menyiapkan data untuk dikirim
-        var requestData = '';
+        // Menyiapkan data untuk dikirim       var requestData = '';
         // Menggunakan jQuery untuk melakukan AJAX request
         $.ajax({
-            url: base_url+'customer/BillCustomer_Controller/getListBillData',
-            method: 'GET',
+            url: base_url+'customer/BillCustomer_Controller/getBillData',
+            method: 'POST',
             dataType: 'json',
+            data: { Page: page },
             success: function (data) {
                 console.log('fetchData',data);
                 // Menyembunyikan elemen loading setelah data diterima
@@ -441,7 +519,7 @@
                             <tr data-reference-id="${value.ReferenceId}">
                                 <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
                                 <td class="d-none">${value.ReferenceId}</td>
-                                <td>${value.ExternalId}</td>
+                                <td>${value.InvoiceId}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.ProductName}</td>
                                 <td>${formatRupiah(value.Amount)}</td>
@@ -452,6 +530,7 @@
                                 <td title="${value.ExpiryDate}">${expiryDate}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
+                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                     <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                 </td>
                             </tr>
@@ -501,7 +580,7 @@
     function deleteSelectedData<?=$idTabMenu;?>() {
         var selectedData = getSelectedData();
         // Lakukan sesuatu dengan data yang dipilih, seperti mengirimnya ke server untuk dihapus
-        console.log('222',selectedData);
+        // console.log('222',selectedData);
         var base_url = '<?= base_url()?>';
         // Menyiapkan data untuk dikirim
         var requestData = {
@@ -580,5 +659,7 @@
         // Kembalikan array data yang dipilih
         return selectedData;
     }
+
+    
 
 </script>

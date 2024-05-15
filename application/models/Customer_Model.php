@@ -50,7 +50,7 @@
             return $query->result_array();
         }
 
-        public function getBillCustomer($select, $join, $where) {
+        public function getBillCustomer($select, $join, $where, $limit, $offset) {
 
             $this->db->select($select);
             $this->db->from('Customer as c');
@@ -58,7 +58,8 @@
             $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
             $this->db->where('c.StatusId','CRS1');
             $this->db->where('c.SiteId',$where);
-            $this->db->where('b.ExternalId IS NOT NULL');
+            $this->db->where('b.InvoiceId IS NOT NULL');
+            $this->db->limit($limit, $offset);
             $query = $this->db->get();
             $rawQuery = $this->db->last_query();
             // var_dump($rawQuery);

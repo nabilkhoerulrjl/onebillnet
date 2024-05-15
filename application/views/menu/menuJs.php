@@ -35,7 +35,7 @@
   }
 
   function addTabBillCustomer() {
-    openTabGeneral('bill_customer','Bill Customer', 'fa-file-invoice-dollar', 'CustomerController/billCustomer', 'Get' );
+    openTabGeneral('bill_customer','Bill Customer', 'fa-file-invoice-dollar', 'customer/BillCustomer_Controller/Index', 'Get' );
   }
 
   function addTabListContact() {

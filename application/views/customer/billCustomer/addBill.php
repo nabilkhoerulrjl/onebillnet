@@ -286,6 +286,9 @@
             // Mengambil nilai dari input form
             var periode = $('#periode').val();
             var customerId = $('select[name="customer"]').val();
+            var customerIdArr = [];
+            customerIdArr.push(customerId);
+
             if(customerId[0] == 'all'){
                 customerId = customerId.filter(function(customer) {
                     return customer !== "all";
@@ -293,7 +296,7 @@
             }
 
             var formData = new FormData();
-                formData.append('CustomerId', customerId);
+                formData.append('CustomerId', customerIdArr);
                 formData.append('Periode', periode);
 
             if (!customerId || !periode) {
@@ -342,6 +345,11 @@
                                 title: "Congratulations!",
                                 text: "Invoice tagihan berhasil dibuat!",
                                 icon: "success"
+                            });
+                            $('#resetDataBill').on('click', function(e) {
+                                $('select[name="customer"]').val(null).trigger('change');
+                                // $('#amount').attr('data-origin','');
+                                $('#dueDate').val('');
                             });
                             fetchData();
                             // fetchData(); // Panggil fungsi untuk memperbarui data setelah berhasil menghapus
@@ -403,6 +411,19 @@
         return true; // Melanjutkan pengiriman formulir jika ukuran file sesuai
     }
 
-    
+    // function cleanForm<?=$idTabMenu;?>() {
+    //     // Bersihkan nilai dari semua input dan textarea di dalam formulir
+    //     $('#firstName').val('');
+    //     $('#lastName').val('');
+    //     $('#whatsapp').val('');
+    //     $('#email').val('');
+    //     $('#product').val('');
+    //     $('#contactGroup').val('');
+    //     $('#address').val('');
+
+    //     // Reset seleksi default pada select box
+    //     $('#product').prop('selectedIndex', 0);
+    //     $('#contactGroup').prop('selectedIndex', 0);
+    // }
 
 </script>

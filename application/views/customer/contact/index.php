@@ -400,7 +400,7 @@
                             <tr data-reference-id="${value.ReferenceId}">
                                 <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>
                                 <td class="d-none">${value.ReferenceId}</td>
-                                <td>${value.ExternalId}</td>
+                                <td>${value.InvoiceId}</td>
                                 <td>${value.FirstName} `+` ${value.LastName}</td>
                                 <td>${value.ProductName}</td>
                                 <td>${formatRupiah(value.Amount)}</td>
