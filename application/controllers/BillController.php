@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-use Xendit\Invoice\Invoice;
+// use Xendit\Invoice\Invoice;
 class BillController extends CI_Controller {
 
     public function __construct() {

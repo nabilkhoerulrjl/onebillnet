@@ -250,6 +250,14 @@
                         icon: 'success',
                         confirmButtonColor: '#1abc9c',
                     });
+                    // Refresh data
+                    var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+                    var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+                    var filterData = {
+                        startDate: startDate,
+                        endDate: endDate
+                    }
+                    fetchData(filterData);
                 },
                 error: function(error) {
                     // Handle error

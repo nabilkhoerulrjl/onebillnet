@@ -160,7 +160,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-notification">
                     <div class="pro-head"> 
-                        <img src="http://localhost/onebillnet/File/getFile/44" class="img-radius" alt="User-Profile-Image">
+                        <img src="<?= base_url()?>/File/getFile/44" class="img-radius" alt="User-Profile-Image">
                         <!-- <img src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" class="img-radius" alt="User-Profile-Image"> -->
                         <span><?= $this->session->userdata('name');?></span>
                         <a href="#" id="logoutBtn" class="dud-logout" title="Logout">

@@ -15,12 +15,23 @@ class BillCustomer_Controller extends CI_Controller {
 
 	public function index()
 	{
+        $endDate = new DateTime();
+        // Mengurangi interval 2 bulan dari startDate untuk mendapatkan endDate
+        $startDate = clone $endDate;
+        $startDate->modify('-2 months');
+        // Format tanggal sesuai yang diinginkan
+        $formattedStartDate = $startDate->format('Y-m-d H:i:s');
+        $formattedEndDate = $endDate->format('Y-m-d H:i:s');
         $page = 1;
+        $requestData = array(
+            'startDate' => $formattedStartDate,
+            'endDate' => $formattedEndDate,
+            'page' => $page
+        );
         $data['idTabMenu'] = 'billCustomer255';
-        $data['dataBill']  = $this->getData($page);
+        $data['dataBill']  = $this->getData($requestData);
         $data['totalPage']  = $this->getTotalPageBill();
         $data['currentPage'] = $page;
-        // var_dump($data['totalPage']);
         $this->load->view('customer/billCustomer/index',$data);
 	}
 
@@ -184,8 +195,14 @@ class BillCustomer_Controller extends CI_Controller {
         return $dataCustomer;
     }
 
-    public function getData($page) {
-        $page = $page;
+    public function getData($requestData) {
+        $startDate = $requestData['startDate'];
+        $endDate = $requestData['endDate'];
+        $page = $requestData['page'];
+        if(is_array($page)){
+            $page = intval($page);
+        }
+
         $limit = 20;
         $offset = abs(($page - 1) * $limit);
         $siteId = $this->getSiteId();
@@ -200,8 +217,13 @@ class BillCustomer_Controller extends CI_Controller {
             'join1' => $join1,
             'join2' => $join2,
         );
-        $where  = $siteId;
-        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
+        $arrWhere = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'siteId' => $siteId,
+        );
+        // $where  = $siteId;
+        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $arrWhere, $limit, $offset);
         return $data;
     }
 
@@ -346,8 +368,13 @@ class BillCustomer_Controller extends CI_Controller {
         $this->load->model('Bill_Model');
         // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
         $totalPage = $this->Bill_Model->getTotalPageBill($siteId);
+        if($totalPage == '' || $totalPage == null){
+            $totalPage = 1;
+        }else{
+            $totalPage = $totalPage[0]->TotalPage;
+        }
         // var_dump();
-        return $totalPage[0]->TotalPage;
+        return $totalPage;
         
     }
 
@@ -448,8 +475,15 @@ class BillCustomer_Controller extends CI_Controller {
     }
 
     public function getBillData(){
+        $startDate = $this->input->post('startDate');
+        $endDate = $this->input->post('endDate');
         $page = $this->input->post('Page');
-        $data = $this->getData($page);
+        $resutData = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'page' => $page
+        );
+        $data = $this->getData($resutData);
         echo json_encode($data);
     }
 }

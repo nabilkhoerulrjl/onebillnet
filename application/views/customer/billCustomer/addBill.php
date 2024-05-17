@@ -346,12 +346,13 @@
                                 text: "Invoice tagihan berhasil dibuat!",
                                 icon: "success"
                             });
-                            $('#resetDataBill').on('click', function(e) {
-                                $('select[name="customer"]').val(null).trigger('change');
-                                // $('#amount').attr('data-origin','');
-                                $('#dueDate').val('');
-                            });
-                            fetchData();
+                            // $('#resetDataBill').on('click', function(e) {
+                            // $('select[name="customer"]').val();
+                            $('select[name="customer"]').val('').trigger('change');
+                            // $('#amount').attr('data-origin','');
+                            $('#periode').val('');
+                            // });
+                            fetchData(1);
                             // fetchData(); // Panggil fungsi untuk memperbarui data setelah berhasil menghapus
                         } else if(responseObject.status === 'info'){
                             Swal.fire({

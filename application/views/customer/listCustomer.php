@@ -33,7 +33,7 @@
         margin-bottom: 5px;
     }
 
-    #btn-filter {
+    #btn-filter<?=$idTabMenu;?> {
         padding: 5px 9px;
     }
 
@@ -64,15 +64,15 @@
         right: 0; /* Pindahkan ke dalam layar saat ditampilkan */
     }
 
-    #filterDateCustomer .text-truncate,
-    #filterDateCustomer .fa,
-    #filterDateCustomer span {
+    #filterDateCustomer<?=$idTabMenu;?> .text-truncate,
+    #filterDateCustomer<?=$idTabMenu;?> .fa,
+    #filterDateCustomer<?=$idTabMenu;?> span {
         color: #373a3c; 
     }
 
-    #filterDateCustomer:hover .text-truncate,
-    #filterDateCustomer:hover .fa,
-    #filterDateCustomer:hover span {
+    #filterDateCustomer<?=$idTabMenu;?>:hover .text-truncate,
+    #filterDateCustomer<?=$idTabMenu;?>:hover .fa,
+    #filterDateCustomer<?=$idTabMenu;?>:hover span {
         color: #373a3c; 
     }
 
@@ -88,7 +88,7 @@
         border-color: #1abc9c;
     }
 
-    #resetFilter:hover {
+    #resetFilter<?=$idTabMenu;?>:hover {
         color: #373a3c; 
     }
 
@@ -154,8 +154,8 @@
                 </button>
             </div>
             <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
-                <input type="text" class="p-1 form-control form-control-sm p-2 mr-1" id="searchDataText" placeholder="Search Data in Table" style="border-top: none;border-left: none;border-right: none;margin-right: 8px;">
-                <button id="btn-filter" class="btn btn-primary btn-sm active" type="button">
+                <input type="text" class="p-1 form-control form-control-sm p-2 mr-1" id="searchDataText<?=$idTabMenu;?>" placeholder="Search Data in Table" style="border-top: none;border-left: none;border-right: none;margin-right: 8px;">
+                <button id="btn-filter<?=$idTabMenu;?>" class="btn btn-primary btn-sm active" type="button">
                     <i class="fa fa-filter"></i>
                 </button>
             </div>
@@ -170,18 +170,18 @@
         
         <!-- Tabel ZingGrid -->
         <div class="table-responsive">
-            <div id="filterSlider" class="slider-menu">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
-                    <button type="button" class="close"  id="closeFilterBtn" class="close-btn">
+                    <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">
                         <i class="fa fa-x fa-xs"></i>
                     </button>
 				</div>
-                <div id="sidebarBodyFilter">
+                <div id="sidebarBodyFilter<?=$idTabMenu;?>">
                     <div class="setings-item b-none p-box">
 						<div class="row p-2">
 							<div class="col-sm-12">
-								<button id="filterDateCustomer" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
+								<button id="filterDateCustomer<?=$idTabMenu;?>" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
                                     <i class="fa fa-calendar-days pr-1"></i>
                                     <div class="text-truncate">
                                         <b>
@@ -194,10 +194,10 @@
 						</div>
                         <div class="row p-2">
                             <div class="col-sm-6">
-                                <button id="resetFilter" class="btn btn-outline-secondary bg-white form-control">Reset Filter</button>
+                                <button id="resetFilter<?=$idTabMenu;?>" class="btn btn-outline-secondary bg-white form-control">Reset Filter</button>
                             </div>
                             <div class="col-sm-6">
-                                <button id="applyFilter" class="btn btn-primary form-control">Apply Filter</button>
+                                <button id="applyFilter<?=$idTabMenu;?>" class="btn btn-primary form-control">Apply Filter</button>
                             </div>
                         </div>
 					</div>
@@ -274,8 +274,8 @@
     function fetchData(filterData) {
         // Ganti dengan URL controller Anda 
         var url = base_url+'CustomerController/getListCsData';
-        // var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        // var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        // var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        // var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         // if(startDate == null){
         //     startDate = moment().subtract(1, 'year').startOf('day').format('YYYY-MM-DD HH:mm:ss');
         // }
@@ -442,7 +442,7 @@
     }
 
         
-    $('#searchDataText').on('input', function () {
+    $('#searchDataText<?=$idTabMenu;?>').on('input', function () {
         // Ambil nilai dari input pencarian
         var searchValue = $(this).val().toLowerCase();
 
@@ -491,8 +491,8 @@
             button: false,
             confirmButtonColor: '#1abc9c',
         });
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD');
         // Ambil semua baris tabel
         var rows = $("#dataTableCS<?=$idTabMenu;?>").find("tr");
 
@@ -699,21 +699,21 @@
         });
     }*/
 
-    $('#btn-filter').click(function() {
+    $('#btn-filter<?=$idTabMenu;?>').click(function() {
         // Toggle kelas 'show' untuk menampilkan atau menyembunyikan slider menu
-        $("#filterSlider").toggleClass("show");
+        $("#filterSlider<?=$idTabMenu;?>").toggleClass("show");
     });
     // Bind event click pada tombol close
-    $("#closeFilterBtn").click(function() {
+    $("#closeFilterBtn<?=$idTabMenu;?>").click(function() {
         // Sembunyikan slider menu dengan menghapus kelas "show"
-        $("#filterSlider").removeClass("show");
+        $("#filterSlider<?=$idTabMenu;?>").removeClass("show");
     });
 
     // searchDateFilter.click(function() {
     //     $( "#filterDateRage" ).click();
     // });
     // Mendapatkan tanggal saat ini
-    $('#filterDateCustomer').daterangepicker({
+    $('#filterDateCustomer<?=$idTabMenu;?>').daterangepicker({
         ranges: {
             'Today': [moment(), moment()],
             // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -760,31 +760,31 @@
         searchDateSpan.attr('enddate', end.format('YYYY-MM-DD HH:mm:ss'));
     });
 
-        // Panggil fungsi updateSearchDateText saat halaman dimuat
+        // Panggil fungsi updateSearchDateText<?=$idTabMenu;?> saat halaman dimuat
         $(document).ready(function () {
-        updateSearchDateText();
+        updateSearchDateText<?=$idTabMenu;?>();
     });
 
     // Event handler untuk button reset filter
-    $('#resetFilter').on('click', function () {
+    $('#resetFilter<?=$idTabMenu;?>').on('click', function () {
         resetFilter();
         $('#closeFilterBtn').click();
     });
 
     // Event handler untuk button apply filter
-    $('#applyFilter').on('click', function () {
+    $('#applyFilter<?=$idTabMenu;?>').on('click', function () {
         applyFilter();
         $('#closeFilterBtn').click();
     });
 
     // Fungsi untuk mereset filter ke 1 tahun terakhir
     function resetFilter() {
-        $('#filterDateCustomer').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
-        $('#filterDateCustomer').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
         // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
-        updateSearchDateText();
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        updateSearchDateText<?=$idTabMenu;?>();
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         var filterData = {
             startDate: startDate,
             endDate: endDate
@@ -794,8 +794,8 @@
 
     // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
     function applyFilter() {
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         var filterData = {
             startDate: startDate,
             endDate: endDate
@@ -804,11 +804,11 @@
     }
 
     // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
-    function updateSearchDateText() {
+    function updateSearchDateText<?=$idTabMenu;?>() {
         var searchDateSpan = $('#searchdatepick');
-        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate;
-        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate;
-        var label = $('#filterDateCustomer').data('daterangepicker').chosenLabel;
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate;
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate;
+        var label = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').chosenLabel;
 
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = startDate.format(dateFormat);
@@ -880,8 +880,8 @@
                         console.log(data.success);
                         if(data.success == true){
                             // Refresh data table agar menjadi terbaru
-                            var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-                            var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+                            var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+                            var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
                             var filterData = {
                                 startDate: startDate,
                                 endDate: endDate

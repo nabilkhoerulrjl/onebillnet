@@ -57,7 +57,9 @@
             $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
             $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
             $this->db->where('c.StatusId','CRS1');
-            $this->db->where('c.SiteId',$where);
+            $this->db->where('c.SiteId',$where['siteId']);
+            $this->db->where('c.CreateDate >=',$where['startDate']);
+            $this->db->where('c.CreateDate <=',$where['endDate']);
             $this->db->where('b.InvoiceId IS NOT NULL');
             $this->db->limit($limit, $offset);
             $query = $this->db->get();

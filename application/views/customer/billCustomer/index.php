@@ -26,7 +26,7 @@
         margin-bottom: 5px;
     }
 
-    #btn-filter {
+    #btn-filter<?=$idTabMenu;?> {
         padding: 5px 9px;
     }
 
@@ -44,10 +44,10 @@
     /* CSS untuk slider menu */
     .slider-menu {
         position: absolute;
-        top: 35%;
+        /*top: 35%;*/
         right: -300px; /* Atur posisi awal di luar layar */
         width: 300px;
-        height: 30%;
+        /* height: 30%; */
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         transition: right 0.3s ease-in-out;
@@ -57,15 +57,15 @@
         right: 0; /* Pindahkan ke dalam layar saat ditampilkan */
     }
 
-    #filterDateCustomer .text-truncate,
-    #filterDateCustomer .fa,
-    #filterDateCustomer span {
+    #filterDateCustomer<?=$idTabMenu;?> .text-truncate,
+    #filterDateCustomer<?=$idTabMenu;?> .fa,
+    #filterDateCustomer<?=$idTabMenu;?> span {
         color: #373a3c; 
     }
 
-    #filterDateCustomer:hover .text-truncate,
-    #filterDateCustomer:hover .fa,
-    #filterDateCustomer:hover span {
+    #filterDateCustomer<?=$idTabMenu;?>:hover .text-truncate,
+    #filterDateCustomer<?=$idTabMenu;?>:hover .fa,
+    #filterDateCustomer<?=$idTabMenu;?>:hover span {
         color: #373a3c; 
     }
 
@@ -116,6 +116,9 @@
         <div class="tools-table d-flex flex-row-reverse align-items-end justify-content-between mb-3">
             <div class="col-sm-3 d-flex align-items-center justify-content-end p-0">
                 <input type="text" class="p-1 form-control form-control-sm p-2 mr-0" id="searchDataText<?=$idTabMenu;?>" placeholder="Search Data in Table" style="border-top: none; border-left: none; border-right: none; margin-right: 8px;">
+                <button id="btn-filter<?=$idTabMenu;?>" class="btn btn-primary btn-sm active" type="button">
+                    <i class="fa fa-filter"></i>
+                </button>
             </div>
             <div id="exportButtons d-flex">
                 <button type="button" id="selectAllBtn<?=$idTabMenu;?>" class="btn btn-outline-secondary btn-sm" 
@@ -137,6 +140,39 @@
             <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
         </div>
         <div class="table-responsive">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
+                <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
+                    <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
+                    <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">
+                        <i class="fa fa-x fa-xs"></i>
+                    </button>
+				</div>
+                <div id="sidebarBodyFilter<?=$idTabMenu;?>">
+                    <div class="setings-item b-none p-box">
+						<div class="row p-2">
+							<div class="col-sm-12">
+								<button id="filterDateCustomer<?=$idTabMenu;?>" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
+                                    <i class="fa fa-calendar-days pr-1"></i>
+                                    <div class="text-truncate">
+                                        <b>
+                                        <span id="searchdatepick" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
+                                        </b>
+                                        <i style="padding-right: 5px;" class="fa fa-angle-down"></i>
+                                    </div>
+								</button>
+							</div>
+						</div>
+                        <div class="row p-2">
+                            <div class="col-sm-6">
+                                <button id="resetFilter<?=$idTabMenu;?>" class="btn btn-outline-secondary bg-white form-control">Reset Filter</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button id="applyFilter<?=$idTabMenu;?>" class="btn btn-primary form-control">Apply Filter</button>
+                            </div>
+                        </div>
+					</div>
+                </div>
+            </div>
             <table class="table table-hover" id="dataTableBill<?=$idTabMenu;?>">
                 <thead>
                     <tr class="thead-<?=$idTabMenu;?>" total-page="<?=$totalPage;?>">
@@ -195,7 +231,7 @@
                             <td title="<?=$row->ExpiryDate;?>"><?=$expiryDateFormated;?></td> 
                             <td class="action-column">
                                 <!-- Tambahkan button action sesuai kebutuhan -->
-                                <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i>
+                                <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
                                 <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
                             </td>
                         <tr>
@@ -366,12 +402,16 @@
             var page = parseInt($(this).data('page'));
             loadPageNumbers(page, totalPages);
             fetchData(page);
+            scrollDown()
+
         });
 
         // Tangani klik nomor halaman
         $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function() {
             var page = $(this).data('page');
             fetchData(page);
+            scrollDown()
+
         });
     });
     var base_url = '<?= base_url()?>';
@@ -480,13 +520,21 @@
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
         var url = base_url+'CustomerController/getListCsData';
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        console.log(startDate,endDate);
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate,
+            Page: page
+        }
         // Menyiapkan data untuk dikirim       var requestData = '';
         // Menggunakan jQuery untuk melakukan AJAX request
         $.ajax({
             url: base_url+'customer/BillCustomer_Controller/getBillData',
             method: 'POST',
             dataType: 'json',
-            data: { Page: page },
+            data: filterData,
             success: function (data) {
                 console.log('fetchData',data);
                 // Menyembunyikan elemen loading setelah data diterima
@@ -530,7 +578,7 @@
                                 <td title="${value.ExpiryDate}">${expiryDate}</td>
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
-                                    <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
+                                    <!--<i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>-->
                                     <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                 </td>
                             </tr>
@@ -660,6 +708,135 @@
         return selectedData;
     }
 
+    $('#btn-filter<?=$idTabMenu;?>').click(function() {
+        // Toggle kelas 'show' untuk menampilkan atau menyembunyikan slider menu
+        $("#filterSlider<?=$idTabMenu;?>").toggleClass("show");
+        console.log('<?=$idTabMenu;?>');
+    });
+
+    // Bind event click pada tombol close
+    $("#closeFilterBtn<?=$idTabMenu;?>").click(function() {
+        // Sembunyikan slider menu dengan menghapus kelas "show"
+        $("#filterSlider<?=$idTabMenu;?>").removeClass("show");
+    });
+
+        $('#filterDateCustomer<?=$idTabMenu;?>').daterangepicker({
+        ranges: {
+            'Today': [moment(), moment()],
+            // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
+        },
+        "startDate": moment().subtract(1, 'year').startOf('day'),
+        "endDate": moment().endOf('day').endOf('year'),
+        "drops": "auto",
+            "locale": {
+            "format": "DD/MM/YYYY",
+            "separator": " - ",
+            "applyLabel": "Apply",
+            "cancelLabel": "Cancel",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            "firstDay": 1
+        }
+    }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        
+        // Mendapatkan elemen span
+        var searchDateSpan = $('#searchdatepick');
+        // Menentukan format tanggal yang sesuai
+        var dateFormat = 'DD/MM/YYYY';
+        var startDateText = start.format(dateFormat);
+        var endDateText = end.format(dateFormat);
+
+        // Memperbarui teks pada elemen span sesuai dengan pilihan tanggal
+        if (label === 'Custom Range') {
+            searchDateSpan.text(startDateText + ' - ' + endDateText);
+        } else {
+            searchDateSpan.text(label);
+        }
+
+        // Tambahan: Memperbarui atribut startdate dan enddate jika diperlukan
+        searchDateSpan.attr('startdate', start.format('YYYY-MM-DD HH:mm:ss'));
+        searchDateSpan.attr('enddate', end.format('YYYY-MM-DD HH:mm:ss'));
+    });
+
+        // Panggil fungsi updateSearchDateText<?=$idTabMenu;?> saat halaman dimuat
+        $(document).ready(function () {
+        updateSearchDateText<?=$idTabMenu;?>();
+    });
+
+    // Event handler untuk button reset filter
+    $('#resetFilter<?=$idTabMenu;?>').on('click', function () {
+        resetFilter();
+        $('#closeFilterBtn').click();
+    });
+
+    // Event handler untuk button apply filter
+    $('#applyFilter<?=$idTabMenu;?>').on('click', function () {
+        applyFilter();
+        $('#closeFilterBtn').click();
+    });
+
+    // Fungsi untuk mereset filter ke 1 tahun terakhir
+    function resetFilter() {
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
+        // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
+        updateSearchDateText<?=$idTabMenu;?>();
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate
+        }
+        fetchData(filterData);
+    }
+
+    // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
+    function applyFilter() {
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var filterData = {
+            startDate: startDate,
+            endDate: endDate
+        }
+        fetchData(filterData);
+    }
+
+    // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
+    function updateSearchDateText<?=$idTabMenu;?>() {
+        var searchDateSpan = $('#searchdatepick');
+        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate;
+        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate;
+        var label = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').chosenLabel;
+
+        var dateFormat = 'DD/MM/YYYY';
+        var startDateText = startDate.format(dateFormat);
+        var endDateText = endDate.format(dateFormat);
+
+        if (label === 'Custom Range') {
+            searchDateSpan.text(startDateText + ' - ' + endDateText);
+        } else {
+            searchDateSpan.text("Last Year");
+        }
+
+        searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
+        searchDateSpan.attr('enddate', endDate.format('YYYY-MM-DD HH:mm:ss'));
+    }
+
+
     
+    function scrollDown() {
+       var container = $('body,html');
+        var scrollHeight = container.prop('scrollHeight');
+        container.animate({scrollTop: scrollHeight});
+    }
 
 </script>
