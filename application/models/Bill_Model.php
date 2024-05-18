@@ -108,14 +108,35 @@ class Bill_Model extends CI_Model {
         return $query->num_rows() > 0;
     }
 
-    public function getTotalPageBill($siteid) {
+    public function getBillCustomer($select, $join, $where, $limit, $offset) {
+        $this->db->select($select);
+        $this->db->from('Bill as b');
+        $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
+        $this->db->where_not_in('c.StatusId',array('CRS5'));
+        $this->db->where('b.SiteId',$where['siteId']);
+        $this->db->where('b.CreateDate >=',$where['startDate']);
+        $this->db->where('b.CreateDate <=',$where['endDate']);
+        $this->db->where('b.InvoiceId IS NOT NULL');
+        $this->db->order_by('b.Id', 'DESC');
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get();
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
+        return $query->result();
+    }
+
+    public function getTotalPageBill($where) {
         // Query untuk mendapatkan pengaturan berdasarkan siteid dan code
         $this->db->select('CEIL(COUNT(*) OVER () / 20) AS TotalPage');
         $this->db->from('Bill');
-        $this->db->where('SiteId', $siteid);
+        $this->db->where('SiteId', $where['siteId']);
         $this->db->where('InvoiceId IS NOT NULL');
+        $this->db->where('CreateDate >=',$where['startDate']);
+        $this->db->where('CreateDate <=',$where['endDate']);
         $this->db->limit(1);
         $query = $this->db->get();
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
         // Kembalikan hasil query
         return $query->result(); // Mengembalikan satu baris hasil query dalam bentuk array asosiatif
     }

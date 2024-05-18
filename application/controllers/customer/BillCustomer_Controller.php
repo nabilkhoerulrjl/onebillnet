@@ -30,7 +30,7 @@ class BillCustomer_Controller extends CI_Controller {
         );
         $data['idTabMenu'] = 'billCustomer255';
         $data['dataBill']  = $this->getData($requestData);
-        $data['totalPage']  = $this->getTotalPageBill();
+        $data['totalPage']  = $this->getTotalPageBill($formattedStartDate,$formattedEndDate);
         $data['currentPage'] = $page;
         $this->load->view('customer/billCustomer/index',$data);
 	}
@@ -205,17 +205,17 @@ class BillCustomer_Controller extends CI_Controller {
 
         $limit = 20;
         $offset = abs(($page - 1) * $limit);
+        // var_dump($offset);
+        // die();
         $siteId = $this->getSiteId();
         $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
         c.FirstName AS FirstName, c.LastName AS LastName,
-        pd.Name AS ProductName, b.Periode,
+        B.Product AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,
         b.PaymentLink, b.ExpiryDate';
-        $join1   = ['Product AS pd', 'c.ProductId = pd.Id', 'left'];
-        $join2   = ['Bill AS b', 'c.Id = b.CustomerId', 'left'];
+        $join1   = ['Customer AS c', 'b.CustomerId = c.Id', 'left'];
         $arrJoin = array(
-            'join1' => $join1,
-            'join2' => $join2,
+            'join1' => $join1
         );
         $arrWhere = array(
             'startDate' => $startDate,
@@ -223,7 +223,7 @@ class BillCustomer_Controller extends CI_Controller {
             'siteId' => $siteId,
         );
         // $where  = $siteId;
-        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $arrWhere, $limit, $offset);
+        $data = $this->Bill_Model->getBillCustomer($select, $arrJoin, $arrWhere, $limit, $offset);
         return $data;
     }
 
@@ -249,7 +249,7 @@ class BillCustomer_Controller extends CI_Controller {
     //         'join2' => $join2,
     //     );
     //     $where  = $siteId;
-    //     $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
+    //     $data = $this->Bill_Customer->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
     //     echo json_encode($data);
     // }
 
@@ -272,12 +272,12 @@ class BillCustomer_Controller extends CI_Controller {
     }
 
     public function generatePaymentLink($invoicesData) {
-        $respone = $this->Xendit_api->CreateInvoiceLink($invoicesData);
+        $respone = $this->xendit_api->CreateInvoiceLink($invoicesData);
         return $respone;
     }
 
     public function expireInvoice($invoicesData) {
-        $respone = $this->Xendit_api->ExpireInvoice($invoicesData);
+        $respone = $this->xendit_api->ExpireInvoice($invoicesData);
         // var_dump($respone); 
 
         return $respone;
@@ -363,17 +363,23 @@ class BillCustomer_Controller extends CI_Controller {
         return $respone;
     }
 
-    public function getTotalPageBill() {
+    public function getTotalPageBill($startDate,$endDate) {
         $siteId = $this->getSiteId();
         $this->load->model('Bill_Model');
+        $where = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'siteId' => $siteId
+        );
         // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
-        $totalPage = $this->Bill_Model->getTotalPageBill($siteId);
+        $totalPage = $this->Bill_Model->getTotalPageBill($where);
         if($totalPage == '' || $totalPage == null){
             $totalPage = 1;
         }else{
             $totalPage = $totalPage[0]->TotalPage;
         }
-        // var_dump();
+        // var_dump($totalPage);
+        // die();
         return $totalPage;
         
     }

@@ -66,17 +66,15 @@ class CustomerController extends CI_Controller {
         $siteId = $this->getSiteId();
         $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
         c.FirstName AS FirstName, c.LastName AS LastName,
-        pd.Name AS ProductName, b.Periode,
+        b.Product AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,
         b.PaymentLink, b.ExpiryDate';
-        $join1   = ['Product AS pd', 'c.ProductId = pd.Id', 'left'];
-        $join2   = ['Bill AS b', 'c.Id = b.CustomerId', 'left'];
+        $join1   = ['Customer AS c', 'b.CustomerId = c.Id', 'left'];
         $arrJoin = array(
-            'join1' => $join1,
-            'join2' => $join2,
+            'join1' => $join1
         );
         $where  = $siteId;
-        $data = $this->Customer_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
+        $data = $this->Bill_Model->getBillCustomer($select, $arrJoin, $where, $limit, $offset);
         return $data;
     }
 

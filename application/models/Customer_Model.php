@@ -61,10 +61,11 @@
             $this->db->where('c.CreateDate >=',$where['startDate']);
             $this->db->where('c.CreateDate <=',$where['endDate']);
             $this->db->where('b.InvoiceId IS NOT NULL');
+            $this->db->order_by('c.Id', 'DESC');
             $this->db->limit($limit, $offset);
             $query = $this->db->get();
             $rawQuery = $this->db->last_query();
-            // var_dump($rawQuery);
+            var_dump($rawQuery);
             return $query->result();
         }
 

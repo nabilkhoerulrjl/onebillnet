@@ -57,15 +57,15 @@
         right: 0; /* Pindahkan ke dalam layar saat ditampilkan */
     }
 
-    #filterDateCustomer<?=$idTabMenu;?> .text-truncate,
-    #filterDateCustomer<?=$idTabMenu;?> .fa,
-    #filterDateCustomer<?=$idTabMenu;?> span {
+    #filterDateBillCs<?=$idTabMenu;?> .text-truncate,
+    #filterDateBillCs<?=$idTabMenu;?> .fa,
+    #filterDateBillCs<?=$idTabMenu;?> span {
         color: #373a3c; 
     }
 
-    #filterDateCustomer<?=$idTabMenu;?>:hover .text-truncate,
-    #filterDateCustomer<?=$idTabMenu;?>:hover .fa,
-    #filterDateCustomer<?=$idTabMenu;?>:hover span {
+    #filterDateBillCs<?=$idTabMenu;?>:hover .text-truncate,
+    #filterDateBillCs<?=$idTabMenu;?>:hover .fa,
+    #filterDateBillCs<?=$idTabMenu;?>:hover span {
         color: #373a3c; 
     }
 
@@ -81,7 +81,7 @@
         border-color: #1abc9c;
     }
 
-    #resetFilter:hover {
+    #resetFilter<?=$idTabMenu;?>:hover {
         color: #373a3c; 
     }
 
@@ -151,7 +151,7 @@
                     <div class="setings-item b-none p-box">
 						<div class="row p-2">
 							<div class="col-sm-12">
-								<button id="filterDateCustomer<?=$idTabMenu;?>" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
+								<button id="filterDateBillCs<?=$idTabMenu;?>" style="border-radius: 3px;" class="btn btn-outline-secondary bg-white form-control dropdown-toggle p-l-xs d-flex justify-content-between align-items-center" aria-expanded="true">
                                     <i class="fa fa-calendar-days pr-1"></i>
                                     <div class="text-truncate">
                                         <b>
@@ -356,6 +356,42 @@
         // });
         // End Pagging TableBill
 
+        // Fungsi untuk membersihkan event handler dari tombol di tab sebelumnya
+        function clearEventHandlers() {
+            $('#nextPage<?=$idTabMenu;?>').off('click');
+            $('#prevPage<?=$idTabMenu;?>').off('click');
+            $(document).off('click', '.pageNumber<?=$idTabMenu;?>');
+        }
+
+        // Fungsi untuk mengikat event handler ke tombol di tab yang baru
+        function bindEventHandlers(totalPages) {
+            // Tangani klik tombol halaman berikutnya
+            $('#nextPage<?=$idTabMenu;?>').click(function () {
+                var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+                var nextPage = Math.min(currentPage + 1, totalPages);
+                loadPageNumbers(nextPage, totalPages);
+                fetchData(nextPage);
+            });
+
+            // Tangani klik tombol halaman sebelumnya
+            $('#prevPage<?=$idTabMenu;?>').click(function () {
+                var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+                var prevPage = Math.max(currentPage - 1, 1);
+                loadPageNumbers(prevPage, totalPages);
+                fetchData(prevPage);
+            });
+
+            // Tangani klik nomor halaman
+            $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function () {
+                var page = parseInt($(this).data('page'));
+                loadPageNumbers(page, totalPages);
+                fetchData(page);
+                var container = $('body,html');
+                scrollDown(container);
+            });
+        }
+
+        // Fungsi untuk memuat nomor halaman
         function loadPageNumbers(currentPage, totalPages) {
             var pageNumbersHTML = '';
             var maxPages = 5; // Jumlah maksimal halaman yang akan ditampilkan
@@ -371,48 +407,29 @@
 
             // Generate HTML untuk nomor halaman
             for (var i = startPage; i <= endPage; i++) {
-                // pageNumbersHTML += '<span class="pageNumber<?=$idTabMenu;?> ' + (i === currentPage ? 'active' : '') + '" data-page="' + i + '">' + i + '</span>';
                 pageNumbersHTML += '<li class="pageNumber<?=$idTabMenu;?> page-item ' + (i === currentPage ? 'active' : '') + '" data-page="' + i + '"><a class="page-link" href="#">' + i + '</a></li>';
             }
 
             $('#pageNumbers<?=$idTabMenu;?>').html(pageNumbersHTML);
         }
 
-        var totalPages = parseInt($('.thead-<?=$idTabMenu;?>').attr('total-page'));
-        loadPageNumbers(1, totalPages);
+        // Fungsi untuk memuat halaman pertama saat tab dimuat
+        function loadFirstPage(totalPages) {
+            loadPageNumbers(1, totalPages);
+            bindEventHandlers(totalPages);
+        }
 
-        // Tangani klik tombol halaman berikutnya
-        $('#nextPage<?=$idTabMenu;?>').click(function () {
-            var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
-            var nextPage = Math.min(currentPage + 1, totalPages);
-            loadPageNumbers(nextPage, totalPages);
-            fetchData(nextPage);
-        });
+        var totalPages<?=$idTabMenu;?> = parseInt($('.thead-<?=$idTabMenu;?>').attr('total-page'));
+        clearEventHandlers();
+        loadFirstPage(totalPages<?=$idTabMenu;?>);
 
-        // Tangani klik tombol halaman sebelumnya
-        $('#prevPage<?=$idTabMenu;?>').click(function () {
-            var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
-            var prevPage = Math.max(currentPage - 1, 1);
-            loadPageNumbers(prevPage, totalPages);
-            fetchData(prevPage);
-        });
+        // // Tangani klik nomor halaman
+        // $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function() {
+        //     var page = $(this).data('page');
+        //     fetchData(page);
+        //     scrollDown()
 
-        // Tangani klik nomor halaman
-        $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function () {
-            var page = parseInt($(this).data('page'));
-            loadPageNumbers(page, totalPages);
-            fetchData(page);
-            scrollDown()
-
-        });
-
-        // Tangani klik nomor halaman
-        $(document).on('click', '.pageNumber<?=$idTabMenu;?>', function() {
-            var page = $(this).data('page');
-            fetchData(page);
-            scrollDown()
-
-        });
+        // });
     });
     var base_url = '<?= base_url()?>';
     // Fungsi untuk menampilkan modal
@@ -437,7 +454,7 @@
     // Fungsi untuk memfilter data di tabel HTML
     function filterTableData(searchValue) {
         var table = document.getElementById('dataTableBill<?=$idTabMenu;?>');
-        console.log(table);
+        // console.log(table);
 
         // Ambil semua baris dalam tabel, kecuali baris header
         var rows = table.getElementsByTagName('tr');
@@ -516,12 +533,12 @@
 
     // Function Refresh Data After insert Data
     function fetchData(page) {
-        // console.log(page)
+        console.log(page);
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
-        var url = base_url+'CustomerController/getListCsData';
-        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var url = base_url+'BillCustomer_Controller/getBillData';
+        var startDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         // console.log(startDate,endDate);
         var filterData = {
             startDate: startDate,
@@ -651,8 +668,8 @@
                 });
             },
             success: function (data) {
-                console.log(data);
-                console.log(typeof data);
+                // console.log(data);
+                // console.log(typeof data);
                 var status;
                 if(typeof data == 'object'){
                     status = data.status;
@@ -720,7 +737,7 @@
         $("#filterSlider<?=$idTabMenu;?>").removeClass("show");
     });
 
-    $('#filterDateCustomer<?=$idTabMenu;?>').daterangepicker({
+    $('#filterDateBillCs<?=$idTabMenu;?>').daterangepicker({
         ranges: {
             'Today': [moment(), moment()],
             // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -732,7 +749,7 @@
             'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
         },
         "startDate": moment().subtract(2, 'month').startOf('month'), // Jadikan dua bulan sebelumnya sebagai default start date
-        "endDate": moment().subtract(1, 'month').endOf('month'), // Jadikan satu bulan sebelumnya sebagai default end date
+        "endDate": moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month'), // Jadikan satu bulan sebelumnya sebagai default end date
         "drops": "auto",
         "locale": {
             "format": "DD/MM/YYYY",
@@ -787,36 +804,38 @@
 
     // Fungsi untuk mereset filter ke 1 tahun terakhir
     function resetFilter() {
-        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(2, 'month').startOf('month'));
-        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().subtract(1, 'month').endOf('month'));
+        $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(2, 'month').startOf('month'));
+        $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month'));
         // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
         updateSearchDateText<?=$idTabMenu;?>();
-        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
         var filterData = {
-            startDate: startDate,
-            endDate: endDate
+            // startDate: startDate,
+            // endDate: endDate,
+            page: currentPage
         }
-        fetchData(filterData);
+        fetchData(currentPage);
     }
 
     // Fungsi untuk mengambil nilai dari date range picker dan mengirimkannya ke AJAX
     function applyFilter() {
-        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+        var currentPage = 1;
+        var startDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+        var endDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
         var filterData = {
             startDate: startDate,
-            endDate: endDate
+            endDate: endDate,
+            page: currentPage
         }
-        fetchData(filterData);
+        fetchData(currentPage);
     }
 
     // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
     function updateSearchDateText<?=$idTabMenu;?>() {
         var searchDateSpan = $('#searchdatepick<?=$idTabMenu;?>');
-        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate;
-        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate;
-        var label = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').chosenLabel;
+        var startDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').startDate;
+        var endDate = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').endDate;
+        var label = $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').chosenLabel;
 
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = startDate.format(dateFormat);
@@ -834,8 +853,8 @@
 
 
     
-    function scrollDown() {
-       var container = $('body,html');
+    function scrollDown(container) {
+        var container = container;
         var scrollHeight = container.prop('scrollHeight');
         container.animate({scrollTop: scrollHeight});
     }
