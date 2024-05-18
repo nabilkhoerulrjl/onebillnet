@@ -155,7 +155,7 @@
                                     <i class="fa fa-calendar-days pr-1"></i>
                                     <div class="text-truncate">
                                         <b>
-                                        <span id="searchdatepick" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
+                                        <span id="searchdatepick<?=$idTabMenu;?>" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
                                         </b>
                                         <i style="padding-right: 5px;" class="fa fa-angle-down"></i>
                                     </div>
@@ -516,13 +516,13 @@
 
     // Function Refresh Data After insert Data
     function fetchData(page) {
-        console.log(page)
+        // console.log(page)
         // Ganti dengan URL controller Anda 
         var base_url = '<?= base_url()?>';
         var url = base_url+'CustomerController/getListCsData';
         var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
         var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
-        console.log(startDate,endDate);
+        // console.log(startDate,endDate);
         var filterData = {
             startDate: startDate,
             endDate: endDate,
@@ -536,7 +536,7 @@
             dataType: 'json',
             data: filterData,
             success: function (data) {
-                console.log('fetchData',data);
+                // console.log('fetchData',data);
                 // Menyembunyikan elemen loading setelah data diterima
                 // $('#overlayLoading').hide();
                 // $('#overlay').hide();
@@ -720,7 +720,7 @@
         $("#filterSlider<?=$idTabMenu;?>").removeClass("show");
     });
 
-        $('#filterDateCustomer<?=$idTabMenu;?>').daterangepicker({
+    $('#filterDateCustomer<?=$idTabMenu;?>').daterangepicker({
         ranges: {
             'Today': [moment(), moment()],
             // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -728,12 +728,13 @@
             // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Last 2 Months': [moment().subtract(2, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')], // Tambahkan rentang waktu 2 bulan
             'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
         },
-        "startDate": moment().subtract(1, 'year').startOf('day'),
-        "endDate": moment().endOf('day').endOf('year'),
+        "startDate": moment().subtract(2, 'month').startOf('month'), // Jadikan dua bulan sebelumnya sebagai default start date
+        "endDate": moment().subtract(1, 'month').endOf('month'), // Jadikan satu bulan sebelumnya sebagai default end date
         "drops": "auto",
-            "locale": {
+        "locale": {
             "format": "DD/MM/YYYY",
             "separator": " - ",
             "applyLabel": "Apply",
@@ -749,12 +750,12 @@
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         
         // Mendapatkan elemen span
-        var searchDateSpan = $('#searchdatepick');
+        var searchDateSpan = $('#searchdatepick<?=$idTabMenu;?>');
         // Menentukan format tanggal yang sesuai
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = start.format(dateFormat);
         var endDateText = end.format(dateFormat);
-
+        alert(label);
         // Memperbarui teks pada elemen span sesuai dengan pilihan tanggal
         if (label === 'Custom Range') {
             searchDateSpan.text(startDateText + ' - ' + endDateText);
@@ -775,19 +776,19 @@
     // Event handler untuk button reset filter
     $('#resetFilter<?=$idTabMenu;?>').on('click', function () {
         resetFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Event handler untuk button apply filter
     $('#applyFilter<?=$idTabMenu;?>').on('click', function () {
         applyFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Fungsi untuk mereset filter ke 1 tahun terakhir
     function resetFilter() {
-        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(1, 'year').startOf('day'));
-        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().endOf('day').endOf('year'));
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(2, 'month').startOf('month'));
+        $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().subtract(1, 'month').endOf('month'));
         // Tambahkan fungsi untuk mengganti teks pada elemen span (jika diperlukan)
         updateSearchDateText<?=$idTabMenu;?>();
         var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
@@ -812,7 +813,7 @@
 
     // Fungsi untuk mengganti teks pada elemen span ketika di klik button reset
     function updateSearchDateText<?=$idTabMenu;?>() {
-        var searchDateSpan = $('#searchdatepick');
+        var searchDateSpan = $('#searchdatepick<?=$idTabMenu;?>');
         var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate;
         var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate;
         var label = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').chosenLabel;
@@ -824,7 +825,7 @@
         if (label === 'Custom Range') {
             searchDateSpan.text(startDateText + ' - ' + endDateText);
         } else {
-            searchDateSpan.text("Last Year");
+            searchDateSpan.text("Last 2 Months");
         }
 
         searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));

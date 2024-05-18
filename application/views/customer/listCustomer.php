@@ -357,7 +357,7 @@
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
                                     <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editDataCs<?=$idTabMenu?>('${value.Id}')"></i>
-                                    <i class="fa fa-circle-info fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Detail Data" onclick="detailDataCs<?=$idTabMenu?>('${value.Id}')"></i>
+                                    <!-- <i class="fa fa-circle-info fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Detail Data" onclick="detailDataCs<?=$idTabMenu?>('${value.Id}')"></i> -->
                                     <!-- <i class="fa fa-ban fa-lg cursor-pointer" style="color:red;" title="Unsubsribe Customer" onclick="deleteDataCs<?=$idTabMenu?>('${value.Id}')"></i> -->
                                 </td>
                             </tr>
@@ -768,13 +768,13 @@
     // Event handler untuk button reset filter
     $('#resetFilter<?=$idTabMenu;?>').on('click', function () {
         resetFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Event handler untuk button apply filter
     $('#applyFilter<?=$idTabMenu;?>').on('click', function () {
         applyFilter();
-        $('#closeFilterBtn').click();
+        $('#closeFilterBtn<?=$idTabMenu;?>').click();
     });
 
     // Fungsi untuk mereset filter ke 1 tahun terakhir

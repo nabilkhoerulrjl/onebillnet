@@ -183,7 +183,7 @@
                     // Ketika sukses, tambahkan data ke dalam select option
                     var select = $('.multiple-select-customer');
                     $.each(data, function(index, item) {
-                        console.log(item.FirstName);
+                        // console.log(item.FirstName);
                         select.append('<option value="' + item.CustomerId + '">' + item.FirstName + '</option>');
                     });
                 },
