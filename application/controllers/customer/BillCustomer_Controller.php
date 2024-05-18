@@ -5,7 +5,7 @@ class BillCustomer_Controller extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-        $this->load->library('xendit_api');
+        $this->load->library('Xendit_api');
         $this->load->model('Bill_Model');
         $this->load->model('FileModel');
 		if($this->session->userdata('status') != "login"){
@@ -272,12 +272,12 @@ class BillCustomer_Controller extends CI_Controller {
     }
 
     public function generatePaymentLink($invoicesData) {
-        $respone = $this->xendit_api->CreateInvoiceLink($invoicesData);
+        $respone = $this->Xendit_api->CreateInvoiceLink($invoicesData);
         return $respone;
     }
 
     public function expireInvoice($invoicesData) {
-        $respone = $this->xendit_api->ExpireInvoice($invoicesData);
+        $respone = $this->Xendit_api->ExpireInvoice($invoicesData);
         // var_dump($respone); 
 
         return $respone;

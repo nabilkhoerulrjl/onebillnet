@@ -331,8 +331,10 @@ switch (ENVIRONMENT)
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, $dotenvFile);
 	$dotenv->load();
 
+	$appEnv = getenv('APP_ENV');
 	// Muat konfigurasi situs berdasarkan domain
-	$siteConfigFile = "config/config-{$domain}.php";
+	$siteConfigFile = isset($appEnv) ? "config/MY_$appEnv.php" : 'config/config.php';
+	// $siteConfigFile = "config/$sites[$domain].php";
 	if (file_exists(APPPATH . $siteConfigFile)) {
 		require_once APPPATH . $siteConfigFile;
 	}

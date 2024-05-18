@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class xendit_api {
+class Xendit_api {
 
     protected $CI;
 
