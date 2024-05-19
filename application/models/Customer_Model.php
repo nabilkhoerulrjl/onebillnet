@@ -50,33 +50,14 @@
             return $query->result_array();
         }
 
-        public function getBillCustomer($select, $join, $where, $limit, $offset) {
-
-            $this->db->select($select);
-            $this->db->from('Customer as c');
-            $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
-            $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
-            $this->db->where('c.StatusId','CRS1');
-            $this->db->where('c.SiteId',$where['siteId']);
-            $this->db->where('c.CreateDate >=',$where['startDate']);
-            $this->db->where('c.CreateDate <=',$where['endDate']);
-            $this->db->where('b.InvoiceId IS NOT NULL');
-            $this->db->order_by('c.Id', 'DESC');
-            $this->db->limit($limit, $offset);
-            $query = $this->db->get();
-            $rawQuery = $this->db->last_query();
-            var_dump($rawQuery);
-            return $query->result();
-        }
-
         public function getCustomer($select, $join, $where) {
 
             $this->db->select($select);
             $this->db->from('Customer as c');
             $this->db->join($join[0], $join[1], $join[2]);
-            $this->db->where('c.SiteId', 1);
-            $this->db->where('c.StatusId','CRS1');
-            $this->db->where_in('c.Id',$where);
+            $this->db->where('c.SiteId', $where['siteId']);
+            $this->db->where_not_in('c.StatusId',$where['statusId']);
+            $this->db->where_in('c.Id',$where['customerId']);
             $rawQuery = $this->db->last_query();
 
             $query = $this->db->get();
@@ -89,9 +70,9 @@
             $this->db->from('Customer as c');
             $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
             $this->db->join($join['join2'][0], $join['join2'][1], $join['join2'][2]);
-            $this->db->where('c.SiteId', 1);
-            $this->db->where('c.StatusId','CRS1');
-            $this->db->where_in('c.Id',$where);
+            $this->db->where('c.SiteId', $where['siteId']);
+            $this->db->where_not_in('c.StatusId',$where['statusId']);
+            $this->db->where_in('c.Id',$where['customerId']);
             $rawQuery = $this->db->last_query();
             // var_dump($rawQuery);
             // die();

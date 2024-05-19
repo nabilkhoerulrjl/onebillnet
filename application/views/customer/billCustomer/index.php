@@ -772,7 +772,6 @@
         var dateFormat = 'DD/MM/YYYY';
         var startDateText = start.format(dateFormat);
         var endDateText = end.format(dateFormat);
-        alert(label);
         // Memperbarui teks pada elemen span sesuai dengan pilihan tanggal
         if (label === 'Custom Range') {
             searchDateSpan.text(startDateText + ' - ' + endDateText);

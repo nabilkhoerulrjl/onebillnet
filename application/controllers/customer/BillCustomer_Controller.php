@@ -40,11 +40,13 @@ class BillCustomer_Controller extends CI_Controller {
         //Get Data from ajax
         $periode = $this->input->post('Periode');
         $customerIdArr = $this->input->post('CustomerId');
+        
         $resultCustomerId = '';
         $timeDueDate = '23:59:59';
         // Get data duedate bill
         $getDueDate = $this->getDueDateInvSet();
         $getPrefixInv = $this->getPrefixInv();
+        $siteId = $this->getSiteId();
         // $getDueDate = $this->getDueDateInvSet();
         $periodeBill = $periode.'-'.$getDueDate;
 
@@ -52,8 +54,12 @@ class BillCustomer_Controller extends CI_Controller {
         $periodeBill = $periode.'-'.$getDueDate;
         // Check apakah customer id array?
         $customerId = $customerIdArr;
-        if (is_array($customerIdArr)) {
-            $customerId = implode(',', $customerIdArr);
+        // if (is_array($customerIdArr)) {
+        //     $customerId = implode(',', $customerIdArr);
+        // }
+        if (is_string($customerIdArr)) {
+            // Jika iya, ubah string menjadi array
+            $customerId = $this->convertStringToArray($customerIdArr);
         }
         // Check Data customer yang akan di insert sudah tersedia atau belum?
         $isHasBill = $this->checkBill($customerId,$periodeBill);
@@ -68,7 +74,7 @@ class BillCustomer_Controller extends CI_Controller {
         $formatPeriodeDesc = date("j F Y", strtotime("$periode-$getDueDate"));
         // Persiapkan data
         // Get Data Customer by Id
-        $customerData   = $this->getCustomer($customerIdArr);
+        $customerData   = $this->getCustomer($customerId);
         $userId         = $this->getUserId();
         $siteId         = $this->getSiteId();
         $arrInvoiceData = array();
@@ -189,7 +195,11 @@ class BillCustomer_Controller extends CI_Controller {
         c.Email, c.Address, p.Id AS ProductId, 
         p.Name AS ProductName, p.Description AS Description, p.Amount AS Price';
         $join   = ['Product AS p', 'c.ProductId = p.Id', 'left'];
-        $where  = $customerId;
+        $where  = array(
+            'customerId' => $customerId,
+            'siteId' => $siteId,
+            'statusId' => 'CRS5'
+        );
         $dataCustomer = $this->Customer_Model->getCustomer($select, $join, $where);
 
         return $dataCustomer;
@@ -210,7 +220,7 @@ class BillCustomer_Controller extends CI_Controller {
         $siteId = $this->getSiteId();
         $select = 'b.ReferenceId, b.InvoiceId AS InvoiceId,
         c.FirstName AS FirstName, c.LastName AS LastName,
-        B.Product AS ProductName, b.Periode,
+        b.Product AS ProductName, b.Periode,
         b.DueDate, b.Amount, b.StatusId,
         b.PaymentLink, b.ExpiryDate';
         $join1   = ['Customer AS c', 'b.CustomerId = c.Id', 'left'];
@@ -265,7 +275,11 @@ class BillCustomer_Controller extends CI_Controller {
             'join1' => $join1,
             'join2' => $join2,
         );
-        $Where = $customerId;
+        $Where  = array(
+            'customerId' => $customerId,
+            'siteId' => $siteId,
+            'statusId' => 'CRS5'
+        );
         $dataCustomer = $this->Customer_Model->getCustomerBill($select, $arrJoin, $Where);
 
         return $dataCustomer;
@@ -491,5 +505,23 @@ class BillCustomer_Controller extends CI_Controller {
         );
         $data = $this->getData($resutData);
         echo json_encode($data);
+    }
+
+    public function convertStringToArray($data) {
+        // Cek apakah data adalah string
+        if (is_string($data)) {
+            // Memisahkan string menjadi array menggunakan koma sebagai pemisah
+            $array = explode(',', $data);
+            
+            // Mengubah elemen-elemen array menjadi string
+            foreach ($array as &$value) {
+                $value = (string)$value;
+            }
+            
+            return $array;
+        }
+        
+        // Jika bukan string, kembalikan data tanpa perubahan
+        return $data;
     }
 }
