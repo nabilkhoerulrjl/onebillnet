@@ -4,7 +4,7 @@
             
             <div class="">
                 <div class="main-menu-header">
-                    <img class="img-radius" src="<?= base_url()?> /File/getFile/<?= $this->session->userdata('picture') ?>" alt="User-Profile-Image">
+                    <img class="img-radius" src="<?= base_url()?>/File/getFile/<?= $this->session->userdata('picture') ?>" alt="User-Profile-Image">
                     <!-- <img class="img-radius" src="data:image/png;base64, <?= base64_encode($this->session->userdata('picture')) ?>" alt="User-Profile-Image"> -->
                     <div class="user-details">
                         <span><?= $this->session->userdata('name');?></span>
