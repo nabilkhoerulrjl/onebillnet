@@ -121,7 +121,7 @@
                     <i class="fa fa-filter"></i>
                 </button>
             </div>
-            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu" style="z-index:10;">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
                     <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">

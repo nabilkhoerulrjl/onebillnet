@@ -170,7 +170,7 @@
         
         <!-- Tabel ZingGrid -->
         <div class="table-responsive">
-            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu"  style="z-index:10;">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
                     <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">
@@ -721,6 +721,7 @@
             // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            '2 Months': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month')], // Tambahkan rentang waktu 2 bulan
             'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
         },
         "startDate": moment().subtract(1, 'year').startOf('day'),

@@ -140,7 +140,7 @@
             <span class="text-loading text-black font-weight-bold h5">Please wait...</span>
         </div>
         <div class="table-responsive">
-            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu">
+            <div id="filterSlider<?=$idTabMenu;?>" class="slider-menu" style="z-index:10;">
                 <div class="sidebar-title d-flex align-items-center justify-content-between p-3" style="background: #f6f6f6;border-bottom: 1px solid #e7eaec;">
                     <div><i class="fa fa-filter fa-lg pr-1"></i><b>Filter Data</b></div>
                     <button type="button" class="close"  id="closeFilterBtn<?=$idTabMenu;?>" class="close-btn">
@@ -510,7 +510,9 @@
                     text: "Your data has been delete!",
                     icon: "success"
                 });
-                fetchData();
+                var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+                console.log(currentPage);
+                fetchData(currentPage);
             },
             error: function (error) {
                 // Menyembunyikan elemen loading jika terjadi kesalahan
@@ -684,7 +686,9 @@
                         text: "Your data has been delete!",
                         icon: "success"
                     });
-                    fetchData();
+                    var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+                    console.log(currentPage);
+                    fetchData(currentPage);
                 }else{
                     Swal.fire({
                         title: "Attandace!",
@@ -745,10 +749,10 @@
             // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Last 2 Months': [moment().subtract(2, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')], // Tambahkan rentang waktu 2 bulan
-            'Last Year': [moment().subtract(1, 'year').startOf('day'), moment().endOf('day').endOf('year')]
+            '2 Months': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month')], // Tambahkan rentang waktu 2 bulan
+            'Last Year': [moment().subtract(1, 'year').startOf('month'), moment().endOf('day').endOf('year')]
         },
-        "startDate": moment().subtract(2, 'month').startOf('month'), // Jadikan dua bulan sebelumnya sebagai default start date
+        "startDate": moment().subtract(1, 'month').startOf('month'), // Jadikan dua bulan sebelumnya sebagai default start date
         "endDate": moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month'), // Jadikan satu bulan sebelumnya sebagai default end date
         "drops": "auto",
         "locale": {
@@ -784,8 +788,10 @@
         searchDateSpan.attr('enddate', end.format('YYYY-MM-DD HH:mm:ss'));
     });
 
-        // Panggil fungsi updateSearchDateText<?=$idTabMenu;?> saat halaman dimuat
-        $(document).ready(function () {
+    // Panggil fungsi updateSearchDateText<?=$idTabMenu;?> saat halaman dimuat
+    $(document).ready(function () {
+        $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').setStartDate(moment().subtract(1, 'month').startOf('month'));
+        $('#filterDateBillCs<?=$idTabMenu;?>').data('daterangepicker').setEndDate(moment().subtract(1, 'months').endOf('month').add(1, 'months').endOf('month'));
         updateSearchDateText<?=$idTabMenu;?>();
     });
 
@@ -843,7 +849,7 @@
         if (label === 'Custom Range') {
             searchDateSpan.text(startDateText + ' - ' + endDateText);
         } else {
-            searchDateSpan.text("Last 2 Months");
+            searchDateSpan.text("2 Months");
         }
 
         searchDateSpan.attr('startdate', startDate.format('YYYY-MM-DD HH:mm:ss'));
