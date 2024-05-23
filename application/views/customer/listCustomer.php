@@ -254,7 +254,7 @@
             startDate: startDate,
             endDate: endDate
         }
-        console.log('filterData',filterData);
+        // console.log('filterData',filterData);
 
         // fetchData(filterData);
         fetchData(filterData);
@@ -282,7 +282,7 @@
         // if(endDate == null){
         //     endDate = moment().endOf('day').endOf('year').format('YYYY-MM-DD HH:mm:ss');
         // }
-        console.log(filterData);
+        // console.log(filterData);
         // Menyiapkan data untuk dikirim
         var requestData = '';
         // if(filterData == "") {
@@ -292,7 +292,7 @@
         //     };
         // }else{
             requestData = filterData;
-            console.log('fetchData',requestData);
+            // console.log('fetchData',requestData);
         // }
 
         // console.log(requestData);
@@ -407,6 +407,9 @@
 
                     $('.pagination<?=$idTabMenu;?> li').removeClass('active');
                     $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
+                    
+                    var container = $('html,body');
+                    scrollDown(container);
                 }
 
                 // Inisialisasi tampilan halaman pertama dan tombol paginasi
@@ -658,7 +661,7 @@
                 // cancelButtonColor: '#d33', // Warna merah (jika ada tombol Cancel)
             });
         }).on('error', function(e) {
-        alert('Failed to copy data');
+        // alert('Failed to copy data');
         });
     });
     /* Ini pake vanilla JS
@@ -1346,5 +1349,13 @@
             //     }
             // });
         });
+    }
+
+    function scrollDown(container) {
+        setTimeout(function() {
+            var container = container;
+            var scrollHeight = $(document).height();
+            container.animate({ scrollTop: scrollHeight }, 1000);
+        }, 100); // Penundaan 100ms
     }
 </script>

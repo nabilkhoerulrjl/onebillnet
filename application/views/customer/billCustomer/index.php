@@ -371,6 +371,11 @@
                 var nextPage = Math.min(currentPage + 1, totalPages);
                 loadPageNumbers(nextPage, totalPages);
                 fetchData(nextPage);
+                setTimeout(function() {
+                    var container = $('html, body');
+                    var scrollHeight = $(document).height();
+                    container.animate({ scrollTop: scrollHeight }, 1000);
+                }, 100); // Penundaan 500ms
             });
 
             // Tangani klik tombol halaman sebelumnya
@@ -379,6 +384,11 @@
                 var prevPage = Math.max(currentPage - 1, 1);
                 loadPageNumbers(prevPage, totalPages);
                 fetchData(prevPage);
+                setTimeout(function() {
+                    var container = $('html, body');
+                    var scrollHeight = $(document).height();
+                    container.animate({ scrollTop: scrollHeight }, 1000);
+                }, 100); // Penundaan 500ms
             });
 
             // Tangani klik nomor halaman
@@ -386,8 +396,12 @@
                 var page = parseInt($(this).data('page'));
                 loadPageNumbers(page, totalPages);
                 fetchData(page);
-                var container = $('body,html');
-                scrollDown(container);
+                setTimeout(function() {
+                    var container = $('html, body');
+                    var scrollHeight = $(document).height();
+                    container.animate({ scrollTop: scrollHeight }, 1000);
+                }, 100); // Penundaan 500ms
+                // scrollDown(container);
             });
         }
 
