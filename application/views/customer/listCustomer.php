@@ -408,8 +408,6 @@
                     $('.pagination<?=$idTabMenu;?> li').removeClass('active');
                     $('.pagination<?=$idTabMenu;?> li:contains(' + currentPage + ')').addClass('active');
                     
-                    var container = $('html,body');
-                    scrollDown(container);
                 }
 
                 // Inisialisasi tampilan halaman pertama dan tombol paginasi
@@ -431,6 +429,8 @@
 
                     showPage<?=$idTabMenu;?>(currentPage);
                     showPagination<?=$idTabMenu;?>();
+                    var container = $('body,html');
+                    scrollDown(container);
                 });
                 // End Pagging TableBill
                 
@@ -1352,10 +1352,9 @@
     }
 
     function scrollDown(container) {
-        setTimeout(function() {
-            var container = container;
-            var scrollHeight = $(document).height();
-            container.animate({ scrollTop: scrollHeight }, 1000);
-        }, 100); // Penundaan 100ms
+        // var container = $('body,html');
+        var container = container;
+        var scrollHeight = container.prop('scrollHeight');
+        container.animate({scrollTop: scrollHeight});
     }
 </script>
