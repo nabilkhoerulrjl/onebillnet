@@ -137,7 +137,7 @@ $autoload['model'] = array(
                         'M_Company', 
                         'M_Site',
                         'M_Setting',
-                        'M_Connection',
+                        'ConnectionModel',
                         'Contact_Model',
                         'Template_Model',
                         'ContactGroup_Model',

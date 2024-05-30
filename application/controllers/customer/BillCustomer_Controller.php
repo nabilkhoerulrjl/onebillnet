@@ -47,8 +47,6 @@ class BillCustomer_Controller extends CI_Controller {
         $getDueDate = $this->getDueDateInvSet();
         $getPrefixInv = $this->getPrefixInv();
         $siteId = $this->getSiteId();
-        // $getDueDate = $this->getDueDateInvSet();
-        $periodeBill = $periode.'-'.$getDueDate;
 
         // Gabungkan periode dengan tanggal due date
         $periodeBill = $periode.'-'.$getDueDate;
@@ -71,6 +69,7 @@ class BillCustomer_Controller extends CI_Controller {
         // Jika tidak lanjut insert
         // Gabungkan periode, tanggal, dan waktu
         $dateTimePeriode = date('Y-m-d H:i:s', strtotime("$periode-$getDueDate $timeDueDate"));
+        $dateTimeDueDate = date("Y-m-d H:i:s", strtotime("+1 month", strtotime($dateTimePeriode)));; 
         $formatPeriodeDesc = date("j F Y", strtotime("$periode-$getDueDate"));
         // Persiapkan data
         // Get Data Customer by Id
@@ -158,7 +157,7 @@ class BillCustomer_Controller extends CI_Controller {
                     'Description' => $data->Description, 
                     'Amount' => $data->Price, 
                     'Periode' => $periodeBill, 
-                    'DueDate' => $dateTimePeriode,
+                    'DueDate' => $dateTimeDueDate,
                     'StatusId' => 'BLS2',
                     'PaymentDate' => null,
                     'PaymentLink' => $item->invoice_url,

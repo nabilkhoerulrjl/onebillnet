@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class fonnte_api {
+class Fonnte_api {
 
     protected $CI;
 
@@ -9,31 +9,32 @@ class fonnte_api {
         $this->CI = &get_instance();
     }
 
-    public function sendMessage($targets, $message, $delay = 2, $scedule, $countryCode = '62') {
+    public function sendMessage($dataMessage) {
+        $getConnApi = $this->getConApiKey($dataMessage['from']);
+        $apiKey = $getConnApi[0]->Token;
         $curl = curl_init();
         
         $toTargets ="";
-        if(is_array($targets)){
-            // Convert the targets array into the desired format
-            $formattedTargets = array();
-            foreach ($targets as $number => $name) {
-                $formattedTargets[] = $number . '|' . $name;
-            }
-            $toTargets = implode(',', $formattedTargets);
-        }else{
-            $toTargets = $targets;
-        }
-
-        // var_dump($toTargets);
+        // if(is_array($targets)){
+        //     // Convert the targets array into the desired format
+        //     $formattedTargets = array();
+        //     foreach ($targets as $number => $name) {
+        //         $formattedTargets[] = $number . '|' . $name;
+        //     }
+        //     $toTargets = implode(',', $formattedTargets);
+        // }else{
+        //     $toTargets = $targets;
+        // }
 
         // echo implode(',', $formattedTargets);
         $postData = array(
-            'target' => $toTargets,
-            'message' => $message,
-            'delay' => $delay,
-            'schedule' => $scedule,
-            'countryCode' => $countryCode,
+            'target' => $dataMessage['targets'],
+            'message' => $dataMessage['message'],
+            'delay' => $dataMessage['delay'],
+            'schedule' => $dataMessage['schedule'],
+            'countryCode' => $dataMessage['countryCode'],
         );
+        // var_dump($postData);
     
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -46,7 +47,7 @@ class fonnte_api {
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $postData,
             CURLOPT_HTTPHEADER => array(
-                'Authorization: ooT5x+1Y4fcHCgtpFnQn', // Replace TOKEN with your actual token
+                'Authorization: '.$apiKey, // Replace TOKEN with your actual token
             ),
         ));
     
@@ -79,4 +80,37 @@ class fonnte_api {
 
         return $response;
     }
+
+    public function getConApiKey($from) {
+        $siteId = $this->getSiteId();
+        $CI =& get_instance(); // Mendapatkan instance CI
+
+        // Memuat model yang diperlukan
+        $CI->load->model('ConnectionModel');
+
+        $select = 'conn.Name, conn.Token';
+        $arrWhere = array(
+            'SiteId' => $siteId,
+            'StatusId' => 'CNS1',
+            'MediaId'  => 'WHATP',
+            'UserName' => $from,
+        );
+        $dataConn = $CI->ConnectionModel->getConnActive($select, $arrWhere);
+
+        return $dataConn;
+    }
+
+    public function getSiteId()
+    {
+		$siteId  ="0";
+		// Load the session library
+        $this->CI =& get_instance();
+        // Memuat library session
+        $this->CI->load->library('session');
+        if ($this->CI->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->CI->session->userdata("siteid");
+        }
+        return $siteId;
+	}
 }

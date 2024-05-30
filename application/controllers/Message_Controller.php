@@ -5,7 +5,7 @@ class Message_Controller extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('fonnte_api');
+        $this->load->library('Fonnte_api');
         // $this->load->library('Fonnte_Controller');
         $this->load->library('session');
 
@@ -24,165 +24,185 @@ class Message_Controller extends CI_Controller {
 		$delay = $this->input->post('Delay');
 		$subject = $this->input->post('Subject');
 		$messageTemplate = $this->input->post('MessageTemplate');
+		$typeTemplate = $this->input->post('TypeTemplate');
 		$metaTemplate = $this->input->post('MetaTemplate');
+		// $fixParamTemplate = $this->input->post('FixParamTemplate');
 		$variableMessage = $this->input->post('VariableMessage');
 		$message = $this->input->post('Message');
         $convertedVariable = $this->input->post('ConvertedVariable');
         // var_dump('Test convertedVariable',$convertedVariable);
-        var_dump('out if',$variableMessage);
+        // var_dump('out if',$variableMessage);
         //call function getSiteId;
         // die();
+        $dataBroadcast = array(
+            'mediaId'           => $mediaId,
+            'from'              => $from,
+            'typeTarget'        => $typeTarget,
+            'toInput'           => $toInput,
+            'toContact'         => $toContact,
+            'toGroupContact'    => $toGroupContact,
+            'sendDate'          => $sendDate,
+            'delay'             => $delay,
+            'messageTemplate'   => $messageTemplate,
+            'typeTemplate'      => $typeTemplate,
+            'metaTemplate'      => $metaTemplate,
+            'variableMessage'   => $variableMessage,
+            'message'  => $message,
+            'convertedVariable' => $convertedVariable,
+        );
+        
+        $dataMessage = $this->mappingDataMessage($dataBroadcast);
 		$siteId = $this->getSiteId();
         $userId = $this->getUserId();
+        // var_dump($dataMessage);
+        // die();
         //Get data contact sesuai input contact yang diberikan 
-        $targets = array();
-        $target = NULL;
-        $schedule = $sendDate;
+        // $targets = array();
+        // $target = NULL;
+        // $schedule = $sendDate;
         //Check input contact mana yang ada datanya
-        if(isset($toInput)) {
-            if (strpos($toInput, '|') !== false) {
-                $toInputArray = explode(',', $toInput);
-                var_dump($toInput);
-                foreach ($toInputArray as $item) {
-                    // Pisahkan data menggunakan pemisah (|)
-                    $itemArray = explode('|', $item);
-                    // Gunakan elemen pertama sebagai kunci, dan gabungkan elemen kedua dan ketiga sebagai nilai
-                    $key = array_shift($itemArray);
-                    if($itemArray !== '' || !$itemArray){
-                        $value = implode('|', $itemArray);
-                        // Tambahkan ke array $targets
-                        $targets[$key] = $value;
-                    }
-                    
-    
-                }
-            }else{
-                // var_dump($toInput);
-
-                $target = $toInput;
-            }
+        // if(isset($toInput)) {
+        //     if (strpos($toInput, '|') !== false) {
+        //         $toInputArray = explode(',', $toInput);
+        //         var_dump($toInput);
+        //         foreach ($toInputArray as $item) {
+        //             // Pisahkan data menggunakan pemisah (|)
+        //             $itemArray = explode('|', $item);
+        //             // Gunakan elemen pertama sebagai kunci, dan gabungkan elemen kedua dan ketiga sebagai nilai
+        //             $key = array_shift($itemArray);
+        //             if($itemArray !== '' || !$itemArray){
+        //                 $value = implode('|', $itemArray);
+        //                 // Tambahkan ke array $targets
+        //                 $targets[$key] = $value;
+        //             }
+        //         }
+        //     }else{
+        //         // var_dump($toInput);
+        //         $target = $toInput;
+        //     }
             
-        }
-        if(isset($toContact) || isset($toGroupContact)){
-            $dataContact = $this->getDataContact($toContact,$toGroupContact);
-            $destContact = array();
-            $contactName = array();
-            $customerId = array();
-            // var_dump($dataContact);
-            // die('asdsad');
-            if (!empty($dataContact)) {
-                foreach ($dataContact as $contact) {
-                    $destContact[] = $contact->Whatsapp;
-                    $contactName[] = $contact->Name;
-                    $customerId[] = $contact->CustomerId;
+        // }
+        // if(isset($toContact) || isset($toGroupContact)){
+        //     $dataContact = $this->getDataContact($toContact,$toGroupContact);
+        //     $destContact = array();
+        //     $contactName = array();
+        //     $customerId = array();
+        //     // var_dump($dataContact);
+        //     // die('asdsad');
+        //     if (!empty($dataContact)) {
+        //         foreach ($dataContact as $contact) {
+        //             $destContact[] = $contact->Whatsapp;
+        //             $contactName[] = $contact->Name;
+        //             $customerId[] = $contact->CustomerId;
 
-                }
-            }
-            // Gabungkan nomor-nomor Whatsapp dengan koma
-            $targetContact = implode(',', $destContact);
-            // Gabungkan nama nama contact dengan koma
-            $customerName = implode(',', $contactName);
-            // Get Data Bill berdasarkan data customer yang diberikan
-            $dataBill = $this->getDataBillbyCS($customerId);
-            var_dump($dataBill);
-            if($dataBill == NULL || !$dataBill){
-                $errMsg = 'Customer tersebut tidak memiliki data tagihan aktif';
-                echo json_encode(['error' => $errMsg]);
-                return;
-            }
-
-            $arrData = array(
-                'variableMessage' => $variableMessage,
-                'customerName' => $customerName,
-                'dataBill' => $dataBill,
-            );
+        //         }
+        //     }
+        //     // Gabungkan nomor-nomor Whatsapp dengan koma
+        //     $targetContact = implode(',', $destContact);
+        //     // Gabungkan nama nama contact dengan koma
+        //     $customerName = implode(',', $contactName);
+        //     // Get Data Bill berdasarkan data customer yang diberikan
+        //     $dataBill = $this->getDataParams($customerId);
             
-            //Check apakah menggunakan template message apa tidak
-            if($messageTemplate !== "" && $variableMessage !== "") {
-                $valueVariable = $this->mapReplaceData($arrData);
-            // var_dump('metaTemplate',$arrData);
+        //     // var_dump($dataBill);
+        //     if($dataBill == NULL || !$dataBill){
+        //         $errMsg = 'Customer tersebut tidak memiliki data tagihan aktif';
+        //         echo json_encode(['error' => $errMsg]);
+        //         return;
+        //     }
+
+        //     $arrData = array(
+        //         'variableMessage' => $variableMessage,
+        //         'customerName' => $customerName,
+        //         'dataBill' => $dataBill,
+        //     );
+            
+        //     //Check apakah menggunakan template message apa tidak
+        //     if($messageTemplate !== "" && $variableMessage !== "") {
+        //         $valueVariable = $this->mapReplaceData($arrData);
+        //     // var_dump('metaTemplate',$arrData);
 
 
-            }
-            $resultClearMessage = [];
-            if(isset($variableMessage) && !empty($variableMessage)){
+        //     }
+        //     $resultClearMessage = [];
+        //     if(isset($variableMessage) && !empty($variableMessage)){
 
-                foreach ($arrData['dataBill'] as $bill) {
-                    foreach (explode(',', $arrData['customerName']) as $customerName) {
-                        $replaceData = [
-                            'variableMessage' => $arrData['variableMessage'],
-                            'customerName' => $customerName,
-                            'bill' => $bill
-                        ];
+        //         foreach ($arrData['dataBill'] as $bill) {
+        //             foreach (explode(',', $arrData['customerName']) as $customerName) {
+        //                 $replaceData = [
+        //                     'variableMessage' => $arrData['variableMessage'],
+        //                     'customerName' => $customerName,
+        //                     'bill' => $bill
+        //                 ];
                 
-                        $resultClearMessage[] = $this->replaceMessageVariables($convertedVariable, $replaceData);
-                    }
-                }
-            }
-            $target = $targetContact;
-            // Menampilkan hasil
-            // var_dump('Test',$replaceData);
-            // var_dump('Test',$resultClearMessage[0]);
-            // die();
+        //                 $resultClearMessage[] = $this->replaceMessageVariables($convertedVariable, $replaceData);
+        //             }
+        //         }
+        //     }
+        //     $target = $targetContact;
+        //     // Menampilkan hasil
+        //     // var_dump('Test',$replaceData);
+        //     // var_dump('Test',$resultClearMessage[0]);
+        //     // die();
 
-            // var_dump('Test',$customerId);
-            // var_dump('dataContact',$dataContact);
-            // var_dump('$customerId',$customerId);
+        //     // var_dump('Test',$customerId);
+        //     // var_dump('dataContact',$dataContact);
+        //     // var_dump('$customerId',$customerId);
 
-            // var_dump('dataBill',$dataBill);
-
-            
-            // Siapkan data untuk dikirim ke API
-
-            // Pisahkan nomor telepon dalam string $target
-            
-            // var_dump($targets);
+        //     // var_dump('dataBill',$dataBill);
 
             
+        //     // Siapkan data untuk dikirim ke API
 
-            // Hasilnya
-            // var_dump($targets);
-            // $targets = array(
-            //     $target => $toInput,
-            // );
+        //     // Pisahkan nomor telepon dalam string $target
+            
+        //     // var_dump($targets);
 
-            // $targets = array(
-            //     '6281219013257' => 'Home Code Project|Rp 150.000|November 2023|1234589|25 November 2023 23:00',
-            //     '6285943063646' => '2345675|Dede Muhammad|November 2023|Rp 150.000|25 November 2023 23:00',
-            //     // '6282123002023' => 'Ahmad Saepudin|7895462|November 2023|Rp 150.000|25 November 2023 23:00',
-            // );
+            
 
-            // var_dump($targets);
-        }
+        //     // Hasilnya
+        //     // var_dump($targets);
+        //     // $targets = array(
+        //     //     $target => $toInput,
+        //     // );
 
-        $phoneNumbers = explode(',', $target);
-        // var_dump($phoneNumbers);
-        // Buat array $targets dengan memetakan setiap nomor telepon ke nilai yang sesuai dalam $valueVariable
-        if(isset($valueVariable)){
-            foreach ($phoneNumbers as $phoneNumber) {
-                $targets[$phoneNumber] = array_shift($valueVariable);
-            }
-        }else{
-            $targets = $target;
-        }
+        //     // $targets = array(
+        //     //     '6281219013257' => 'Home Code Project|Rp 150.000|November 2023|1234589|25 November 2023 23:00',
+        //     //     '6285943063646' => '2345675|Dede Muhammad|November 2023|Rp 150.000|25 November 2023 23:00',
+        //     //     // '6282123002023' => 'Ahmad Saepudin|7895462|November 2023|Rp 150.000|25 November 2023 23:00',
+        //     // );
 
-        if($schedule == '' || $schedule == null){
-            $currentDateTime = new DateTime();
-            $timestamp = $currentDateTime->getTimestamp();
-            $schedule = $timestamp;
-        }
+        //     // var_dump($targets);
+        // }
 
-        $apiData = array(
-            'targets' => $targets,//$toInput,
-            'sendDate' => $sendDate,
-            'message' => $message,
-            'schedule' => $schedule,
-            'delay' => $delay,
-            'countryCode' => '62', // Sesuaikan dengan kebutuhan
-        );
+        // $phoneNumbers = explode(',', $target);
+        // // var_dump($phoneNumbers);
+        // // Buat array $targets dengan memetakan setiap nomor telepon ke nilai yang sesuai dalam $valueVariable
+        // if(isset($valueVariable)){
+        //     foreach ($phoneNumbers as $phoneNumber) {
+        //         $targets[$phoneNumber] = array_shift($valueVariable);
+        //     }
+        // }else{
+        //     $targets = $target;
+        // }
 
-        //Send data to sendFonnteApi
-        $sendMessage = $this->sendFonnteApi($apiData);
+        // if($schedule == '' || $schedule == null){
+        //     $currentDateTime = new DateTime();
+        //     $timestamp = $currentDateTime->getTimestamp();
+        //     $schedule = $timestamp;
+        // }
+
+        // $apiData = array(
+        //     'targets' => $targets,//$toInput,
+        //     'sendDate' => $sendDate,
+        //     'message' => $message,
+        //     'schedule' => $schedule,
+        //     'delay' => $delay,
+        //     'countryCode' => '62', // Sesuaikan dengan kebutuhan
+        // );
+
+        //Send data to sendAPI
+        $sendMessage = $this->sendMessageApi($dataMessage,$mediaId);
         // var_dump($sendMessage);
         //Check apakah status berhasil atau tidak
         if($sendMessage['status'] == 'true'){
@@ -221,11 +241,10 @@ class Message_Controller extends CI_Controller {
                         'Modifier' => $userId,
                     );
                     $messageBody = $message;
-                    var_dump($variableMessage);
+                    // var_dump($variableMessage);
                     // die();
                     if(isset($variableMessage) && !empty($variableMessage)){
-                        var_dump('asdasdsad');
-                        $messageBody = $resultClearMessage[0];
+                        $messageBody = $message;
                     }
     
                     // Data untuk dimasukkan ke tabel 'messagecontent'
@@ -260,7 +279,7 @@ class Message_Controller extends CI_Controller {
                     // die();
                         // Menyimpan data ke dalam tabel 'messagecontent'
                         $var = $this->MessageContent_Model->insertMessageContent($dataMessageContent);
-            var_dump($var);
+            // var_dump($var);
                         
                         // Respon berhasil ke AJAX atau sesuaikan dengan kebutuhan
                         echo json_encode(array('status' => 'success', 'message' => 'Message sent successfully.'));
@@ -284,6 +303,9 @@ class Message_Controller extends CI_Controller {
                 $errMsg = 'Nomor tujuan salah atau tidak terdaftar di Whatsapp';
                 echo json_encode(['error' => $errMsg]);
                 return;
+            }else if($sendMessage['reason'] == 'unknown token'){
+                $errMsg = 'Token API anda salah atau tidak diketahui';
+                echo json_encode(['error' => $errMsg]);
             }
         }
         
@@ -293,37 +315,6 @@ class Message_Controller extends CI_Controller {
                 
         
 	}
-
-    public function sendFonnteApi($apiData) {
-        $targets = array(
-            '085943063646' => 'Fonnte|Admin',
-            '021219013257' => 'Lily|Client',
-        );
-
-        $message = $apiData['message'];
-        $scedule = $apiData['schedule'];
-        $delay = $apiData['delay'];
-        $countryCode = $apiData['countryCode'];
-
-        $response = $this->fonnte_api->sendMessage($apiData['targets'], $message, $scedule, $delay, $countryCode);
-
-        $jsonString = $response;
-        $jsonData = json_decode($jsonString, true);
-        
-        // Mengakses nilai tertentu
-        // $status = $jsonData['status'];
-        // $detail = $jsonData['detail'];
-        // $process = $jsonData['process'];
-        // $ids = $jsonData['id'];
-        // $targets = $jsonData['target'];
-        return $jsonData;
-        // Menampilkan hasil
-        // echo 'Status: ' . ($status ? 'True' : 'False') . '<br>';
-        // echo 'Detail: ' . $detail . '<br>';
-        // echo 'Process: ' . $process . '<br>';
-        // echo 'IDs: ' . implode(', ', $ids) . '<br>';
-        // echo 'Targets: ' . implode(', ', $targets) . '<br>';
-    }
 
     public function saveMessage() {
         // Anda bisa menyesuaikan data yang akan di-insert sesuai kebutuhan
@@ -393,10 +384,10 @@ class Message_Controller extends CI_Controller {
         //     $where['Whatsapp'] = $toInput;
         // }
         if ($toContact) {
-            $where['Id'] = $toContact;
+            $where['Id'] = explode(", ", $toContact);
         }
         if ($toGroupContact) {
-            $where['GroupId'] = $toGroupContact;
+            $where['GroupId'] = explode(", ", $toGroupContact);
         }
 
 
@@ -407,100 +398,170 @@ class Message_Controller extends CI_Controller {
         return $data['dataContact'];
     }
 
-    function mapReplaceData($arrData) {
-        // Variabel hasil
-        $result = array();
+    // function mapReplaceData($arrData) {
+    //     // Variabel hasil
+    //     $result = array();
 
-        // Mendapatkan array customerName dari string
-        $customerNames = explode(',', $arrData['customerName']);
+    //     // Mendapatkan array customerName dari string
+    //     $customerNames = explode(',', $arrData['customerName']);
         
-        // Pemetaan dan penggantian data
-        foreach ($arrData['dataBill'] as $bill) {
-            foreach ($customerNames as $customerName) {
-                // Mendapatkan nama variabel dari 'variableMessage'
-                $variableNames = array_map('trim', explode(',', $arrData['variableMessage']));
+    //     // Pemetaan dan penggantian data
+    //     foreach ($arrData['dataBill'] as $bill) {
+    //         foreach ($customerNames as $customerName) {
+    //             // Mendapatkan nama variabel dari 'variableMessage'
+    //             $variableNames = array_map('trim', explode(',', $arrData['variableMessage']));
 
-                // Mengganti nilai yang sesuai dengan 'variableMessage'
-                $replaceData = array_combine($variableNames, array(
-                    trim($customerName),
-                    'ID' . uniqid(),
-                    date('F Y', strtotime($bill->Periode)),
-                    date('d F Y H:i', strtotime($bill->DueDate)),
-                    "Rp " . number_format($bill->Amount, 2, ',', '.')
-                ));
+    //             // Mengganti nilai yang sesuai dengan 'variableMessage'
+    //             $replaceData = array_combine($variableNames, array(
+    //                 trim($customerName),
+    //                 'ID' . uniqid(),
+    //                 date('F Y', strtotime($bill->Periode)),
+    //                 date('d F Y H:i', strtotime($bill->DueDate)),
+    //                 "Rp " . number_format($bill->Amount, 2, ',', '.')
+    //             ));
 
-                // Mengganti koma dengan pipa dan menghilangkan spasi
-                $result[] = implode('|', array_map(function ($key, $value) {
-                    return "$value";
-                }, array_keys($replaceData), $replaceData));
-            }
-        }
+    //             // Mengganti koma dengan pipa dan menghilangkan spasi
+    //             $result[] = implode('|', array_map(function ($key, $value) {
+    //                 return "$value";
+    //             }, array_keys($replaceData), $replaceData));
+    //         }
+    //     }
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
-    public function getDataBillbyCS($CustomerId)
+    public function getDataParams($customerId,$contactName,$destContact,$variableMessage)
     {
 		$siteId = $this->getSiteId();
-        $select = 'Bill.Amount,Bill.Periode,Bill.DueDate';
-        $where = array(
-            'SiteId' => $siteId,
-            'StatusId' => 'BLS2',
-            'CustomerId' => $CustomerId,
+        //ubah data variable jadi array
+        $variable = explode(", ", $variableMessage);
+        // Tentukan array alias
+        $aliasData = array(
+            "cs.Id" => "CustomerId",
+            "CONCAT(cs.FirstName, ' ', cs.LastName)" => "CustomerName",
+            "b.InvoiceId" => "InvoiceId",
+            "b.Product" => "BillName",
+            "b.Description" => "BillDesc",
+            "b.Amount" => "BillAmount",
+            "b.Periode" => "BillPeriode",
+            "b.DueDate" => "BillDueDate",
+            "b.PaymentLink" => "PaymentLink",
+            "b.ReferenceId" => "BillId",
+            "st.Name" => "MerchantName",
+            "st.BankType" => "MerchantBank",
+            "st.AccounBank" => "MerchantBankAccount",
+            "st.Phone" => "MerchantPhone",
+            "st.Email" => "MerchantEmail",
         );
-
-
-        
-
-		$this->load->model('Bill_Model');
-		$data['Bill'] = $this->Bill_Model->getBillByAny($select, $where);
-
-        return $data['Bill'];
-    }
-
-    function replaceMessageVariables($message, $replaceData) {
-        // Mendapatkan nama variabel dari 'variableMessage'
-        $variableNames = array_map('trim', explode(',', $replaceData['variableMessage']));
-    
-        // Mengganti nilai yang sesuai dengan 'variableMessage'
-        $replaceData = array_combine($variableNames, array(
-            trim($replaceData['customerName']),
-            'ID' . uniqid(),
-            date('F Y', strtotime($replaceData['bill']->Periode)),
-            date('d F Y H:i', strtotime($replaceData['bill']->DueDate)),
-            "Rp " . number_format($replaceData['bill']->Amount, 2, ',', '.')
-        ));
-        // Mengganti variabel dalam teks
-        foreach ($replaceData as $key => $value) {
-        // var_dump('Test',$key);
-        // var_dump('Test',$value);
-
-            $message = str_replace("{$key}", $value, $message);
-        // var_dump('Test',$message);
-
+        // Mapping and check, hanya data yang ada di dalam $variable yang masuk kedalam select
+        $selectFields = [];
+        foreach ($variable as $alias) {
+            foreach ($aliasData as $column => $aliasName) {
+                if ($aliasName == $alias) {
+                    $selectFields[] = "$column AS $alias";
+                    break;
+                }
+            }
         }
-    // die();
-        return $message;
+        // define where customer table
+        $where = array(
+            'cs.SiteId' => $siteId,
+            // 'cs.StatusId' => 'CRS1',
+            'cs.CustomerId' => $customerId,
+        );
+        // define variable join
+        $joinBill = null;
+        $joinSite = null;
+        // foreach data variable
+        for ($i=0; $i < count($variable); $i++) {
+            // Check if data has at teh same $variable define where and join value
+            if($variable[$i] == 'InvoiceId' || $variable[$i] == 'BillName' || $variable[$i] == 'BillDesc'
+            || $variable[$i] == 'BillAmount' || $variable[$i] == 'BillPeriode' || $variable[$i] == 'BillDueDate'
+            || $variable[$i] == 'PaymentLink' || $variable[$i] == 'BillId'){
+                $joinBill = ["(SELECT b1.* FROM Bill b1 
+                INNER JOIN (SELECT ProductId, CustomerId, MAX(Periode) AS MaxPeriode 
+                        FROM Bill 
+                        WHERE CustomerId IN (".implode(',', $customerId).")
+                        GROUP BY ProductId, CustomerId) b2 
+                ON b1.ProductId = b2.ProductId AND b1.CustomerId = b2.CustomerId AND b1.Periode = b2.MaxPeriode) b",
+                'cs.Id = b.CustomerId',
+                'INNER'];
+                $orderClause = "FIELD(CONCAT(cs.FirstName, ' ', cs.LastName), '" . implode("', '", $contactName) . "')";
+            }
+            if($variable[$i] == 'MerchantName' || $variable[$i] == 'MerchantPhone' || $variable[$i] == 'MerchantEmail'){
+                $joinSite = ['Site AS st', 'cs.SiteId = st.Id', 'left'];
+            }
+        }
+        // Load model
+		$this->load->model('Customer_Model');
+        // Passing data to model
+		$dataRespone = $this->Customer_Model->getDataParamTemplate($selectFields,$joinBill,$joinSite,$orderClause, $where);
+        $formattedTargets = array();
+        $toTargets;
+        $formattedTargets = [];
+        for ($i = 0; $i < count($dataRespone); $i++) {
+            if ($dataRespone[$i]['CustomerName'] == $contactName[$i]) {
+                $dataTarget = [];
+                // Tambahkan $destnumber ke dalam $dataTarget
+                $dataTarget[] = $destContact[$i];
+                // Loop melalui setiap key yang ada di $variable
+                for ($j = 0; $j < count($variable); $j++) {
+                    // echo $variable[$j] . ": " . $dataRespone[$i][$variable[$j]] . "\n";
+                    if($variable[$j] == 'BillPeriode'){
+                        $dataRespone[$i][$variable[$j]] = date("F Y", strtotime($dataRespone[$i][$variable[$j]]));
+                    }
+                    if($variable[$j] == 'BillAmount'){
+                        $dataRespone[$i][$variable[$j]] = "Rp " . number_format($dataRespone[$i][$variable[$j]], 0, ',', '.');
+                    }
+                    if($variable[$j] == 'BillDueDate'){
+                        $dataRespone[$i][$variable[$j]] = date("j F Y H:i", strtotime($dataRespone[$i][$variable[$j]]));
+                    }
+                    $dataTarget[] = $dataRespone[$i][$variable[$j]];
+
+                }
+                // Gabungkan nilai-nilai menjadi string dengan pemisah '|'
+                // var_dump($dataTarget);
+                $formattedTargets[] = implode('|', $dataTarget);
+            }
+        }
+        $toTargets = implode(',', $formattedTargets);
+        // var_dump('Hallo',$toTargets);
+        return $toTargets;
     }
+
+    // function replaceMessageVariables($message, $replaceData) {
+    //     // Mendapatkan nama variabel dari 'variableMessage'
+    //     $variableNames = array_map('trim', explode(',', $replaceData['variableMessage']));
+    
+    //     // Mengganti nilai yang sesuai dengan 'variableMessage'
+    //     $replaceData = array_combine($variableNames, array(
+    //         trim($replaceData['customerName']),
+    //         'ID' . uniqid(),
+    //         date('F Y', strtotime($replaceData['bill']->Periode)),
+    //         date('d F Y H:i', strtotime($replaceData['bill']->DueDate)),
+    //         "Rp " . number_format($replaceData['bill']->Amount, 2, ',', '.')
+    //     ));
+    //     // Mengganti variabel dalam teks
+    //     foreach ($replaceData as $key => $value) {
+    //     // var_dump('Test',$key);
+    //     // var_dump('Test',$value);
+
+    //         $message = str_replace("{$key}", $value, $message);
+    //     // var_dump('Test',$message);
+
+    //     }
+    // // die();
+    //     return $message;
+    // }
 
     public function getSiteId()
     {
-        $domain = 'homewifi.com';//$_SERVER['HTTP_HOST'];
-        if (!$domain) {
-            $domain = $_SERVER['SERVER_NAME'];
-        }
-        $where = array(
-			'Domain' => $domain,
-		);
-        
-        $site = $this->M_Site->siteId("site",$where);
-        //$query = $this->db->get('site');
-		//$arrays = $site->result();
-        $siteId = null;
-        if(isset($site)){
-            $siteId = $site;
-        }else{
-            echo "SiteId Not Found !";
+        $siteId  ="0";
+		// Load the session library
+		$this->load->library('session');
+        if ($this->session->has_userdata('siteid')) {
+            // Retrieve its value
+            $siteId = $this->session->userdata("siteid");
         }
         return $siteId;
 	}
@@ -530,5 +591,161 @@ class Message_Controller extends CI_Controller {
 		return $data['dataConn'];
 	}
 
-    
+    public function mappingDataMessage($dataBroadcast){
+        $data = $dataBroadcast;
+        // var_dump($data);
+        if($data["mediaId"] == 'WHATP'){
+            //Get data contact sesuai input contact yang diberikan 
+            $targets = array();
+            $target = NULL;
+            $schedule = $data["sendDate"];
+            //Check input contact mana yang ada datanya
+            if(isset($toInput)) {
+                if (strpos($toInput, '|') !== false) {
+                    $toInputArray = explode(',', $toInput);
+                    // var_dump($toInput);
+                    foreach ($toInputArray as $item) {
+                        // Pisahkan data menggunakan pemisah (|)
+                        $itemArray = explode('|', $item);
+                        // Gunakan elemen pertama sebagai kunci, dan gabungkan elemen kedua dan ketiga sebagai nilai
+                        $key = array_shift($itemArray);
+                        if($itemArray !== '' || !$itemArray){
+                            $value = implode('|', $itemArray);
+                            // Tambahkan ke array $targets
+                            $targets[$key] = $value;
+                        }
+                    }
+                }else{
+                    $target = $toInput;
+                }
+            }
+            if(isset($data["toContact"]) || isset($data["toGroupContact"])){
+                $dataContact = $this->getDataContact($data["toContact"],$data["toGroupContact"]);
+                // var_dump($dataContact);
+                $destContact = array();
+                $contactName = array();
+                $customerId = array();
+                if (!empty($dataContact)) {
+                    foreach ($dataContact as $contact) {
+                        $destContact[] = $contact->Whatsapp;
+                        $contactName[] = $contact->Name;
+                        $customerId[] = $contact->CustomerId;
+                    }
+                }
+                // Gabungkan nomor-nomor Whatsapp dengan koma
+                $targetContact = implode(',', $destContact);
+                // Gabungkan nama nama contact dengan koma
+                $customerName = implode(',', $contactName);
+                $arrData = array(
+                    'variableMessage' => $data["variableMessage"],
+                    'customerName' => $customerName,
+                );
+                //if data is template and type ttm1 check bill
+                if(isset($data['messageTemplate']) && $data['typeTemplate'] == 'TTM1'){
+                    // Get Data Bill berdasarkan data customer yang diberikan
+                    $variable = explode(", ", $data["variableMessage"]);
+                    $dataParams = $this->getDataParams($customerId,$contactName,$destContact,$data["variableMessage"]);
+                    // var_dump($dataParams);
+                    // die();
+                    if($dataParams == NULL || !$dataParams){
+                        $errMsg = 'Customer tersebut tidak memiliki data tagihan aktif';
+                        echo json_encode(['error' => $errMsg]);
+                        return;
+                    }
+                    // $arrData['dataBill'] = $dataBill;
+                    $toTargets = $dataParams;
+                }
+                    $toTargets = $targetContact;
+                //Check apakah menggunakan template message apa tidak
+                /*if($data["messageTemplate"] !== "" && $data["variableMessage"] !== "") {
+                    $valueVariable = $this->mapReplaceData($arrData);
+                // var_dump('metaTemplate',$arrData);
+                }
+                $resultClearMessage = [];
+                if(isset($data["variableMessage"]) && !empty($data["variableMessage"])){
+                    foreach ($arrData['dataBill'] as $bill) {
+                        foreach (explode(',', $arrData['customerName']) as $customerName) {
+                            $replaceData = [
+                                'variableMessage' => $arrData['variableMessage'],
+                                'customerName' => $customerName,
+                                'bill' => $bill
+                            ];
+                    
+                            $resultClearMessage[] = $this->replaceMessageVariables($convertedVariable, $replaceData);
+                        }
+                    }
+                }*/
+                $target = $toTargets;
+            }
+
+            /*$phoneNumbers = explode(',', $target);
+            // var_dump($phoneNumbers);
+            // Buat array $targets dengan memetakan setiap nomor telepon ke nilai yang sesuai dalam $valueVariable
+            if(isset($valueVariable)){
+                foreach ($phoneNumbers as $phoneNumber) {
+                    $targets[$phoneNumber] = array_shift($valueVariable);
+                }
+            }else{
+                $targets = $target;
+            }*/
+
+            //
+            
+            // var_dump($data['sendDate']);
+            if($data['sendDate'] == '' || $data['sendDate'] == null){
+                $currentDateTime = new DateTime();
+                $timestamp = $currentDateTime->getTimestamp();
+                $scheduleSend = $timestamp;
+                $data['sendDate'] = $scheduleSend;
+            }
+            // else{
+            //     // $dataDate = DateTime::createFromFormat("Y-m-d H:i:s", );
+            //     $date = new DateTime($data['sendDate']); // Create a new DateTime object with the current date and time
+            //     $currentDateTime = new DateTime($data['sendDate']);
+            //     $timestamp = $currentDateTime->getTimestamp();
+            //     $data['sendDate'] = $timestamp;
+
+            // }
+                // var_dump($data['sendDate']);
+            $schedule = $data['sendDate'];
+            if($data['delay'] == '' || $data['delay'] == null){
+                $data['delay'] = 3;
+            }
+            $dataMapping = array(
+                'from' => $data['from'],
+                'targets' => $dataParams,//$toInput,
+                'sendDate' => $data['sendDate'],
+                'message' => $data['message'],
+                'schedule' => $schedule,
+                'delay' => $data['delay'],
+                'countryCode' => '62', // Sesuaikan dengan kebutuhan
+            );
+        }else if($data["mediaId"] == 'EMAIL'){
+
+        }
+        return $dataMessage = $dataMapping;
+    }
+
+    public function getDueDateInvSet()
+    {
+        $siteId = $this->getSiteId();
+        $code = 'DueDateInvoice';
+        $this->load->model('Setting_Model');
+        // Panggil fungsi model untuk mendapatkan pengaturan berdasarkan siteid dan code
+        $setting = $this->Setting_Model->getConfigSetting($siteId, $code);
+        
+        return $setting["Value"];
+    }
+
+    public function sendMessageApi($dataMessage,$mediaId)
+    {
+        if($mediaId == 'WHATP'){
+            $apiData = $dataMessage;
+            $response = $this->fonnte_api->sendMessage($dataMessage);
+            $jsonString = $response;
+            $jsonData = json_decode($jsonString, true);
+        }
+
+        return $jsonData;
+    }
 }

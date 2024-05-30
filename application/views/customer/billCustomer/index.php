@@ -155,7 +155,7 @@
                                     <i class="fa fa-calendar-days pr-1"></i>
                                     <div class="text-truncate">
                                         <b>
-                                        <span id="searchdatepick<?=$idTabMenu;?>" class="" style="font-size: 0.9em;" startdate="" enddate="">All</span>
+                                        <span id="searchdatepick<?=$idTabMenu;?>" class="" style="font-size: 0.9em;" startdate="" enddate="">2 Months</span>
                                         </b>
                                         <i style="padding-right: 5px;" class="fa fa-angle-down"></i>
                                     </div>
@@ -594,8 +594,8 @@
                         }
                         // Gunakan moment.js untuk memformat tanggal
                         var periode = moment(value.Periode).format('MMMM YYYY');
-                        var dueDate = moment(value.DueDate).format('D MMMM YYYY hh:mm');
-                        var expiryDate = moment(value.ExpiryDate).format('D MMMM YYYY hh:mm');
+                        var dueDate = moment(value.DueDate).format('D MMMM YYYY')+' 23:59';
+                        var expiryDate = moment(value.ExpiryDate).format('D MMMM YYYY');
                         $('#dataTableBill<?=$idTabMenu;?> tbody').append(`
                             <tr data-reference-id="${value.ReferenceId}">
                                 <td><input type="checkbox" id="checkboxBill<?=$idTabMenu;?>" class="checkboxBill cursor-pointer"></td>

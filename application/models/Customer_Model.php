@@ -142,5 +142,33 @@
             return $this->db->delete('Customer');
         }
 
-        // Tambahkan metode lain sesuai kebutuhan Anda
+        public function getDataParamTemplate($selectFields, $joinBill=null,$joinSite=null,$orderClause=null,$where){
+            $this->db->select($selectFields);
+
+            $this->db->from('Customer cs');
+            // define join
+            if($joinBill != null){
+                $this->db->join($joinBill[0], $joinBill[1], $joinBill[2]);
+            }
+            if($joinSite != null){
+                $this->db->join($joinSite[0], $joinSite[1], $joinSite[2]);
+            }
+            $this->db->where('cs.SiteId', $where['cs.SiteId']);
+            $this->db->where_in('cs.Id',$where['cs.CustomerId']);
+            if($orderClause != null){
+                $this->db->order_by($orderClause);
+            }
+            // Eksekusi query
+            $query = $this->db->get();
+            $rawQuery = $this->db->last_query();
+            // var_dump($rawQuery);
+            // Periksa apakah query berhasil dieksekusi
+            if ($query) {
+                // Ambil hasil query dalam bentuk array
+                return $query->result_array();
+            } else {
+                // Tampilkan pesan jika query gagal dieksekusi
+                return false;
+            }
+        }
     }
