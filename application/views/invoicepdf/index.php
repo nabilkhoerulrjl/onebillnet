@@ -303,7 +303,7 @@
 <!--                                    <li>kel. Bantarjati Kec. Bogor Utara,</li>
                                     <li>Kota Bogor 16153</li>-->
                                     <li>Phone : <?=$dataInvoice[0]->ComPhone;?></li>
-                                    <li>Email : <?=$dataInvoice[0]->ComEmail;?></li>
+                                    <li>Email : <?php if(isset($dataInvoice[0]->ComEmail) && $dataInvoice[0]->ComEmail != ''){echo $dataInvoice[0]->ComEmail;}else{echo '-';}?></li>
                                 </ul>
                             </div>
                             <div class = "invoice-head-bottom-right">
@@ -312,7 +312,7 @@
                                     <li><?=$dataInvoice[0]->FirstName;?> <?=$dataInvoice[0]->LastName;?></li>
                                     <li max-width: 50%;><?=$dataInvoice[0]->CsAddress;?></li>
                                     <li>Phone : <?=$dataInvoice[0]->CsPhone;?></li>
-                                    <li>Email : <?=$dataInvoice[0]->CsEmail;?></li>
+                                    <li>Email : <?php if(isset($dataInvoice[0]->CsEmail) && $dataInvoice[0]->CsEmail != ''){echo $dataInvoice[0]->CsEmail;}else{echo '-';}?></li>
                                 </ul>
                             </div>
                         </div>
@@ -377,8 +377,28 @@
                         <p><?=$dataInvoice[0]->ComPhone;?></p>
                         <p><?=$dataInvoice[0]->ComEmail;?></p>
                     </div>
+					<div class = "text-center">
+						<div class = "invoice-btns">
+							<button type = "button" class = "invoice-btn" onclick="printInvoice()">
+								<span>
+									<i class="fa-solid fa-download"></i>
+								</span>
+								<span>Download</span>
+							</button>
+						</div>
+					</div>
                 </div>
             </div>
         </div>
     </body>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script>
+		// A $( document ).ready() block.
+		$( document ).ready(function() {
+			window.print();
+		});
+		function printInvoice(){
+			window.print();
+		}
+	</script>
 </html>

@@ -13,7 +13,9 @@ class ConnectionModel extends CI_Model {
         $this->db->where('conn.SiteId', $where['SiteId']);
         $this->db->where('conn.StatusId', $where['StatusId']);
         $this->db->where('conn.MediaId', $where['MediaId']);
+        if(isset($where['UserName'])){
         $this->db->where('conn.UserName', $where['UserName']);
+        }
         // $rawQuery = $this->db->last_query();
 
         $query = $this->db->get();

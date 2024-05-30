@@ -446,6 +446,7 @@ class Message_Controller extends CI_Controller {
             "b.Periode" => "BillPeriode",
             "b.DueDate" => "BillDueDate",
             "b.PaymentLink" => "PaymentLink",
+            "b.InvoiceLink" => "InvoiceLink",
             "b.ReferenceId" => "BillId",
             "st.Name" => "MerchantName",
             "st.BankType" => "MerchantBank",
@@ -709,7 +710,7 @@ class Message_Controller extends CI_Controller {
                 // var_dump($data['sendDate']);
             $schedule = $data['sendDate'];
             if($data['delay'] == '' || $data['delay'] == null){
-                $data['delay'] = 3;
+                $data['delay'] = 120;
             }
             $dataMapping = array(
                 'from' => $data['from'],

@@ -144,7 +144,8 @@ class BillCustomer_Controller extends CI_Controller {
                     'Status'        => $item->status,
                     'ExpiryDate'    => $item->expiry_date,
                     'MerchantName'  => $item->merchant_name,
-                    'InvoiceUrl'    => $item->invoice_url
+                    'PaymentUrl'    => $item->invoice_url,
+                    'InvoiceUrl'    => 'https://'.$_SERVER['SERVER_NAME'].'/BillController/getInvoicePdf/'.$item->id,
                 );
                 $contentText = json_encode($mappingJSON);
                 
@@ -165,6 +166,7 @@ class BillCustomer_Controller extends CI_Controller {
                     'ReferenceId' => $item->id,
                     'ExpiryDate' => $item->expiry_date, 
                     'ContentText' => $contentText, 
+                    'InvoiceLink' => 'https://'.$_SERVER['SERVER_NAME'].'/BillController/getInvoicePdf/'.$item->id,
                     'Creator' => $userId,
                     'CreateDate' => date('Y-m-d H:i:s'),
                     'Modifier' => $userId,
