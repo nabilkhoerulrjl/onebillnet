@@ -371,7 +371,7 @@
                     </div>
                     <div class = "invoice-foot">
                         <p><span class = "text-bold text-center">NOTE:&nbsp;</span></p>
-                        <p>Jatuh Tempo Pembayaran 7 Hari Setelah Invoice ini Terbit</p>
+                        <!-- <p>Jatuh Tempo Pembayaran 5 Hari Setelah Invoice ini Terbit</p> -->
                         <p>Konfirmasi pembayaran bisa melalui WA admin Cantumkan Invoice Number/Customer ID</p>
                         <p>Contact Admin</p>
                         <p><?=$dataInvoice[0]->ComPhone;?></p>

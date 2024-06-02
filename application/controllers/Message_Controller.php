@@ -215,6 +215,7 @@ class Message_Controller extends CI_Controller {
                 $dataConn = $this->getMediaConnection($from);
                 $totalTarget = count($sendMessage["target"]);
                 $connId = $dataConn[0]->Id;
+                $responseMessages = array();
                 // die();
                 for ($i=0; $i < $totalTarget; $i++) { 
                     $dataMessage = array(
@@ -284,14 +285,14 @@ class Message_Controller extends CI_Controller {
             // var_dump(json_encode($metaTemplate));
                     // die();
                         // Menyimpan data ke dalam tabel 'messagecontent'
-                        $var = $this->MessageContent_Model->insertMessageContent($dataMessageContent);
+                        $responeMC = $this->MessageContent_Model->insertMessageContent($dataMessageContent);
             // var_dump($var);
                         
                         // Respon berhasil ke AJAX atau sesuaikan dengan kebutuhan
-                        echo json_encode(array('status' => 'success', 'message' => 'Message sent successfully.'));
+                        $responseMessages[] = array('status' => 'success', 'message' => 'Message sent successfully.');
                     } else {
                         // Respon gagal ke AJAX atau sesuaikan dengan kebutuhan
-                        echo json_encode(array('status' => 'error', 'message' => 'Failed to send message.'));
+                        $responseMessages[] = array('status' => 'error', 'message' => 'Failed to send message.');
                     }
     
                 }
@@ -302,7 +303,7 @@ class Message_Controller extends CI_Controller {
                 $sendMessage['process'];
                 $sendMessage['status'];
                 $sendMessage['target'];
-    
+                echo json_encode($responseMessages);
             }
         }else{
             if($sendMessage['reason'] == 'target invalid'){
