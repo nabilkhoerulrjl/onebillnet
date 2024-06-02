@@ -35,7 +35,7 @@ class Company_Controller extends CI_Controller {
 			'Domain' => $domain,
 		);
         
-        $site = $this->M_Site->siteId("site",$where);
+        $site = $this->SiteModel->siteId("site",$where);
         //$query = $this->db->get('site');
 		//$arrays = $site->result();
         $siteId = null;

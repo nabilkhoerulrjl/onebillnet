@@ -43,8 +43,8 @@ class Login_Controller extends CI_Controller {
 			'Password' => $password
 		);
 
-		$this->load->model('M_Login');
-		$data['dataUser'] = $this->M_Login->loginData('Users', $where);
+		$this->load->model('LoginModel');
+		$data['dataUser'] = $this->LoginModel->loginData('Users', $where);
 		// var_dump($data['dataUser']->Email);
 		if (!empty($data['dataUser'])) { // Ubah kondisi ini
 			$data_session = array(
@@ -87,7 +87,7 @@ class Login_Controller extends CI_Controller {
 		$where = array(
 			'Id' => $siteId,
 		);
-        $company = $this->M_Site->siteName("Site",$where);
+        $company = $this->SiteModel->siteName("Site",$where);
         //$query = $this->db->get('site');
 		//$arrays = $site->result();
         $companyName = null;
@@ -110,7 +110,7 @@ class Login_Controller extends CI_Controller {
         }
         $where = array('Domain' => $domain);
         
-        $site = $this->M_Site->siteId("Site",$where);
+        $site = $this->SiteModel->siteId("Site",$where);
 		// require_once APPPATH . 'config/config.php';
         $siteId = null;
         if(isset($site)){
@@ -127,8 +127,8 @@ class Login_Controller extends CI_Controller {
 		$where = array(
 			'Email' => $email
 		);
-		$this->load->model('M_Login');
-		$data['dataUser'] = $this->M_Login->getUserData('Users', $where);
+		$this->load->model('LoginModel');
+		$data['dataUser'] = $this->LoginModel->getUserData('Users', $where);
 		if($data['dataUser']) {
 			$data = array(
 				'email' => $data['dataUser']->Email,
@@ -155,8 +155,8 @@ class Login_Controller extends CI_Controller {
 		$where = array(
 			'Email' => $email
 		);
-		$this->load->model('M_Login');
-		$data['dataUser'] = $this->M_Login->getUserData('Users', $where);
+		$this->load->model('LoginModel');
+		$data['dataUser'] = $this->LoginModel->getUserData('Users', $where);
 		if($data['dataUser']->Password == $newpassword) {
 			$data = array(
 				'email' => $data['dataUser']->Email,
@@ -164,7 +164,7 @@ class Login_Controller extends CI_Controller {
 			);
 			$this->load->view('login/resetPassword',$data);
 		}else{
-			$resetResult = $this->M_Login->resetPassword($email, $newpassword);
+			$resetResult = $this->LoginModel->resetPassword($email, $newpassword);
 			if ($resetResult) {
 				$companyName = $this->getSiteName();
 				$data = array(

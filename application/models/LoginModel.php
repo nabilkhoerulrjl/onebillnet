@@ -1,5 +1,5 @@
 <?php
-    class M_Login extends CI_Model {
+    class LoginModel extends CI_Model {
         function loginData($table, $where) {
             $this->db->select('Users.Id AS Id, Users.Email AS Email, Users.Password AS Password, Users.Name AS UserName, Roles.Name AS RoleName, Users.ImageId AS ImageId, Users.SiteId');
             $this->db->from('Users');

@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         }
 
         public function getSiteInfo($domain) {
-            return $this->db->get_where('site', ['Domain' => $domain])->row_array();
+            return $this->db->get_where('Site', ['Domain' => $domain])->row_array();
         }
     }
 ?>

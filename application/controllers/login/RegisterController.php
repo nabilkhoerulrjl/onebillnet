@@ -23,7 +23,7 @@ class Welcome extends CI_Controller {
 		parent::__construct();
 	
 		if($this->session->userdata('status') != "login"){
-			redirect(base_url("system_login/Login_Controller"));
+			redirect(base_url("systeLoginModel/Login_Controller"));
 		}
 	}
 

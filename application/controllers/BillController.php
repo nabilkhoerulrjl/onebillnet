@@ -140,7 +140,7 @@ class BillController extends CI_Controller {
         }
         $where = array('Domain' => $domain);
         
-        $site = $this->M_Site->siteId("Site",$where);
+        $site = $this->SiteModel->siteId("Site",$where);
 		// require_once APPPATH . 'config/config.php';
         $siteId = null;
         if(isset($site)){
