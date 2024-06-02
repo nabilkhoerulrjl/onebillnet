@@ -201,6 +201,11 @@ class Message_Controller extends CI_Controller {
         //     'countryCode' => '62', // Sesuaikan dengan kebutuhan
         // );
 
+        if(isset($dataMessage['status']) && $dataMessage['status'] == 'error'){
+            $errMsg = 'Customer tersebut tidak memiliki data tagihan aktif';
+            echo json_encode(array('status' => 'error', 'message' => $errMsg));
+            return;
+        }
         //Send data to sendAPI
         $sendMessage = $this->sendMessageApi($dataMessage,$mediaId);
         // var_dump($sendMessage);
@@ -231,6 +236,7 @@ class Message_Controller extends CI_Controller {
                         'StatusId' => 'MES1',
                         'Status' => $sendMessage["status"],
                         'State' => $sendMessage['detail'],
+                        'StateId' => NULL,
                         'Retry' => 0,
                         'Attachment' => 0,
                         'Processing' => 1,
@@ -649,9 +655,8 @@ class Message_Controller extends CI_Controller {
                     // var_dump($dataParams);
                     // die();
                     if($dataParams == NULL || !$dataParams){
-                        $errMsg = 'Customer tersebut tidak memiliki data tagihan aktif';
-                        echo json_encode(['error' => $errMsg]);
-                        return;
+                        $errMsg = 'Data Param Null';
+                        return array('status' => 'error', 'message' => $errMsg);
                     }
                     // $arrData['dataBill'] = $dataBill;
                     $toTargets = $dataParams;

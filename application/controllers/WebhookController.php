@@ -3,15 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class WebhookController extends CI_Controller {
 
-    public function receive() {
+    public function receiveMessageStatus() {
         // Handle webhook logic here
         header('Content-Type: application/json; charset=utf-8');
-
-        $conn = mysqli_connect("localhost","root","","onebillnet_db");
-        if (mysqli_connect_errno()) {
-          echo "Failed to connect to MySQL: " . mysqli_connect_error();
-          exit();
-        }
         
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -20,7 +14,65 @@ class WebhookController extends CI_Controller {
         $stateid = $data['stateid'];
         $status= $data['status']; 
         $state = $data['state'];
-        var_dump($data);
+        // $dateWebhook = $data;
+        // $dateWebhook = array(
+        //   "Device" => $data['device'],
+        //   "Id" => $data['id'],
+        //   "StateId" => $data['stateid'],
+        //   "Status"=> $data['status'], 
+        //   "State" => $data['state'],
+        // );
+        if($data["state"] == 'sent'){
+          $statusId = 'MES1';
+        }elseif($data["state"] == 'delivered'){
+          $statusId = 'MES2';
+        }elseif ($data["state"] == 'read') {
+          $statusId = 'MES3';
+        }
+        $this->load->model('Customer_Model');
+        if(isset($id) && isset($stateid)){
+          $dataUpdate = array(
+            'StatusId' => $statusId,
+            'Status' => $data["status"],
+            'State' => $data['state'],
+            'StateId' => $data["stateid"],
+            'ModifyDate' => date('Y-m-d H:i:s'),
+          );
+          $where = array(
+            'RemoteId' => $data['id'],
+          );
+          $this->Message_Model->updateMessageStatus($dataUpdate, $where);
 
+        }else if(isset($id) && !isset($stateid)){
+          $dataUpdate = array(
+            'Status' => $data["status"],
+            'ModifyDate' => date('Y-m-d H:i:s'),
+          );
+          $where = array(
+            'RemoteId' => $data['id'],
+          );
+          $this->Message_Model->updateMessageStatus($dataUpdate, $where);
+        }else{
+          $dataUpdate = array(
+            'StatusId' => $statusId,
+            'State' => $data['state'],
+            'ModifyDate' => date('Y-m-d H:i:s'),
+          );
+          $where = array(
+            'StateId' => $data['stateid'],
+          );
+        $this->Message_Model->updateMessageStatus($dataUpdate, $where);
+
+        }
+
+        // $respone = $this->updateMessage($dateWebhook);
+        
+        // var_dump($respone);
+
+    }
+
+    public function updateMessage($dataRespone) {
+        
+        return $data;
     }
 }

@@ -41,4 +41,25 @@ class Message_Model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function updateMessageStatus($data, $where) {
+        if(isset($where['RemoteId']) && $where['RemoteId'] != ''){
+            $this->db->where('RemoteId', $where['RemoteId']);
+        }
+        if(isset($where['State']) && $where['State'] != ''){
+            $this->db->where('State', $where['State']);
+        }
+        if(isset($where['StateId']) && $where['StateId'] != ''){
+            $this->db->where('StateId', $where['StateId']);
+        }
+        $this->db->update('Message', $data);
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
+        // Memeriksa apakah ada baris yang terpengaruh oleh operasi update
+        if ($this->db->affected_rows() > 0) {
+            return true; // Jika ada baris yang terpengaruh, update berhasil
+        } else {
+            return false; // Jika tidak ada baris yang terpengaruh, update gagal
+        }
+    }
 }

@@ -397,11 +397,23 @@
                     });
                 },
                 success: function (response) {
-                    Swal.fire({
-                        title: "Congratulations!",
-                        text: "Your message broadcast success and in queue to send!",
-                        icon: "success"
-                    });
+                    var responeJson = JSON.parse(response);
+                    var status = responeJson.status;
+                    var message = responeJson.message;
+                    if(status == 'error'){
+                        Swal.fire({
+                            title: "Attandace!",
+                            text: message,
+                            icon: "error"
+                        });
+                    }else{
+                        Swal.fire({
+                            title: "Congratulations!",
+                            text: "Your message broadcast success and in queue to send!",
+                            icon: "success"
+                        });
+                    }
+                    
                     // Handle the response from the controller
                     $('.loading-overlay').hide();
                     // console.log(response);
