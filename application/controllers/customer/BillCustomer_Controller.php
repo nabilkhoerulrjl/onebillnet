@@ -118,7 +118,7 @@ class BillCustomer_Controller extends CI_Controller {
                 'description' => $descriptions,
                 'customer' => $customer,
                 'currency' => 'IDR',
-                'invoice_duration' => '2629056',
+                'invoice_duration' => '432000',
                 'payment_methods' => ["CREDIT_CARD", "BCA", "BNI", "BSI", "BRI", 
                 "MANDIRI", "PERMATA", "SAHABAT_SAMPOERNA", "BNC", "ALFAMART", "INDOMARET", 
                 "OVO", "DANA", "SHOPEEPAY", "LINKAJA", "JENIUSPAY", "DD_BRI", "DD_BCA_KLIKPAY",

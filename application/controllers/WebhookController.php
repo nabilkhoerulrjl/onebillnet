@@ -28,6 +28,8 @@ class WebhookController extends CI_Controller {
           $statusId = 'MES2';
         }elseif ($data["state"] == 'read') {
           $statusId = 'MES3';
+        }elseif ($data["state"] == '' && $data["status"] == 'waiting') {
+          $statusId = 'MES6';
         }
         $this->load->model('Customer_Model');
         if(isset($id) && isset($stateid)){
