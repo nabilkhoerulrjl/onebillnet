@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-    class M_Site extends CI_Model {
+    class SiteModel extends CI_Model {
         function siteId($table,$where){
             $queryGetSite = $this->db->get_where($table,$where);
             $dataSites = $queryGetSite->result();
