@@ -1,7 +1,5 @@
 <?php
     class fonnte {
-
-    
         public function generate_qr() {
             // Contoh penggunaan
             $url = 'https://api.fonnte.com/qr';
