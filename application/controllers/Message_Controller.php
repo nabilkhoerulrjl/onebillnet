@@ -484,7 +484,7 @@ class Message_Controller extends CI_Controller {
             // Check if data has at teh same $variable define where and join value
             if($variable[$i] == 'InvoiceId' || $variable[$i] == 'BillName' || $variable[$i] == 'BillDesc'
             || $variable[$i] == 'BillAmount' || $variable[$i] == 'BillPeriode' || $variable[$i] == 'BillDueDate'
-            || $variable[$i] == 'PaymentLink' || $variable[$i] == 'BillId'){
+            || $variable[$i] == 'PaymentLink' || $variable[$i] == 'BillId' || $variable[$i] == 'InvoiceLink'){
                 $joinBill = ["(SELECT b1.* FROM Bill b1 
                 INNER JOIN (SELECT ProductId, CustomerId, MAX(Periode) AS MaxPeriode 
                         FROM Bill 
