@@ -215,6 +215,7 @@ class Message_Controller extends CI_Controller {
                 $dataConn = $this->getMediaConnection($from);
                 $totalTarget = count($sendMessage["target"]);
                 $connId = $dataConn[0]->Id;
+                $responseMessages = array();
                 // die();
                 for ($i=0; $i < $totalTarget; $i++) { 
                     $dataMessage = array(
@@ -284,14 +285,14 @@ class Message_Controller extends CI_Controller {
             // var_dump(json_encode($metaTemplate));
                     // die();
                         // Menyimpan data ke dalam tabel 'messagecontent'
-                        $var = $this->MessageContent_Model->insertMessageContent($dataMessageContent);
+                        $responeMC = $this->MessageContent_Model->insertMessageContent($dataMessageContent);
             // var_dump($var);
                         
                         // Respon berhasil ke AJAX atau sesuaikan dengan kebutuhan
-                        echo json_encode(array('status' => 'success', 'message' => 'Message sent successfully.'));
+                        $responseMessages[] = array('status' => 'success', 'message' => 'Message sent successfully.');
                     } else {
                         // Respon gagal ke AJAX atau sesuaikan dengan kebutuhan
-                        echo json_encode(array('status' => 'error', 'message' => 'Failed to send message.'));
+                        $responseMessages[] = array('status' => 'error', 'message' => 'Failed to send message.');
                     }
     
                 }
@@ -302,7 +303,7 @@ class Message_Controller extends CI_Controller {
                 $sendMessage['process'];
                 $sendMessage['status'];
                 $sendMessage['target'];
-    
+                echo json_encode($responseMessages);
             }
         }else{
             if($sendMessage['reason'] == 'target invalid'){
@@ -518,7 +519,12 @@ class Message_Controller extends CI_Controller {
                         $dataRespone[$i][$variable[$j]] = date("F Y", strtotime($dataRespone[$i][$variable[$j]]));
                     }
                     if($variable[$j] == 'BillAmount'){
-                        $dataRespone[$i][$variable[$j]] = "Rp " . number_format($dataRespone[$i][$variable[$j]], 0, ',', '.');
+                        $billAmount = $dataRespone[$i][$variable[$j]];
+                        $ppn = $billAmount * 0.11;
+                        $totalAmount = $billAmount + $ppn;
+                        $formattedTotal = "Rp " . number_format($totalAmount, 0, ',', '.');
+                        $dataRespone[$i][$variable[$j]] = $formattedTotal;
+                        // $dataRespone[$i][$variable[$j]] = "Rp " . number_format($dataRespone[$i][$variable[$j]]=$dataResponse[$i][$variable[$j]]+$dataResponse[$i][$variable[$j]]*0.11, 0, ',', '.');
                     }
                     if($variable[$j] == 'BillDueDate'){
                         $dataRespone[$i][$variable[$j]] = date("j F Y H:i", strtotime($dataRespone[$i][$variable[$j]]));
@@ -660,8 +666,10 @@ class Message_Controller extends CI_Controller {
                     }
                     // $arrData['dataBill'] = $dataBill;
                     $toTargets = $dataParams;
-                }
+                }else{
                     $toTargets = $targetContact;
+                }
+                    
                 //Check apakah menggunakan template message apa tidak
                 /*if($data["messageTemplate"] !== "" && $data["variableMessage"] !== "") {
                     $valueVariable = $this->mapReplaceData($arrData);
@@ -719,7 +727,7 @@ class Message_Controller extends CI_Controller {
             }
             $dataMapping = array(
                 'from' => $data['from'],
-                'targets' => $dataParams,//$toInput,
+                'targets' => $target,//$toInput,
                 'sendDate' => $data['sendDate'],
                 'message' => $data['message'],
                 'schedule' => $schedule,

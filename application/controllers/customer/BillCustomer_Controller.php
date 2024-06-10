@@ -81,6 +81,8 @@ class BillCustomer_Controller extends CI_Controller {
         $arrInvoicePdfData      = array();
         foreach($customerData AS $data) 
         {
+            $tax = (11 / 100) * $data->Price;
+            $totalPrice = $data->Price+$tax;
             // Mapping Data Customer for paymentlink
             $customer = array(
                 'GivenNames' => $data->GivenName,
@@ -100,6 +102,11 @@ class BillCustomer_Controller extends CI_Controller {
                 "category" => "Internet Service Provider",
             );
 
+            $fees = array(
+                "type"=> "TAX",
+                "value"=> $tax,
+            );
+
             // Mapping data untuk create invoice PaymentLink
             // INV-{{Prefix Invoice}}-{{tanggal invoice dibuat}}-{{ProductId}}{{random Angka}}
             $invoiceData = [];
@@ -107,16 +114,17 @@ class BillCustomer_Controller extends CI_Controller {
             $descriptions = $data->ProductName.' Periode '.$formatPeriodeDesc;
             $invoiceData = array(
                 'external_id' => 'INV-'.$getPrefixInv.'-'.date("Ymd").'-'.$data->ProductId.$randomNumber,
-                'amount' => $data->Price, 
+                'amount' => floor($totalPrice), 
                 'description' => $descriptions,
                 'customer' => $customer,
                 'currency' => 'IDR',
-                'invoice_duration' => '2629056',
+                'invoice_duration' => '432000',
                 'payment_methods' => ["CREDIT_CARD", "BCA", "BNI", "BSI", "BRI", 
                 "MANDIRI", "PERMATA", "SAHABAT_SAMPOERNA", "BNC", "ALFAMART", "INDOMARET", 
                 "OVO", "DANA", "SHOPEEPAY", "LINKAJA", "JENIUSPAY", "DD_BRI", "DD_BCA_KLIKPAY",
                     "KREDIVO", "AKULAKU", "UANGME", "ATOME", "QRIS"],
-                "items" => [$items]
+                "items" => [$items],
+                "fees" => [$fees],
             );
             // 
             if (!empty($data->email)) {

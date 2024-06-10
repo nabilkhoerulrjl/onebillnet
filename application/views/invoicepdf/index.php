@@ -6,6 +6,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="https://app.jiraisglobalnetwork.com/File/getFile/43" type="image/x-icon">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -371,7 +372,7 @@
                     </div>
                     <div class = "invoice-foot">
                         <p><span class = "text-bold text-center">NOTE:&nbsp;</span></p>
-                        <p>Jatuh Tempo Pembayaran 7 Hari Setelah Invoice ini Terbit</p>
+                        <!-- <p>Jatuh Tempo Pembayaran 5 Hari Setelah Invoice ini Terbit</p> -->
                         <p>Konfirmasi pembayaran bisa melalui WA admin Cantumkan Invoice Number/Customer ID</p>
                         <p>Contact Admin</p>
                         <p><?=$dataInvoice[0]->ComPhone;?></p>
