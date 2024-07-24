@@ -31,6 +31,20 @@ class Welcome extends CI_Controller {
 		$data['iconHeaderNav'] = $iconHeaderNav;
 		$this->load->view('admin/dashboard',$data);
 	}
+
+	public function mobile()
+	{
+		$iconHeaderNav = $this->getIconHeaderNav();
+		$data['iconHeaderNav'] = $iconHeaderNav;
+		$this->load->view('admin/mobile/index',$data);
+	}
+
+		public function service()
+	{
+		$iconHeaderNav = $this->getIconHeaderNav();
+		$data['iconHeaderNav'] = $iconHeaderNav;
+		$this->load->view('__service-worker');
+	}
 /*
 	public function mainDashboard()
 	{

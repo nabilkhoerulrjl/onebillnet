@@ -70,7 +70,7 @@
             <!-- [ footer ] End -->
         </div>
         <!-- Logout Modal-->
-<?php $this->load->view("admin/_partials/logoutModal.php") ?>
+            <?php $this->load->view("admin/_partials/logoutModal.php") ?>
         <!-- Dashboard JS -->
             <?php $this->load->view("admin/_partials/dashboardjs.php") ?>
         <!-- End of Dashboard JS -->
