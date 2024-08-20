@@ -177,11 +177,15 @@
                     });
                 },
                 success: function (data) {
+                    console.log('data',data);
+                    console.log('data.success',data.success);
                     // Menyembunyikan elemen loading setelah data diterima
-                    if(data.success == true){
+                    if(data.success === true){
                         // Perbarui tabel
-                        var startDate = $('#filterDateCustomer').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
-                        var endDate = $('#filterDateCustomer').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+                        var startDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').startDate.format('YYYY-MM-DD HH:mm:ss');
+                        var endDate = $('#filterDateCustomer<?=$idTabMenu;?>').data('daterangepicker').endDate.format('YYYY-MM-DD HH:mm:ss');
+                        console.log('startDate',startDate);
+                        console.log('endDate',endDate);
                         var filterData = {
                             startDate: startDate,
                             endDate: endDate
@@ -190,14 +194,14 @@
 
                         Swal.fire({
                             title: 'Success',
-                            text: 'Data Customer Berhasil Diupdate',
+                            text: 'Horee🥳, Data Pelangganmu berhasil di update',
                             icon: 'success',
                             confirmButtonColor: '#1abc9c',
                         });
                     }else{
                         Swal.fire({
                             title: 'Attention',
-                            text: 'Data Customer Gagal Diupdate',
+                            text: 'Yahh☹️, Data Pelangganmu gagal di update',
                             icon: 'error',
                             button: true,
                             confirmButtonColor: 'red',
