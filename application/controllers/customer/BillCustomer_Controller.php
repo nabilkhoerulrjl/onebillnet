@@ -233,7 +233,7 @@ class BillCustomer_Controller extends CI_Controller {
             'siteId' => $siteId,
         );
         // $where  = $siteId;
-        $data = $this->Bill_Model->getBillCustomer($select, $arrJoin, $arrWhere, $limit, $offset);
+        $data = $this->Bill_Model->getBillCustomers($select, $arrJoin, $arrWhere, $limit, $offset);
         return $data;
     }
 
@@ -295,6 +295,90 @@ class BillCustomer_Controller extends CI_Controller {
         // var_dump($respone); 
 
         return $respone;
+    }
+
+    public function payBill() {
+        // Ambil ReferenceId dari post data
+        $refId = $this->input->post('ReferenceId');
+        $PaymentMethod = $this->input->post('PaymentMethod');
+        $PaymentDate = $this->input->post('PaymentDate');
+        
+        // Panggil fungsi expireInvoice untuk mendapatkan respons dari API
+        $responseApi = $this->expireInvoice($refId);
+        $userId = $this->getUserId();
+        // var_dump($responseApi);
+        $responeType = gettype($responseApi);
+        $refIdType = gettype($refId);
+        $this->load->model('Bill_model');
+        $apiData = null;
+        $deleteResult = null;
+        // var_dump('responeType',$responeType);
+        // die();
+
+        // Lakukan pemrosesan jika respons diterima
+        if ($responeType == 'string') {
+            $apiData = json_decode($responseApi,true);
+            // var_dump($apiData['error_code']);
+            // var_dump('refIdType',$refIdType);
+            $referenceId = null;
+            if($refIdType == 'string'){
+                $referenceId = $refId;
+            }
+            if($refIdType == 'array'){
+                // jika data berasal dari select box namun hanya ada 1 data
+                $referenceId = $refId[0];
+            }
+            if(isset($apiData['error_code']) && $apiData['error_code'] == 'REQUEST_FORBIDDEN_ERROR'
+            || isset($apiData['error_code']) && $apiData['error_code'] == 'INVALID_JSON_FORMAT'){
+                $response = array('status' => 'error', 'message' => 'Bill gagal di hapus');
+                echo json_encode($response);
+                return;
+            }else{
+                $updatedData = array(
+                    'StatusId' => 'BLS1',
+                    'PaymentMethod' => $PaymentMethod,
+                    'PaymentDate' => $PaymentDate,
+                    'Modifier' => $userId,
+                    'ModifyDate' => date('Y-m-d H:i:s')
+                );
+                $where = $refId;
+                $updateResult = $this->Bill_model->payBill($where, $updatedData);
+
+                if ($updateResult) {
+                    $response = array('status' => 'success', 'message' => 'Horee, Tagihan Berhasil di Bayar');
+                } else {
+                    $response = array('status' => 'error', 'message' => 'Yahh, Tagihan Gagal di Bayar');
+                }
+                echo json_encode($response);
+                return;
+            }
+
+        } elseif ($responeType == 'array') {
+            // Jika $refId adalah array, loop dan kirim permintaan untuk setiap invoice
+            $resultArray = array();
+            for ($i=0; $i < count($responseApi); $i++) { 
+            // foreach ($responseApi as $apiData) {
+                $apiData = json_decode($responseApi[$i],true);
+                if(isset($apiData['error_code']) && $apiData['error_code'] == 'REQUEST_FORBIDDEN_ERROR'
+                || isset($apiData['error_code']) && $apiData['error_code'] == 'INVALID_JSON_FORMAT'){
+                    $response = array('status' => 'error', 'message' => 'Yahh, Tagihan Gagal di Bayar');
+                    // echo json_encode($response);
+                    // return;
+                }else{
+                    $deleteResult = $this->Bill_model->deleteBill($refId[$i]);
+                    // Periksa hasil penghapusan
+                    if ($deleteResult) {
+                        $resultArray[] = array('status' => 'success', 'message' => 'Bill berhasil dihapus');
+                    } else {
+                        $resultArray[] = array('status' => 'error', 'message' => 'Gagal menghapus Bill');
+                    }
+
+                } 
+            }
+            echo json_encode($resultArray[0]);
+            return;
+            // echo json_encode($resultArray);
+        }
     }
 
     public function deleteBill() {
@@ -504,6 +588,24 @@ class BillCustomer_Controller extends CI_Controller {
             'page' => $page
         );
         $data = $this->getData($resutData);
+        echo json_encode($data);
+    }
+
+    public function getBill(){
+        $refId = $this->input->post('refId');
+        $siteId = $this->getSiteId();
+        $select = 'b.ReferenceId, c.FirstName, c.LastName, b.Product, b.Amount, b.StatusId, b.PaymentMethod, b.PaymentDate';
+        $join1   = ['Customer AS c', 'b.CustomerId = c.Id', 'left'];
+        $arrJoin = array(
+            'join1' => $join1
+        );
+        $arrWhere = array(
+            'siteId' => $siteId,
+            'refId' => $refId,
+        );
+        // $where  = $siteId;
+        $data = $this->Bill_Model->getBillCustomer($select, $arrJoin, $arrWhere);
+
         echo json_encode($data);
     }
 

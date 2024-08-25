@@ -41,6 +41,10 @@
         cursor:pointer;
     }
 
+    .cursor-no-drop{
+        cursor:no-drop;
+    }
+
     /* CSS untuk slider menu */
     .slider-menu {
         position: absolute;
@@ -103,6 +107,7 @@
     }
 </style>
 <?php $this->load->view("customer/billCustomer/addBill.php") ?>
+<?php $this->load->view("customer/billCustomer/payBill.php") ?>
 <div class="wrapper wrapper-content bg-white">
     <div class="text-header col-md p-4">
         <h3 class="font-weight-bold">Data Bill Customers</h3>
@@ -205,10 +210,16 @@
                             if($row->StatusId == 'BLS1') {
                                 $statusId = 'Paid';
                                 $statusBadge = 'badge-success';
+                                $colorButtonPay = 'silver';
+                                $cursor = 'pointer';
+                                $title = 'Pay Bill';
                             }
                             if($row->StatusId == 'BLS2') {
                                 $statusId = 'UnPaid';
                                 $statusBadge = 'badge-warning';
+                                $colorButtonPay = '#28a745!important;';
+                                $cursor = 'pointer';
+                                $title = 'Paid Bill';
                             }
                             $periode = strtotime($row->Periode); 
                             $dueDate = strtotime($row->DueDate); 
@@ -232,7 +243,8 @@
                             <td class="action-column">
                                 <!-- Tambahkan button action sesuai kebutuhan -->
                                 <!-- <i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Edit Data" onclick="editData(${value.id})"></i> -->
-                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
+                                <i class="fa fa-dollar fa-lg cursor-<?=$cursor;?> m-r-10" style="color:<?=$colorButtonPay;?>" title="<?=$title;?>" onclick="payBillModal('<?= $row->ReferenceId; ?>')" id="btnmodalPayBill<?=$idTabMenu;?>" data="<?= $row->ReferenceId; ?>"></i>
+                                <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Bill" onclick="deleteDataBill<?= $idTabMenu; ?>('<?= $row->ReferenceId; ?>')"></i>
                             </td>
                         <tr>
                     <?php
@@ -496,6 +508,49 @@
     }
     // End Search Data di table yang sudah di olah
 
+    function payDataBill<?= $idTabMenu; ?>($invId) {
+        var base_url = '<?= base_url()?>';
+        // Menyiapkan data untuk dikirim
+        var requestData = {
+            ReferenceId: $invId,
+        };
+        // Menggunakan jQuery untuk melakukan AJAX request
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/payyedBill',
+            method: 'POST',
+            dataType: 'json',
+            data: requestData,
+            beforeSend: function() {
+                // Menampilkan elemen loading sebelum permintaan dikirim
+                Swal.fire({
+                    title: 'Loading',
+                    icon: "info",
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
+            },
+            success: function (data) {
+                Swal.fire({
+                    title: "Congratulations!",
+                    text: "Your data has been delete!",
+                    icon: "success"
+                });
+                var currentPage = parseInt($('.pageNumber<?=$idTabMenu;?>.active').data('page'));
+                console.log(currentPage);
+                fetchData(currentPage);
+            },
+            error: function (error) {
+                // Menyembunyikan elemen loading jika terjadi kesalahan
+                Swal.fire({
+                    title: "Attandace!",
+                    text: "Your data failed to delete!",
+                    icon: "failed"
+                });
+            }
+        });
+    }
+
     function deleteDataBill<?= $idTabMenu; ?>($invId) {
         var base_url = '<?= base_url()?>';
         // Menyiapkan data untuk dikirim
@@ -547,6 +602,88 @@
         $("#formAddBlModal<?=$idTabMenu;?>").modal("show");
     });
 
+    // buat trigger modal form add Bill
+    /*$("[id^=btnmodalPayBill]").on("click", function () {
+        var referenceId = $(this).attr("data");
+        console.log('click btnmodalPayBill');
+        console.log('show ',referenceId);
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/getBill',  // Ganti dengan URL API server kamu
+            type: 'POST',
+            data: { refId: referenceId },
+            success: function (response) {
+                var data = JSON.parse(response);
+                console.log(data[0]);
+                const price = new Intl.NumberFormat("Id",{
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0,
+                }).format(data[0].Amount);
+                //console.log(rupiah);
+                // Asumsikan response berisi data yang ingin ditampilkan di modal
+                $(".reference-id").text(data[0].ReferenceId); // Sesuaikan dengan struktur response;
+                $(".name-customer").text(data[0].FirstName+' '+data[0].LastName); // Sesuaikan dengan struktur response;
+                $(".product").text(data[0].Product); // Sesuaikan dengan struktur response;
+                $(".price").text(price); // Sesuaikan dengan struktur response;
+                
+                // Tampilkan modal setelah data diterima
+                $("#formPayBlModal<?=$idTabMenu;?>").modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error: ' + status + error);
+                $("#modalContent<?=$idTabMenu;?>").text("Error loading data.");
+                $("#formPayBlModal<?=$idTabMenu;?>").modal("show");
+            }
+        });
+        // alert('asdasdsa');
+        //$("#formPayBlModal<?=$idTabMenu;?>").modal("show");
+    });*/
+
+    function payBillModal(refId){
+        console.log('click btnmodalPayBill');
+        console.log('show ',refId);
+        var referenceId = refId;
+        $.ajax({
+            url: base_url+'customer/BillCustomer_Controller/getBill',  // Ganti dengan URL API server kamu
+            type: 'POST',
+            data: { refId: referenceId },
+            success: function (response) {
+                var data = JSON.parse(response);
+                console.log(data[0]);
+                const price = new Intl.NumberFormat("Id",{
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0,
+                }).format(data[0].Amount);
+                //console.log(rupiah);
+                // Asumsikan response berisi data yang ingin ditampilkan di modal
+                $(".reference-id").text(data[0].ReferenceId); // Sesuaikan dengan struktur response;
+                $(".name-customer").text(data[0].FirstName+' '+data[0].LastName); // Sesuaikan dengan struktur response;
+                $(".product").text(data[0].Product); // Sesuaikan dengan struktur response;
+                $(".price").text(price); // Sesuaikan dengan struktur response;
+                if(data[0].PaymentMethod !== ''){
+                    $('select[name="paymentMethod"]').val(data[0].PaymentMethod).trigger('change');
+                }
+                if(data[0].PaymentDate !== ''){
+                    $('#payDate').val(data[0].PaymentDate);
+                }
+                var htmlImgLunas = `<img src="<?= base_url()?>public/images/Image-lunas.png" class="img-lunas" width="100" alt="" srcset="">`;
+                if(data[0].StatusId == 'BLS1') {
+                    $(".wrapper-img-lunas").html(htmlImgLunas);
+                }
+                console.log(data[0].StatusId);
+                console.log(data[0].htmlImgLunas);
+                // Tampilkan modal setelah data diterima
+                $("#formPayBlModal<?=$idTabMenu;?>").modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error: ' + status + error);
+                $("#modalContent<?=$idTabMenu;?>").text("Error loading data.");
+                $("#formPayBlModal<?=$idTabMenu;?>").modal("show");
+            }
+        });
+    }
+
     // Function Refresh Data After insert Data
     function fetchData(page) {
         console.log(page);
@@ -583,14 +720,23 @@
                         var SubscribeBadge = '';
                         var StatusBilling = '';
                         var BillingBadge = '';
+                        var colorButtonPay = '';
+                        var cursor = '';
+                        var title = '';
                         //kondisi untuk status bill dan subscribe
                         if(value.StatusId == 'BLS1'){
                             StatusBilling = 'Paid';
                             BillingBadge = 'badge-success';
+                            colorButtonPay = 'silver';
+                            cursor = 'pointer';
+                            title = 'Pay Bill';
                         }
                         if(value.StatusId == 'BLS2'){
                             StatusBilling = 'Not Paid';
                             BillingBadge = 'badge-warning';
+                            colorButtonPay = '#28a745!important;';
+                            cursor = 'pointer';
+                            title = 'Paid Bill';
                         }
                         // Gunakan moment.js untuk memformat tanggal
                         var periode = moment(value.Periode).format('MMMM YYYY');
@@ -612,7 +758,8 @@
                                 <td class="action-column">
                                     <!-- Tambahkan button action sesuai kebutuhan -->
                                     <!--<i class="fa fa-pen-to-square fa-lg cursor-pointer pr-3" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>-->
-                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Data" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
+                                    <i class="fa fa-dollar fa-lg cursor-${cursor} m-r-10" style="color:${colorButtonPay};" title="${title}" id="btnmodalPayBill<?=$idTabMenu;?>" onclick="payBillModal('${value.ReferenceId}')" data="${value.ReferenceId}"></i>
+                                    <i class="fa fa-trash fa-lg cursor-pointer" style="color:#00acc1;" title="Delete Bill" onclick="deleteDataBill<?=$idTabMenu;?>('${value.ReferenceId}')"></i>
                                 </td>
                             </tr>
                         `);

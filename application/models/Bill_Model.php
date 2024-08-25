@@ -47,10 +47,10 @@ class Bill_Model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function updateBill($billId, $data) {
+    public function updateBill($where, $data) {
         // var_dump($data);
         // $this->db->where_in('Id', $billId);
-        $success = $this->db->update('Bill', $data, array('Id' => $billId));
+        $success = $this->db->update('Bill', $data, array('Id' => $where));
         // $this->db->update_batch('Bill', $data, 'Id');
 
         if ($success) {
@@ -66,6 +66,35 @@ class Bill_Model extends CI_Model {
         }
     
         return $response;
+    }
+
+    public function payBill($where, $data) {
+        $success = $this->db->update('Bill', $data, array('ReferenceId' => $where));
+        // $this->db->update_batch('Bill', $data, 'Id');
+        //die();
+        if ($success) {
+            $response = array(
+                'status' => 'success',
+                'message' => 'Horee🥳, Kamu berhasil update status tagihan pelanggan🤗.'
+            );
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Yahh☹️, Kamu gagal update status tagihan pelanggan😨.'
+            );
+        }
+    
+        return $response;
+    
+        // Output query mentah
+        // echo $compiledQuery;
+        
+        // Periksa apakah penghapusan berhasil
+        if ($deleteResult) {
+            return true; // Penghapusan berhasil
+        } else {
+            return false; // Penghapusan gagal
+        }
     }
 
     public function deleteBill($refId) {
@@ -108,7 +137,7 @@ class Bill_Model extends CI_Model {
         return $query->num_rows() > 0;
     }
 
-    public function getBillCustomer($select, $join, $where, $limit, $offset) {
+    public function getBillCustomers($select, $join, $where, $limit, $offset) {
         $this->db->select($select);
         $this->db->from('Bill as b');
         $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
@@ -119,6 +148,19 @@ class Bill_Model extends CI_Model {
         $this->db->where('b.InvoiceId IS NOT NULL');
         $this->db->order_by('b.Id', 'DESC');
         $this->db->limit($limit, $offset);
+        $query = $this->db->get();
+        $rawQuery = $this->db->last_query();
+        // var_dump($rawQuery);
+        return $query->result();
+    }
+
+    public function getBillCustomer($select, $join, $where) {
+        $this->db->select($select);
+        $this->db->from('Bill as b');
+        $this->db->join($join['join1'][0], $join['join1'][1], $join['join1'][2]);
+        $this->db->where('b.SiteId',$where['siteId']);
+        $this->db->where('b.ReferenceId',$where['refId']);
+        $this->db->where('b.InvoiceId IS NOT NULL');
         $query = $this->db->get();
         $rawQuery = $this->db->last_query();
         // var_dump($rawQuery);
