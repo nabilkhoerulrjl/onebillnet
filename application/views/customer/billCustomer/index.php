@@ -667,8 +667,8 @@
                 if(data[0].PaymentDate !== ''){
                     $('#payDate').val(data[0].PaymentDate);
                 }
-                var htmlImgLunas = `<img src="<?= base_url()?>public/images/Image-lunas.png" class="img-lunas" width="100" alt="" srcset="">`;
                 if(data[0].StatusId == 'BLS1') {
+                    var htmlImgLunas = `<img src="<?= base_url()?>public/images/Image-lunas.png" class="img-lunas" width="100" alt="" srcset="">`;
                     $(".wrapper-img-lunas").html(htmlImgLunas);
                 }
                 console.log(data[0].StatusId);
